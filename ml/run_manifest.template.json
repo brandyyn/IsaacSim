@@ -1,0 +1,34 @@
+{
+  "run_id": "replace-with-unique-run-id",
+  "status": "draft",
+  "baseline_commit": "replace-with-full-git-sha",
+  "isaac_sim_version": "replace-me",
+  "stage": "panel_crease_leg_v8.usd",
+  "environment_version": "replace-me",
+  "fea_case_id": "replace-with-case-id-or-none",
+  "fea_artifact_sha256": "replace-me",
+  "algorithm": "replace-me",
+  "seed": 0,
+  "randomization": {},
+  "observations": [],
+  "actions": [],
+  "reward_version": "replace-me",
+  "training": {
+    "command": "replace-me",
+    "steps": 0,
+    "wall_time_s": 0.0
+  },
+  "evaluation": {
+    "command": "replace-me",
+    "conditions": "replace-me",
+    "metrics": {}
+  },
+  "artifacts": {
+    "config": "config.json",
+    "metrics": "metrics.json",
+    "checkpoint": "replace-with-lfs-or-artifact-pointer",
+    "checkpoint_sha256": "replace-me"
+  },
+  "notes": "replace-me"
+}
+

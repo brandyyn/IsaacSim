@@ -189,7 +189,7 @@ Do not commit `_build/`, generated caches, `.idea/`, `tmp/`, simulator logs, or 
 
 ## Machine-learning status
 
-No trained machine-learning model, weights, policy checkpoint, dataset, or RL training run has been created in this conversation. The current progress is a deterministic physics/visual-controller simulation. If ML training is added later, store its configuration, environment version, random seeds, evaluation results, and checkpoints in a separate tracked directory such as `ml/` or `experiments/`, rather than mixing them into the USD source asset.
+No trained machine-learning model, weights, policy checkpoint, dataset, or RL training run has been created in this conversation. The current progress is a deterministic physics/visual-controller simulation. The shared rules and handoff templates are in `PROJECT_RULES.md`, `ML_PROGRESS.md`, `fea/`, and `ml/`. The intended next step is to import a reviewed Ansys FEA case, calibrate the knee response in Isaac Sim, validate it without a policy, and only then begin stabilization learning.
 
 ## Conversation intent in one sentence
 

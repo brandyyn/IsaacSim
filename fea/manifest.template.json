@@ -1,0 +1,60 @@
+{
+  "case_id": "replace-with-unique-case-id",
+  "status": "draft",
+  "geometry": {
+    "source_asset": "input_improved.usd",
+    "source_topology": "input_improved.json",
+    "geometry_revision": "replace-me",
+    "sha256": "replace-me"
+  },
+  "units": {
+    "length": "m",
+    "mass": "kg",
+    "time": "s",
+    "force": "N",
+    "torque": "N*m",
+    "stress": "Pa",
+    "angle": "rad"
+  },
+  "frames": {
+    "fea_frame": "describe-origin-and-axes",
+    "isaac_frame": "describe-origin-and-axes",
+    "transform_fea_to_isaac": "provide-rotation-translation-and-scale",
+    "joint_axis_in_isaac": [0.0, 1.0, 0.0],
+    "neutral_angle_rad": 0.0,
+    "positive_angle_direction": "describe-looking-direction-and-sign"
+  },
+  "material": {
+    "model": "replace-me",
+    "parameters": {}
+  },
+  "mesh": {
+    "element_type": "replace-me",
+    "element_count": 0,
+    "characteristic_length_m": 0.0,
+    "mesh_revision": "replace-me",
+    "convergence_summary": "replace-me"
+  },
+  "boundary_conditions": [],
+  "loads": [],
+  "solver": {
+    "software": "Ansys",
+    "version": "replace-me",
+    "analysis_type": "replace-me",
+    "time_step_s": null,
+    "notes": "replace-me"
+  },
+  "outputs": {
+    "raw_files": [],
+    "processed_files": [],
+    "response_model": null
+  },
+  "limitations": [],
+  "review": {
+    "prepared_by": "replace-me",
+    "reviewed_by": [],
+    "date_utc": "replace-me",
+    "notes": "replace-me"
+  }
+}
+
