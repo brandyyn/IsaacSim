@@ -29,4 +29,8 @@ Do not load all at once. Use the categorized index in [`skills/SKILLS.md`](skill
 
 [`.cursor/rules/`](.cursor/rules/) holds the `*.mdc` style and policy rules (C++ codestyle, Python codestyle, docs style, extension structure, build instructions, pip packaging, ...). Cursor loads them automatically; other platforms read them at session start.
 
+### Panel-crease knee project rules
+
+When working on the panel-crease knee, FEA calibration, or machine-learning environment, read [`PROJECT_RULES.md`](PROJECT_RULES.md) and [`ML_PROGRESS.md`](ML_PROGRESS.md) before making changes. Keep the FEA case manifest, simulator commit, and ML run manifest linked as described there. [`PROJECT_CONTEXT.md`](PROJECT_CONTEXT.md) is the technical history and current checkpoint reference.
+
 Skills are authored once under `skills/`. `.claude/skills/` contains symlinks into `skills/` so Claude Code's native skill discovery works without duplication. `.cursor/skills/` is retired.
