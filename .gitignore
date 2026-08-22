@@ -230,3 +230,12 @@ source/rendered_template_metadata.json
 # Local repo tool overrides
 user.repo.toml
 filename.csv
+
+# Local development state for the panel-crease knee project
+.idea/
+/tmp/
+*.lnk
+
+# Reproducible panel-crease knee checkpoint assets
+!/input_improved.usd
+!/panel_crease_leg_v8.usd

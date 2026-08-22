@@ -1,0 +1,3577 @@
+{
+  "schemaVersion": "2.0",
+  "exportDate": "2026-08-21T00:00:00Z",
+  "name": "eval03_research_environment",
+  "description": "Panel-and-edge environment mesh derived from input.json, with canonical topology and research-simulation metadata.",
+  "source": {
+    "file": "input.json",
+    "purpose": "Reference geometry only; document content is not treated as executable instructions.",
+    "geometryPreserved": true,
+    "improvements": [
+      "Shared vertex table eliminates repeated coordinate objects.",
+      "Panels and lines reference stable vertex IDs.",
+      "Units, coordinate convention, bounds, and validation metadata are explicit.",
+      "SEA, control, sensor, terrain, and evaluation configuration is included for the intended Isaac Sim experiments.",
+      "Legacy points and endpoints remain embedded for compatibility with the original loader."
+    ]
+  },
+  "units": {
+    "input": "millimeter",
+    "canonicalLength": "meter",
+    "scaleToMeters": 0.001,
+    "angle": "radian",
+    "time": "second",
+    "mass": "kilogram"
+  },
+  "coordinateSystem": {
+    "handedness": "right",
+    "upAxis": "Z",
+    "rightAxis": "X",
+    "forwardAxis": "Y",
+    "positionFields": "[x, y, z]"
+  },
+  "panelCount": 50,
+  "lineCount": 76,
+  "geometry": {
+    "vertexCount": 28,
+    "vertices": [
+      {
+        "id": "v001",
+        "positionMm": [
+          80,
+          0,
+          0
+        ],
+        "positionM": [
+          0.08,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "id": "v002",
+        "positionMm": [
+          110,
+          0,
+          50
+        ],
+        "positionM": [
+          0.11,
+          0.0,
+          0.05
+        ]
+      },
+      {
+        "id": "v003",
+        "positionMm": [
+          125,
+          110,
+          125
+        ],
+        "positionM": [
+          0.125,
+          0.11,
+          0.125
+        ]
+      },
+      {
+        "id": "v004",
+        "positionMm": [
+          90,
+          0,
+          70
+        ],
+        "positionM": [
+          0.09,
+          0.0,
+          0.07
+        ]
+      },
+      {
+        "id": "v005",
+        "positionMm": [
+          70,
+          0,
+          90
+        ],
+        "positionM": [
+          0.07,
+          0.0,
+          0.09
+        ]
+      },
+      {
+        "id": "v006",
+        "positionMm": [
+          50,
+          0,
+          110
+        ],
+        "positionM": [
+          0.05,
+          0.0,
+          0.11
+        ]
+      },
+      {
+        "id": "v007",
+        "positionMm": [
+          125,
+          -110,
+          125
+        ],
+        "positionM": [
+          0.125,
+          -0.11,
+          0.125
+        ]
+      },
+      {
+        "id": "v008",
+        "positionMm": [
+          0,
+          0,
+          80
+        ],
+        "positionM": [
+          0.0,
+          0.0,
+          0.08
+        ]
+      },
+      {
+        "id": "v009",
+        "positionMm": [
+          -125,
+          110,
+          125
+        ],
+        "positionM": [
+          -0.125,
+          0.11,
+          0.125
+        ]
+      },
+      {
+        "id": "v010",
+        "positionMm": [
+          -125,
+          -110,
+          125
+        ],
+        "positionM": [
+          -0.125,
+          -0.11,
+          0.125
+        ]
+      },
+      {
+        "id": "v011",
+        "positionMm": [
+          -50,
+          0,
+          110
+        ],
+        "positionM": [
+          -0.05,
+          0.0,
+          0.11
+        ]
+      },
+      {
+        "id": "v012",
+        "positionMm": [
+          -70,
+          0,
+          90
+        ],
+        "positionM": [
+          -0.07,
+          0.0,
+          0.09
+        ]
+      },
+      {
+        "id": "v013",
+        "positionMm": [
+          -90,
+          0,
+          70
+        ],
+        "positionM": [
+          -0.09,
+          0.0,
+          0.07
+        ]
+      },
+      {
+        "id": "v014",
+        "positionMm": [
+          -110,
+          0,
+          50
+        ],
+        "positionM": [
+          -0.11,
+          0.0,
+          0.05
+        ]
+      },
+      {
+        "id": "v015",
+        "positionMm": [
+          -80,
+          0,
+          0
+        ],
+        "positionM": [
+          -0.08,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "id": "v016",
+        "positionMm": [
+          -125,
+          110,
+          -125
+        ],
+        "positionM": [
+          -0.125,
+          0.11,
+          -0.125
+        ]
+      },
+      {
+        "id": "v017",
+        "positionMm": [
+          -125,
+          -110,
+          -125
+        ],
+        "positionM": [
+          -0.125,
+          -0.11,
+          -0.125
+        ]
+      },
+      {
+        "id": "v018",
+        "positionMm": [
+          -110,
+          0,
+          -50
+        ],
+        "positionM": [
+          -0.11,
+          0.0,
+          -0.05
+        ]
+      },
+      {
+        "id": "v019",
+        "positionMm": [
+          -90,
+          0,
+          -70
+        ],
+        "positionM": [
+          -0.09,
+          0.0,
+          -0.07
+        ]
+      },
+      {
+        "id": "v020",
+        "positionMm": [
+          -70,
+          0,
+          -90
+        ],
+        "positionM": [
+          -0.07,
+          0.0,
+          -0.09
+        ]
+      },
+      {
+        "id": "v021",
+        "positionMm": [
+          -50,
+          0,
+          -110
+        ],
+        "positionM": [
+          -0.05,
+          0.0,
+          -0.11
+        ]
+      },
+      {
+        "id": "v022",
+        "positionMm": [
+          0,
+          0,
+          -80
+        ],
+        "positionM": [
+          0.0,
+          0.0,
+          -0.08
+        ]
+      },
+      {
+        "id": "v023",
+        "positionMm": [
+          125,
+          110,
+          -125
+        ],
+        "positionM": [
+          0.125,
+          0.11,
+          -0.125
+        ]
+      },
+      {
+        "id": "v024",
+        "positionMm": [
+          125,
+          -110,
+          -125
+        ],
+        "positionM": [
+          0.125,
+          -0.11,
+          -0.125
+        ]
+      },
+      {
+        "id": "v025",
+        "positionMm": [
+          50,
+          0,
+          -110
+        ],
+        "positionM": [
+          0.05,
+          0.0,
+          -0.11
+        ]
+      },
+      {
+        "id": "v026",
+        "positionMm": [
+          70,
+          0,
+          -90
+        ],
+        "positionM": [
+          0.07,
+          0.0,
+          -0.09
+        ]
+      },
+      {
+        "id": "v027",
+        "positionMm": [
+          90,
+          0,
+          -70
+        ],
+        "positionM": [
+          0.09,
+          0.0,
+          -0.07
+        ]
+      },
+      {
+        "id": "v028",
+        "positionMm": [
+          110,
+          0,
+          -50
+        ],
+        "positionM": [
+          0.11,
+          0.0,
+          -0.05
+        ]
+      }
+    ],
+    "boundsMm": {
+      "min": [
+        -125,
+        -110,
+        -125
+      ],
+      "max": [
+        125,
+        110,
+        125
+      ]
+    },
+    "boundsM": {
+      "min": [
+        -0.125,
+        -0.11,
+        -0.125
+      ],
+      "max": [
+        0.125,
+        0.11,
+        0.125
+      ]
+    },
+    "dimensionsMm": [
+      250,
+      220,
+      250
+    ],
+    "dimensionsM": [
+      0.25,
+      0.22,
+      0.25
+    ],
+    "closedSurfaceExpected": true,
+    "weldToleranceMm": 0.001
+  },
+  "topology": {
+    "sharedVertices": true,
+    "stableVertexIds": true,
+    "panelsReferenceVertexIds": true,
+    "linesReferenceVertexIds": true,
+    "declaredCountsMatchArrays": true,
+    "duplicatePanelNames": false,
+    "duplicateLineNames": false,
+    "manifoldStatus": "validate_at_import",
+    "windingStatus": "validate_at_import"
+  },
+  "panels": [
+    {
+      "name": "c1p1",
+      "kind": "triangle",
+      "role": "shell",
+      "vertexIds": [
+        "v001",
+        "v002",
+        "v003"
+      ],
+      "points": [
+        {
+          "x": 80,
+          "y": 0,
+          "z": 0
+        },
+        {
+          "x": 110,
+          "y": 0,
+          "z": 50
+        },
+        {
+          "x": 125,
+          "y": 110,
+          "z": 125
+        }
+      ]
+    },
+    {
+      "name": "c1p3",
+      "kind": "triangle",
+      "role": "shell",
+      "vertexIds": [
+        "v002",
+        "v004",
+        "v003"
+      ],
+      "points": [
+        {
+          "x": 110,
+          "y": 0,
+          "z": 50
+        },
+        {
+          "x": 90,
+          "y": 0,
+          "z": 70
+        },
+        {
+          "x": 125,
+          "y": 110,
+          "z": 125
+        }
+      ]
+    },
+    {
+      "name": "c1p5",
+      "kind": "triangle",
+      "role": "shell",
+      "vertexIds": [
+        "v004",
+        "v005",
+        "v003"
+      ],
+      "points": [
+        {
+          "x": 90,
+          "y": 0,
+          "z": 70
+        },
+        {
+          "x": 70,
+          "y": 0,
+          "z": 90
+        },
+        {
+          "x": 125,
+          "y": 110,
+          "z": 125
+        }
+      ]
+    },
+    {
+      "name": "c1p7",
+      "kind": "triangle",
+      "role": "shell",
+      "vertexIds": [
+        "v005",
+        "v006",
+        "v003"
+      ],
+      "points": [
+        {
+          "x": 70,
+          "y": 0,
+          "z": 90
+        },
+        {
+          "x": 50,
+          "y": 0,
+          "z": 110
+        },
+        {
+          "x": 125,
+          "y": 110,
+          "z": 125
+        }
+      ]
+    },
+    {
+      "name": "c1p2",
+      "kind": "triangle",
+      "role": "shell",
+      "vertexIds": [
+        "v001",
+        "v002",
+        "v007"
+      ],
+      "points": [
+        {
+          "x": 80,
+          "y": 0,
+          "z": 0
+        },
+        {
+          "x": 110,
+          "y": 0,
+          "z": 50
+        },
+        {
+          "x": 125,
+          "y": -110,
+          "z": 125
+        }
+      ]
+    },
+    {
+      "name": "c1p6",
+      "kind": "triangle",
+      "role": "shell",
+      "vertexIds": [
+        "v004",
+        "v005",
+        "v007"
+      ],
+      "points": [
+        {
+          "x": 90,
+          "y": 0,
+          "z": 70
+        },
+        {
+          "x": 70,
+          "y": 0,
+          "z": 90
+        },
+        {
+          "x": 125,
+          "y": -110,
+          "z": 125
+        }
+      ]
+    },
+    {
+      "name": "c1p8",
+      "kind": "triangle",
+      "role": "shell",
+      "vertexIds": [
+        "v005",
+        "v006",
+        "v007"
+      ],
+      "points": [
+        {
+          "x": 70,
+          "y": 0,
+          "z": 90
+        },
+        {
+          "x": 50,
+          "y": 0,
+          "z": 110
+        },
+        {
+          "x": 125,
+          "y": -110,
+          "z": 125
+        }
+      ]
+    },
+    {
+      "name": "c1p10",
+      "kind": "triangle",
+      "role": "shell",
+      "vertexIds": [
+        "v006",
+        "v008",
+        "v007"
+      ],
+      "points": [
+        {
+          "x": 50,
+          "y": 0,
+          "z": 110
+        },
+        {
+          "x": 0,
+          "y": 0,
+          "z": 80
+        },
+        {
+          "x": 125,
+          "y": -110,
+          "z": 125
+        }
+      ]
+    },
+    {
+      "name": "c1p4",
+      "kind": "triangle",
+      "role": "shell",
+      "vertexIds": [
+        "v002",
+        "v004",
+        "v007"
+      ],
+      "points": [
+        {
+          "x": 110,
+          "y": 0,
+          "z": 50
+        },
+        {
+          "x": 90,
+          "y": 0,
+          "z": 70
+        },
+        {
+          "x": 125,
+          "y": -110,
+          "z": 125
+        }
+      ]
+    },
+    {
+      "name": "s1p1",
+      "kind": "triangle",
+      "role": "shell",
+      "vertexIds": [
+        "v008",
+        "v003",
+        "v009"
+      ],
+      "points": [
+        {
+          "x": 0,
+          "y": 0,
+          "z": 80
+        },
+        {
+          "x": 125,
+          "y": 110,
+          "z": 125
+        },
+        {
+          "x": -125,
+          "y": 110,
+          "z": 125
+        }
+      ]
+    },
+    {
+      "name": "s1p2",
+      "kind": "triangle",
+      "role": "shell",
+      "vertexIds": [
+        "v008",
+        "v007",
+        "v010"
+      ],
+      "points": [
+        {
+          "x": 0,
+          "y": 0,
+          "z": 80
+        },
+        {
+          "x": 125,
+          "y": -110,
+          "z": 125
+        },
+        {
+          "x": -125,
+          "y": -110,
+          "z": 125
+        }
+      ]
+    },
+    {
+      "name": "c2p1",
+      "kind": "triangle",
+      "role": "shell",
+      "vertexIds": [
+        "v008",
+        "v011",
+        "v009"
+      ],
+      "points": [
+        {
+          "x": 0,
+          "y": 0,
+          "z": 80
+        },
+        {
+          "x": -50,
+          "y": 0,
+          "z": 110
+        },
+        {
+          "x": -125,
+          "y": 110,
+          "z": 125
+        }
+      ]
+    },
+    {
+      "name": "c2p3",
+      "kind": "triangle",
+      "role": "shell",
+      "vertexIds": [
+        "v011",
+        "v012",
+        "v009"
+      ],
+      "points": [
+        {
+          "x": -50,
+          "y": 0,
+          "z": 110
+        },
+        {
+          "x": -70,
+          "y": 0,
+          "z": 90
+        },
+        {
+          "x": -125,
+          "y": 110,
+          "z": 125
+        }
+      ]
+    },
+    {
+      "name": "c2p5",
+      "kind": "triangle",
+      "role": "shell",
+      "vertexIds": [
+        "v012",
+        "v013",
+        "v009"
+      ],
+      "points": [
+        {
+          "x": -70,
+          "y": 0,
+          "z": 90
+        },
+        {
+          "x": -90,
+          "y": 0,
+          "z": 70
+        },
+        {
+          "x": -125,
+          "y": 110,
+          "z": 125
+        }
+      ]
+    },
+    {
+      "name": "c2p7",
+      "kind": "triangle",
+      "role": "shell",
+      "vertexIds": [
+        "v013",
+        "v014",
+        "v009"
+      ],
+      "points": [
+        {
+          "x": -90,
+          "y": 0,
+          "z": 70
+        },
+        {
+          "x": -110,
+          "y": 0,
+          "z": 50
+        },
+        {
+          "x": -125,
+          "y": 110,
+          "z": 125
+        }
+      ]
+    },
+    {
+      "name": "c2p9",
+      "kind": "triangle",
+      "role": "shell",
+      "vertexIds": [
+        "v014",
+        "v015",
+        "v009"
+      ],
+      "points": [
+        {
+          "x": -110,
+          "y": 0,
+          "z": 50
+        },
+        {
+          "x": -80,
+          "y": 0,
+          "z": 0
+        },
+        {
+          "x": -125,
+          "y": 110,
+          "z": 125
+        }
+      ]
+    },
+    {
+      "name": "c2p2",
+      "kind": "triangle",
+      "role": "shell",
+      "vertexIds": [
+        "v008",
+        "v011",
+        "v010"
+      ],
+      "points": [
+        {
+          "x": 0,
+          "y": 0,
+          "z": 80
+        },
+        {
+          "x": -50,
+          "y": 0,
+          "z": 110
+        },
+        {
+          "x": -125,
+          "y": -110,
+          "z": 125
+        }
+      ]
+    },
+    {
+      "name": "c2p4",
+      "kind": "triangle",
+      "role": "shell",
+      "vertexIds": [
+        "v011",
+        "v012",
+        "v010"
+      ],
+      "points": [
+        {
+          "x": -50,
+          "y": 0,
+          "z": 110
+        },
+        {
+          "x": -70,
+          "y": 0,
+          "z": 90
+        },
+        {
+          "x": -125,
+          "y": -110,
+          "z": 125
+        }
+      ]
+    },
+    {
+      "name": "c2p6",
+      "kind": "triangle",
+      "role": "shell",
+      "vertexIds": [
+        "v012",
+        "v013",
+        "v010"
+      ],
+      "points": [
+        {
+          "x": -70,
+          "y": 0,
+          "z": 90
+        },
+        {
+          "x": -90,
+          "y": 0,
+          "z": 70
+        },
+        {
+          "x": -125,
+          "y": -110,
+          "z": 125
+        }
+      ]
+    },
+    {
+      "name": "c2p8",
+      "kind": "triangle",
+      "role": "shell",
+      "vertexIds": [
+        "v013",
+        "v014",
+        "v010"
+      ],
+      "points": [
+        {
+          "x": -90,
+          "y": 0,
+          "z": 70
+        },
+        {
+          "x": -110,
+          "y": 0,
+          "z": 50
+        },
+        {
+          "x": -125,
+          "y": -110,
+          "z": 125
+        }
+      ]
+    },
+    {
+      "name": "c2p10",
+      "kind": "triangle",
+      "role": "shell",
+      "vertexIds": [
+        "v014",
+        "v015",
+        "v010"
+      ],
+      "points": [
+        {
+          "x": -110,
+          "y": 0,
+          "z": 50
+        },
+        {
+          "x": -80,
+          "y": 0,
+          "z": 0
+        },
+        {
+          "x": -125,
+          "y": -110,
+          "z": 125
+        }
+      ]
+    },
+    {
+      "name": "s2p1",
+      "kind": "triangle",
+      "role": "shell",
+      "vertexIds": [
+        "v015",
+        "v009",
+        "v016"
+      ],
+      "points": [
+        {
+          "x": -80,
+          "y": 0,
+          "z": 0
+        },
+        {
+          "x": -125,
+          "y": 110,
+          "z": 125
+        },
+        {
+          "x": -125,
+          "y": 110,
+          "z": -125
+        }
+      ]
+    },
+    {
+      "name": "s2p2",
+      "kind": "triangle",
+      "role": "shell",
+      "vertexIds": [
+        "v015",
+        "v010",
+        "v017"
+      ],
+      "points": [
+        {
+          "x": -80,
+          "y": 0,
+          "z": 0
+        },
+        {
+          "x": -125,
+          "y": -110,
+          "z": 125
+        },
+        {
+          "x": -125,
+          "y": -110,
+          "z": -125
+        }
+      ]
+    },
+    {
+      "name": "c3p1",
+      "kind": "triangle",
+      "role": "shell",
+      "vertexIds": [
+        "v015",
+        "v018",
+        "v016"
+      ],
+      "points": [
+        {
+          "x": -80,
+          "y": 0,
+          "z": 0
+        },
+        {
+          "x": -110,
+          "y": 0,
+          "z": -50
+        },
+        {
+          "x": -125,
+          "y": 110,
+          "z": -125
+        }
+      ]
+    },
+    {
+      "name": "c3p3",
+      "kind": "triangle",
+      "role": "shell",
+      "vertexIds": [
+        "v018",
+        "v019",
+        "v016"
+      ],
+      "points": [
+        {
+          "x": -110,
+          "y": 0,
+          "z": -50
+        },
+        {
+          "x": -90,
+          "y": 0,
+          "z": -70
+        },
+        {
+          "x": -125,
+          "y": 110,
+          "z": -125
+        }
+      ]
+    },
+    {
+      "name": "c3p5",
+      "kind": "triangle",
+      "role": "shell",
+      "vertexIds": [
+        "v019",
+        "v020",
+        "v016"
+      ],
+      "points": [
+        {
+          "x": -90,
+          "y": 0,
+          "z": -70
+        },
+        {
+          "x": -70,
+          "y": 0,
+          "z": -90
+        },
+        {
+          "x": -125,
+          "y": 110,
+          "z": -125
+        }
+      ]
+    },
+    {
+      "name": "c3p7",
+      "kind": "triangle",
+      "role": "shell",
+      "vertexIds": [
+        "v020",
+        "v021",
+        "v016"
+      ],
+      "points": [
+        {
+          "x": -70,
+          "y": 0,
+          "z": -90
+        },
+        {
+          "x": -50,
+          "y": 0,
+          "z": -110
+        },
+        {
+          "x": -125,
+          "y": 110,
+          "z": -125
+        }
+      ]
+    },
+    {
+      "name": "c3p9",
+      "kind": "triangle",
+      "role": "shell",
+      "vertexIds": [
+        "v021",
+        "v022",
+        "v016"
+      ],
+      "points": [
+        {
+          "x": -50,
+          "y": 0,
+          "z": -110
+        },
+        {
+          "x": 0,
+          "y": 0,
+          "z": -80
+        },
+        {
+          "x": -125,
+          "y": 110,
+          "z": -125
+        }
+      ]
+    },
+    {
+      "name": "c3p2",
+      "kind": "triangle",
+      "role": "shell",
+      "vertexIds": [
+        "v015",
+        "v018",
+        "v017"
+      ],
+      "points": [
+        {
+          "x": -80,
+          "y": 0,
+          "z": 0
+        },
+        {
+          "x": -110,
+          "y": 0,
+          "z": -50
+        },
+        {
+          "x": -125,
+          "y": -110,
+          "z": -125
+        }
+      ]
+    },
+    {
+      "name": "c3p4",
+      "kind": "triangle",
+      "role": "shell",
+      "vertexIds": [
+        "v018",
+        "v019",
+        "v017"
+      ],
+      "points": [
+        {
+          "x": -110,
+          "y": 0,
+          "z": -50
+        },
+        {
+          "x": -90,
+          "y": 0,
+          "z": -70
+        },
+        {
+          "x": -125,
+          "y": -110,
+          "z": -125
+        }
+      ]
+    },
+    {
+      "name": "c3p6",
+      "kind": "triangle",
+      "role": "shell",
+      "vertexIds": [
+        "v019",
+        "v020",
+        "v017"
+      ],
+      "points": [
+        {
+          "x": -90,
+          "y": 0,
+          "z": -70
+        },
+        {
+          "x": -70,
+          "y": 0,
+          "z": -90
+        },
+        {
+          "x": -125,
+          "y": -110,
+          "z": -125
+        }
+      ]
+    },
+    {
+      "name": "c3p8",
+      "kind": "triangle",
+      "role": "shell",
+      "vertexIds": [
+        "v020",
+        "v021",
+        "v017"
+      ],
+      "points": [
+        {
+          "x": -70,
+          "y": 0,
+          "z": -90
+        },
+        {
+          "x": -50,
+          "y": 0,
+          "z": -110
+        },
+        {
+          "x": -125,
+          "y": -110,
+          "z": -125
+        }
+      ]
+    },
+    {
+      "name": "s3p1",
+      "kind": "triangle",
+      "role": "shell",
+      "vertexIds": [
+        "v022",
+        "v016",
+        "v023"
+      ],
+      "points": [
+        {
+          "x": 0,
+          "y": 0,
+          "z": -80
+        },
+        {
+          "x": -125,
+          "y": 110,
+          "z": -125
+        },
+        {
+          "x": 125,
+          "y": 110,
+          "z": -125
+        }
+      ]
+    },
+    {
+      "name": "s3p2",
+      "kind": "triangle",
+      "role": "shell",
+      "vertexIds": [
+        "v022",
+        "v024",
+        "v017"
+      ],
+      "points": [
+        {
+          "x": 0,
+          "y": 0,
+          "z": -80
+        },
+        {
+          "x": 125,
+          "y": -110,
+          "z": -125
+        },
+        {
+          "x": -125,
+          "y": -110,
+          "z": -125
+        }
+      ]
+    },
+    {
+      "name": "c4p3",
+      "kind": "triangle",
+      "role": "shell",
+      "vertexIds": [
+        "v025",
+        "v026",
+        "v023"
+      ],
+      "points": [
+        {
+          "x": 50,
+          "y": 0,
+          "z": -110
+        },
+        {
+          "x": 70,
+          "y": 0,
+          "z": -90
+        },
+        {
+          "x": 125,
+          "y": 110,
+          "z": -125
+        }
+      ]
+    },
+    {
+      "name": "c4p5",
+      "kind": "triangle",
+      "role": "shell",
+      "vertexIds": [
+        "v026",
+        "v027",
+        "v023"
+      ],
+      "points": [
+        {
+          "x": 70,
+          "y": 0,
+          "z": -90
+        },
+        {
+          "x": 90,
+          "y": 0,
+          "z": -70
+        },
+        {
+          "x": 125,
+          "y": 110,
+          "z": -125
+        }
+      ]
+    },
+    {
+      "name": "c4p7",
+      "kind": "triangle",
+      "role": "shell",
+      "vertexIds": [
+        "v027",
+        "v028",
+        "v023"
+      ],
+      "points": [
+        {
+          "x": 90,
+          "y": 0,
+          "z": -70
+        },
+        {
+          "x": 110,
+          "y": 0,
+          "z": -50
+        },
+        {
+          "x": 125,
+          "y": 110,
+          "z": -125
+        }
+      ]
+    },
+    {
+      "name": "c4p9",
+      "kind": "triangle",
+      "role": "shell",
+      "vertexIds": [
+        "v028",
+        "v001",
+        "v023"
+      ],
+      "points": [
+        {
+          "x": 110,
+          "y": 0,
+          "z": -50
+        },
+        {
+          "x": 80,
+          "y": 0,
+          "z": 0
+        },
+        {
+          "x": 125,
+          "y": 110,
+          "z": -125
+        }
+      ]
+    },
+    {
+      "name": "c4p2",
+      "kind": "triangle",
+      "role": "shell",
+      "vertexIds": [
+        "v022",
+        "v025",
+        "v024"
+      ],
+      "points": [
+        {
+          "x": 0,
+          "y": 0,
+          "z": -80
+        },
+        {
+          "x": 50,
+          "y": 0,
+          "z": -110
+        },
+        {
+          "x": 125,
+          "y": -110,
+          "z": -125
+        }
+      ]
+    },
+    {
+      "name": "c4p4",
+      "kind": "triangle",
+      "role": "shell",
+      "vertexIds": [
+        "v025",
+        "v026",
+        "v024"
+      ],
+      "points": [
+        {
+          "x": 50,
+          "y": 0,
+          "z": -110
+        },
+        {
+          "x": 70,
+          "y": 0,
+          "z": -90
+        },
+        {
+          "x": 125,
+          "y": -110,
+          "z": -125
+        }
+      ]
+    },
+    {
+      "name": "c4p6",
+      "kind": "triangle",
+      "role": "shell",
+      "vertexIds": [
+        "v026",
+        "v027",
+        "v024"
+      ],
+      "points": [
+        {
+          "x": 70,
+          "y": 0,
+          "z": -90
+        },
+        {
+          "x": 90,
+          "y": 0,
+          "z": -70
+        },
+        {
+          "x": 125,
+          "y": -110,
+          "z": -125
+        }
+      ]
+    },
+    {
+      "name": "c4p8",
+      "kind": "triangle",
+      "role": "shell",
+      "vertexIds": [
+        "v027",
+        "v028",
+        "v024"
+      ],
+      "points": [
+        {
+          "x": 90,
+          "y": 0,
+          "z": -70
+        },
+        {
+          "x": 110,
+          "y": 0,
+          "z": -50
+        },
+        {
+          "x": 125,
+          "y": -110,
+          "z": -125
+        }
+      ]
+    },
+    {
+      "name": "c4p10",
+      "kind": "triangle",
+      "role": "shell",
+      "vertexIds": [
+        "v028",
+        "v001",
+        "v024"
+      ],
+      "points": [
+        {
+          "x": 110,
+          "y": 0,
+          "z": -50
+        },
+        {
+          "x": 80,
+          "y": 0,
+          "z": 0
+        },
+        {
+          "x": 125,
+          "y": -110,
+          "z": -125
+        }
+      ]
+    },
+    {
+      "name": "c4p1",
+      "kind": "triangle",
+      "role": "shell",
+      "vertexIds": [
+        "v022",
+        "v025",
+        "v023"
+      ],
+      "points": [
+        {
+          "x": 0,
+          "y": 0,
+          "z": -80
+        },
+        {
+          "x": 50,
+          "y": 0,
+          "z": -110
+        },
+        {
+          "x": 125,
+          "y": 110,
+          "z": -125
+        }
+      ]
+    },
+    {
+      "name": "s4p1",
+      "kind": "triangle",
+      "role": "shell",
+      "vertexIds": [
+        "v023",
+        "v001",
+        "v003"
+      ],
+      "points": [
+        {
+          "x": 125,
+          "y": 110,
+          "z": -125
+        },
+        {
+          "x": 80,
+          "y": 0,
+          "z": 0
+        },
+        {
+          "x": 125,
+          "y": 110,
+          "z": 125
+        }
+      ]
+    },
+    {
+      "name": "s4p2",
+      "kind": "triangle",
+      "role": "shell",
+      "vertexIds": [
+        "v024",
+        "v001",
+        "v007"
+      ],
+      "points": [
+        {
+          "x": 125,
+          "y": -110,
+          "z": -125
+        },
+        {
+          "x": 80,
+          "y": 0,
+          "z": 0
+        },
+        {
+          "x": 125,
+          "y": -110,
+          "z": 125
+        }
+      ]
+    },
+    {
+      "name": "c3p10",
+      "kind": "triangle",
+      "role": "shell",
+      "vertexIds": [
+        "v021",
+        "v022",
+        "v017"
+      ],
+      "points": [
+        {
+          "x": -50,
+          "y": 0,
+          "z": -110
+        },
+        {
+          "x": 0,
+          "y": 0,
+          "z": -80
+        },
+        {
+          "x": -125,
+          "y": -110,
+          "z": -125
+        }
+      ]
+    },
+    {
+      "name": "c1p9",
+      "kind": "triangle",
+      "role": "shell",
+      "vertexIds": [
+        "v006",
+        "v008",
+        "v003"
+      ],
+      "points": [
+        {
+          "x": 50,
+          "y": 0,
+          "z": 110
+        },
+        {
+          "x": 0,
+          "y": 0,
+          "z": 80
+        },
+        {
+          "x": 125,
+          "y": 110,
+          "z": 125
+        }
+      ]
+    },
+    {
+      "name": "Roof 3",
+      "kind": "quad",
+      "role": "roof",
+      "vertexIds": [
+        "v007",
+        "v010",
+        "v017",
+        "v024"
+      ],
+      "points": [
+        {
+          "x": 125,
+          "y": -110,
+          "z": 125
+        },
+        {
+          "x": -125,
+          "y": -110,
+          "z": 125
+        },
+        {
+          "x": -125,
+          "y": -110,
+          "z": -125
+        },
+        {
+          "x": 125,
+          "y": -110,
+          "z": -125
+        }
+      ]
+    },
+    {
+      "name": "Roof 1",
+      "kind": "quad",
+      "role": "roof",
+      "vertexIds": [
+        "v003",
+        "v009",
+        "v016",
+        "v023"
+      ],
+      "points": [
+        {
+          "x": 125,
+          "y": 110,
+          "z": 125
+        },
+        {
+          "x": -125,
+          "y": 110,
+          "z": 125
+        },
+        {
+          "x": -125,
+          "y": 110,
+          "z": -125
+        },
+        {
+          "x": 125,
+          "y": 110,
+          "z": -125
+        }
+      ]
+    }
+  ],
+  "lines": [
+    {
+      "name": "c1p3_c1p4",
+      "kind": "edge",
+      "startVertexId": "v002",
+      "endVertexId": "v004",
+      "vertexIds": [
+        "v002",
+        "v004"
+      ],
+      "start": {
+        "x": 110,
+        "y": 0,
+        "z": 50
+      },
+      "end": {
+        "x": 90,
+        "y": 0,
+        "z": 70
+      }
+    },
+    {
+      "name": "c1p7_c1p8",
+      "kind": "edge",
+      "startVertexId": "v005",
+      "endVertexId": "v006",
+      "vertexIds": [
+        "v005",
+        "v006"
+      ],
+      "start": {
+        "x": 70,
+        "y": 0,
+        "z": 90
+      },
+      "end": {
+        "x": 50,
+        "y": 0,
+        "z": 110
+      }
+    },
+    {
+      "name": "c1p1_c1p2",
+      "kind": "edge",
+      "startVertexId": "v001",
+      "endVertexId": "v002",
+      "vertexIds": [
+        "v001",
+        "v002"
+      ],
+      "start": {
+        "x": 80,
+        "y": 0,
+        "z": 0
+      },
+      "end": {
+        "x": 110,
+        "y": 0,
+        "z": 50
+      }
+    },
+    {
+      "name": "s4p1_c1p1",
+      "kind": "edge",
+      "startVertexId": "v001",
+      "endVertexId": "v003",
+      "vertexIds": [
+        "v001",
+        "v003"
+      ],
+      "start": {
+        "x": 80,
+        "y": 0,
+        "z": 0
+      },
+      "end": {
+        "x": 125,
+        "y": 110,
+        "z": 125
+      }
+    },
+    {
+      "name": "c1p1_c1p3",
+      "kind": "edge",
+      "startVertexId": "v002",
+      "endVertexId": "v003",
+      "vertexIds": [
+        "v002",
+        "v003"
+      ],
+      "start": {
+        "x": 110,
+        "y": 0,
+        "z": 50
+      },
+      "end": {
+        "x": 125,
+        "y": 110,
+        "z": 125
+      }
+    },
+    {
+      "name": "c1p3_c1p5",
+      "kind": "edge",
+      "startVertexId": "v004",
+      "endVertexId": "v003",
+      "vertexIds": [
+        "v004",
+        "v003"
+      ],
+      "start": {
+        "x": 90,
+        "y": 0,
+        "z": 70
+      },
+      "end": {
+        "x": 125,
+        "y": 110,
+        "z": 125
+      }
+    },
+    {
+      "name": "c1p5_c1p7",
+      "kind": "edge",
+      "startVertexId": "v005",
+      "endVertexId": "v003",
+      "vertexIds": [
+        "v005",
+        "v003"
+      ],
+      "start": {
+        "x": 70,
+        "y": 0,
+        "z": 90
+      },
+      "end": {
+        "x": 125,
+        "y": 110,
+        "z": 125
+      }
+    },
+    {
+      "name": "c1p7_c1p9",
+      "kind": "edge",
+      "startVertexId": "v006",
+      "endVertexId": "v003",
+      "vertexIds": [
+        "v006",
+        "v003"
+      ],
+      "start": {
+        "x": 50,
+        "y": 0,
+        "z": 110
+      },
+      "end": {
+        "x": 125,
+        "y": 110,
+        "z": 125
+      }
+    },
+    {
+      "name": "s4p2_c1p2",
+      "kind": "edge",
+      "startVertexId": "v001",
+      "endVertexId": "v007",
+      "vertexIds": [
+        "v001",
+        "v007"
+      ],
+      "start": {
+        "x": 80,
+        "y": 0,
+        "z": 0
+      },
+      "end": {
+        "x": 125,
+        "y": -110,
+        "z": 125
+      }
+    },
+    {
+      "name": "c1p2_c1p4",
+      "kind": "edge",
+      "startVertexId": "v002",
+      "endVertexId": "v007",
+      "vertexIds": [
+        "v002",
+        "v007"
+      ],
+      "start": {
+        "x": 110,
+        "y": 0,
+        "z": 50
+      },
+      "end": {
+        "x": 125,
+        "y": -110,
+        "z": 125
+      }
+    },
+    {
+      "name": "c1p4_c1p6",
+      "kind": "edge",
+      "startVertexId": "v004",
+      "endVertexId": "v007",
+      "vertexIds": [
+        "v004",
+        "v007"
+      ],
+      "start": {
+        "x": 90,
+        "y": 0,
+        "z": 70
+      },
+      "end": {
+        "x": 125,
+        "y": -110,
+        "z": 125
+      }
+    },
+    {
+      "name": "c1p6_c1p8",
+      "kind": "edge",
+      "startVertexId": "v005",
+      "endVertexId": "v007",
+      "vertexIds": [
+        "v005",
+        "v007"
+      ],
+      "start": {
+        "x": 70,
+        "y": 0,
+        "z": 90
+      },
+      "end": {
+        "x": 125,
+        "y": -110,
+        "z": 125
+      }
+    },
+    {
+      "name": "c1p8_c1p10",
+      "kind": "edge",
+      "startVertexId": "v006",
+      "endVertexId": "v007",
+      "vertexIds": [
+        "v006",
+        "v007"
+      ],
+      "start": {
+        "x": 50,
+        "y": 0,
+        "z": 110
+      },
+      "end": {
+        "x": 125,
+        "y": -110,
+        "z": 125
+      }
+    },
+    {
+      "name": "c1p5_c1p6",
+      "kind": "edge",
+      "startVertexId": "v004",
+      "endVertexId": "v005",
+      "vertexIds": [
+        "v004",
+        "v005"
+      ],
+      "start": {
+        "x": 90,
+        "y": 0,
+        "z": 70
+      },
+      "end": {
+        "x": 70,
+        "y": 0,
+        "z": 90
+      }
+    },
+    {
+      "name": "s1p1_c2p1",
+      "kind": "edge",
+      "startVertexId": "v008",
+      "endVertexId": "v009",
+      "vertexIds": [
+        "v008",
+        "v009"
+      ],
+      "start": {
+        "x": 0,
+        "y": 0,
+        "z": 80
+      },
+      "end": {
+        "x": -125,
+        "y": 110,
+        "z": 125
+      }
+    },
+    {
+      "name": "c2p1_c2p3",
+      "kind": "edge",
+      "startVertexId": "v011",
+      "endVertexId": "v009",
+      "vertexIds": [
+        "v011",
+        "v009"
+      ],
+      "start": {
+        "x": -50,
+        "y": 0,
+        "z": 110
+      },
+      "end": {
+        "x": -125,
+        "y": 110,
+        "z": 125
+      }
+    },
+    {
+      "name": "c2p3_c2p5",
+      "kind": "edge",
+      "startVertexId": "v012",
+      "endVertexId": "v009",
+      "vertexIds": [
+        "v012",
+        "v009"
+      ],
+      "start": {
+        "x": -70,
+        "y": 0,
+        "z": 90
+      },
+      "end": {
+        "x": -125,
+        "y": 110,
+        "z": 125
+      }
+    },
+    {
+      "name": "c2p5_c2p7",
+      "kind": "edge",
+      "startVertexId": "v013",
+      "endVertexId": "v009",
+      "vertexIds": [
+        "v013",
+        "v009"
+      ],
+      "start": {
+        "x": -90,
+        "y": 0,
+        "z": 70
+      },
+      "end": {
+        "x": -125,
+        "y": 110,
+        "z": 125
+      }
+    },
+    {
+      "name": "c2p7_c2p9",
+      "kind": "edge",
+      "startVertexId": "v014",
+      "endVertexId": "v009",
+      "vertexIds": [
+        "v014",
+        "v009"
+      ],
+      "start": {
+        "x": -110,
+        "y": 0,
+        "z": 50
+      },
+      "end": {
+        "x": -125,
+        "y": 110,
+        "z": 125
+      }
+    },
+    {
+      "name": "c2p1_c2p2",
+      "kind": "edge",
+      "startVertexId": "v008",
+      "endVertexId": "v011",
+      "vertexIds": [
+        "v008",
+        "v011"
+      ],
+      "start": {
+        "x": 0,
+        "y": 0,
+        "z": 80
+      },
+      "end": {
+        "x": -50,
+        "y": 0,
+        "z": 110
+      }
+    },
+    {
+      "name": "c2p3_c2p4",
+      "kind": "edge",
+      "startVertexId": "v011",
+      "endVertexId": "v012",
+      "vertexIds": [
+        "v011",
+        "v012"
+      ],
+      "start": {
+        "x": -50,
+        "y": 0,
+        "z": 110
+      },
+      "end": {
+        "x": -70,
+        "y": 0,
+        "z": 90
+      }
+    },
+    {
+      "name": "c2p5_c2p6",
+      "kind": "edge",
+      "startVertexId": "v012",
+      "endVertexId": "v013",
+      "vertexIds": [
+        "v012",
+        "v013"
+      ],
+      "start": {
+        "x": -70,
+        "y": 0,
+        "z": 90
+      },
+      "end": {
+        "x": -90,
+        "y": 0,
+        "z": 70
+      }
+    },
+    {
+      "name": "c2p7_c2p8",
+      "kind": "edge",
+      "startVertexId": "v013",
+      "endVertexId": "v014",
+      "vertexIds": [
+        "v013",
+        "v014"
+      ],
+      "start": {
+        "x": -90,
+        "y": 0,
+        "z": 70
+      },
+      "end": {
+        "x": -110,
+        "y": 0,
+        "z": 50
+      }
+    },
+    {
+      "name": "s1p2_c2p2",
+      "kind": "edge",
+      "startVertexId": "v008",
+      "endVertexId": "v010",
+      "vertexIds": [
+        "v008",
+        "v010"
+      ],
+      "start": {
+        "x": 0,
+        "y": 0,
+        "z": 80
+      },
+      "end": {
+        "x": -125,
+        "y": -110,
+        "z": 125
+      }
+    },
+    {
+      "name": "c2p2_c2p4",
+      "kind": "edge",
+      "startVertexId": "v011",
+      "endVertexId": "v010",
+      "vertexIds": [
+        "v011",
+        "v010"
+      ],
+      "start": {
+        "x": -50,
+        "y": 0,
+        "z": 110
+      },
+      "end": {
+        "x": -125,
+        "y": -110,
+        "z": 125
+      }
+    },
+    {
+      "name": "c2p4_c2p6",
+      "kind": "edge",
+      "startVertexId": "v012",
+      "endVertexId": "v010",
+      "vertexIds": [
+        "v012",
+        "v010"
+      ],
+      "start": {
+        "x": -70,
+        "y": 0,
+        "z": 90
+      },
+      "end": {
+        "x": -125,
+        "y": -110,
+        "z": 125
+      }
+    },
+    {
+      "name": "c2p6_c2p8",
+      "kind": "edge",
+      "startVertexId": "v013",
+      "endVertexId": "v010",
+      "vertexIds": [
+        "v013",
+        "v010"
+      ],
+      "start": {
+        "x": -90,
+        "y": 0,
+        "z": 70
+      },
+      "end": {
+        "x": -125,
+        "y": -110,
+        "z": 125
+      }
+    },
+    {
+      "name": "c2p8_c2p10",
+      "kind": "edge",
+      "startVertexId": "v014",
+      "endVertexId": "v010",
+      "vertexIds": [
+        "v014",
+        "v010"
+      ],
+      "start": {
+        "x": -110,
+        "y": 0,
+        "z": 50
+      },
+      "end": {
+        "x": -125,
+        "y": -110,
+        "z": 125
+      }
+    },
+    {
+      "name": "c2p10_s2p2",
+      "kind": "edge",
+      "startVertexId": "v015",
+      "endVertexId": "v010",
+      "vertexIds": [
+        "v015",
+        "v010"
+      ],
+      "start": {
+        "x": -80,
+        "y": 0,
+        "z": 0
+      },
+      "end": {
+        "x": -125,
+        "y": -110,
+        "z": 125
+      }
+    },
+    {
+      "name": "c1p10_s1p2",
+      "kind": "edge",
+      "startVertexId": "v008",
+      "endVertexId": "v007",
+      "vertexIds": [
+        "v008",
+        "v007"
+      ],
+      "start": {
+        "x": 0,
+        "y": 0,
+        "z": 80
+      },
+      "end": {
+        "x": 125,
+        "y": -110,
+        "z": 125
+      }
+    },
+    {
+      "name": "c3p1_c3p2",
+      "kind": "edge",
+      "startVertexId": "v015",
+      "endVertexId": "v018",
+      "vertexIds": [
+        "v015",
+        "v018"
+      ],
+      "start": {
+        "x": -80,
+        "y": 0,
+        "z": 0
+      },
+      "end": {
+        "x": -110,
+        "y": 0,
+        "z": -50
+      }
+    },
+    {
+      "name": "c3p3_c3p4",
+      "kind": "edge",
+      "startVertexId": "v018",
+      "endVertexId": "v019",
+      "vertexIds": [
+        "v018",
+        "v019"
+      ],
+      "start": {
+        "x": -110,
+        "y": 0,
+        "z": -50
+      },
+      "end": {
+        "x": -90,
+        "y": 0,
+        "z": -70
+      }
+    },
+    {
+      "name": "c3p5_c3p6",
+      "kind": "edge",
+      "startVertexId": "v019",
+      "endVertexId": "v020",
+      "vertexIds": [
+        "v019",
+        "v020"
+      ],
+      "start": {
+        "x": -90,
+        "y": 0,
+        "z": -70
+      },
+      "end": {
+        "x": -70,
+        "y": 0,
+        "z": -90
+      }
+    },
+    {
+      "name": "c3p7_c3p8",
+      "kind": "edge",
+      "startVertexId": "v020",
+      "endVertexId": "v021",
+      "vertexIds": [
+        "v020",
+        "v021"
+      ],
+      "start": {
+        "x": -70,
+        "y": 0,
+        "z": -90
+      },
+      "end": {
+        "x": -50,
+        "y": 0,
+        "z": -110
+      }
+    },
+    {
+      "name": "s2p1_c3p1",
+      "kind": "edge",
+      "startVertexId": "v015",
+      "endVertexId": "v016",
+      "vertexIds": [
+        "v015",
+        "v016"
+      ],
+      "start": {
+        "x": -80,
+        "y": 0,
+        "z": 0
+      },
+      "end": {
+        "x": -125,
+        "y": 110,
+        "z": -125
+      }
+    },
+    {
+      "name": "c3p1_c3p3",
+      "kind": "edge",
+      "startVertexId": "v018",
+      "endVertexId": "v016",
+      "vertexIds": [
+        "v018",
+        "v016"
+      ],
+      "start": {
+        "x": -110,
+        "y": 0,
+        "z": -50
+      },
+      "end": {
+        "x": -125,
+        "y": 110,
+        "z": -125
+      }
+    },
+    {
+      "name": "c3p3_c3p5",
+      "kind": "edge",
+      "startVertexId": "v019",
+      "endVertexId": "v016",
+      "vertexIds": [
+        "v019",
+        "v016"
+      ],
+      "start": {
+        "x": -90,
+        "y": 0,
+        "z": -70
+      },
+      "end": {
+        "x": -125,
+        "y": 110,
+        "z": -125
+      }
+    },
+    {
+      "name": "c3p5_c3p7",
+      "kind": "edge",
+      "startVertexId": "v020",
+      "endVertexId": "v016",
+      "vertexIds": [
+        "v020",
+        "v016"
+      ],
+      "start": {
+        "x": -70,
+        "y": 0,
+        "z": -90
+      },
+      "end": {
+        "x": -125,
+        "y": 110,
+        "z": -125
+      }
+    },
+    {
+      "name": "c3p7_c3p9",
+      "kind": "edge",
+      "startVertexId": "v021",
+      "endVertexId": "v016",
+      "vertexIds": [
+        "v021",
+        "v016"
+      ],
+      "start": {
+        "x": -50,
+        "y": 0,
+        "z": -110
+      },
+      "end": {
+        "x": -125,
+        "y": 110,
+        "z": -125
+      }
+    },
+    {
+      "name": "s2p2_c3p2",
+      "kind": "edge",
+      "startVertexId": "v015",
+      "endVertexId": "v017",
+      "vertexIds": [
+        "v015",
+        "v017"
+      ],
+      "start": {
+        "x": -80,
+        "y": 0,
+        "z": 0
+      },
+      "end": {
+        "x": -125,
+        "y": -110,
+        "z": -125
+      }
+    },
+    {
+      "name": "c3p2_c3p4",
+      "kind": "edge",
+      "startVertexId": "v018",
+      "endVertexId": "v017",
+      "vertexIds": [
+        "v018",
+        "v017"
+      ],
+      "start": {
+        "x": -110,
+        "y": 0,
+        "z": -50
+      },
+      "end": {
+        "x": -125,
+        "y": -110,
+        "z": -125
+      }
+    },
+    {
+      "name": "c3p4_c3p6",
+      "kind": "edge",
+      "startVertexId": "v019",
+      "endVertexId": "v017",
+      "vertexIds": [
+        "v019",
+        "v017"
+      ],
+      "start": {
+        "x": -90,
+        "y": 0,
+        "z": -70
+      },
+      "end": {
+        "x": -125,
+        "y": -110,
+        "z": -125
+      }
+    },
+    {
+      "name": "c3p6_c3p8",
+      "kind": "edge",
+      "startVertexId": "v020",
+      "endVertexId": "v017",
+      "vertexIds": [
+        "v020",
+        "v017"
+      ],
+      "start": {
+        "x": -70,
+        "y": 0,
+        "z": -90
+      },
+      "end": {
+        "x": -125,
+        "y": -110,
+        "z": -125
+      }
+    },
+    {
+      "name": "c3p8_c3p10",
+      "kind": "edge",
+      "startVertexId": "v021",
+      "endVertexId": "v017",
+      "vertexIds": [
+        "v021",
+        "v017"
+      ],
+      "start": {
+        "x": -50,
+        "y": 0,
+        "z": -110
+      },
+      "end": {
+        "x": -125,
+        "y": -110,
+        "z": -125
+      }
+    },
+    {
+      "name": "c3p10_s3p2",
+      "kind": "edge",
+      "startVertexId": "v022",
+      "endVertexId": "v017",
+      "vertexIds": [
+        "v022",
+        "v017"
+      ],
+      "start": {
+        "x": 0,
+        "y": 0,
+        "z": -80
+      },
+      "end": {
+        "x": -125,
+        "y": -110,
+        "z": -125
+      }
+    },
+    {
+      "name": "c4p1_c4p2",
+      "kind": "edge",
+      "startVertexId": "v022",
+      "endVertexId": "v025",
+      "vertexIds": [
+        "v022",
+        "v025"
+      ],
+      "start": {
+        "x": 0,
+        "y": 0,
+        "z": -80
+      },
+      "end": {
+        "x": 50,
+        "y": 0,
+        "z": -110
+      }
+    },
+    {
+      "name": "c4p3_c4p4",
+      "kind": "edge",
+      "startVertexId": "v025",
+      "endVertexId": "v026",
+      "vertexIds": [
+        "v025",
+        "v026"
+      ],
+      "start": {
+        "x": 50,
+        "y": 0,
+        "z": -110
+      },
+      "end": {
+        "x": 70,
+        "y": 0,
+        "z": -90
+      }
+    },
+    {
+      "name": "c4p5_c4p6",
+      "kind": "edge",
+      "startVertexId": "v026",
+      "endVertexId": "v027",
+      "vertexIds": [
+        "v026",
+        "v027"
+      ],
+      "start": {
+        "x": 70,
+        "y": 0,
+        "z": -90
+      },
+      "end": {
+        "x": 90,
+        "y": 0,
+        "z": -70
+      }
+    },
+    {
+      "name": "c4p7_c4p8",
+      "kind": "edge",
+      "startVertexId": "v027",
+      "endVertexId": "v028",
+      "vertexIds": [
+        "v027",
+        "v028"
+      ],
+      "start": {
+        "x": 90,
+        "y": 0,
+        "z": -70
+      },
+      "end": {
+        "x": 110,
+        "y": 0,
+        "z": -50
+      }
+    },
+    {
+      "name": "c4p3_c4p5",
+      "kind": "edge",
+      "startVertexId": "v026",
+      "endVertexId": "v023",
+      "vertexIds": [
+        "v026",
+        "v023"
+      ],
+      "start": {
+        "x": 70,
+        "y": 0,
+        "z": -90
+      },
+      "end": {
+        "x": 125,
+        "y": 110,
+        "z": -125
+      }
+    },
+    {
+      "name": "c4p5_c4p7",
+      "kind": "edge",
+      "startVertexId": "v027",
+      "endVertexId": "v023",
+      "vertexIds": [
+        "v027",
+        "v023"
+      ],
+      "start": {
+        "x": 90,
+        "y": 0,
+        "z": -70
+      },
+      "end": {
+        "x": 125,
+        "y": 110,
+        "z": -125
+      }
+    },
+    {
+      "name": "c4p7_c4p9",
+      "kind": "edge",
+      "startVertexId": "v028",
+      "endVertexId": "v023",
+      "vertexIds": [
+        "v028",
+        "v023"
+      ],
+      "start": {
+        "x": 110,
+        "y": 0,
+        "z": -50
+      },
+      "end": {
+        "x": 125,
+        "y": 110,
+        "z": -125
+      }
+    },
+    {
+      "name": "c4p2_c4p4",
+      "kind": "edge",
+      "startVertexId": "v025",
+      "endVertexId": "v024",
+      "vertexIds": [
+        "v025",
+        "v024"
+      ],
+      "start": {
+        "x": 50,
+        "y": 0,
+        "z": -110
+      },
+      "end": {
+        "x": 125,
+        "y": -110,
+        "z": -125
+      }
+    },
+    {
+      "name": "c4p4_c4p6",
+      "kind": "edge",
+      "startVertexId": "v026",
+      "endVertexId": "v024",
+      "vertexIds": [
+        "v026",
+        "v024"
+      ],
+      "start": {
+        "x": 70,
+        "y": 0,
+        "z": -90
+      },
+      "end": {
+        "x": 125,
+        "y": -110,
+        "z": -125
+      }
+    },
+    {
+      "name": "c4p6_c4p8",
+      "kind": "edge",
+      "startVertexId": "v027",
+      "endVertexId": "v024",
+      "vertexIds": [
+        "v027",
+        "v024"
+      ],
+      "start": {
+        "x": 90,
+        "y": 0,
+        "z": -70
+      },
+      "end": {
+        "x": 125,
+        "y": -110,
+        "z": -125
+      }
+    },
+    {
+      "name": "c4p8_c4p10",
+      "kind": "edge",
+      "startVertexId": "v028",
+      "endVertexId": "v024",
+      "vertexIds": [
+        "v028",
+        "v024"
+      ],
+      "start": {
+        "x": 110,
+        "y": 0,
+        "z": -50
+      },
+      "end": {
+        "x": 125,
+        "y": -110,
+        "z": -125
+      }
+    },
+    {
+      "name": "c4p10_s4p2",
+      "kind": "edge",
+      "startVertexId": "v001",
+      "endVertexId": "v024",
+      "vertexIds": [
+        "v001",
+        "v024"
+      ],
+      "start": {
+        "x": 80,
+        "y": 0,
+        "z": 0
+      },
+      "end": {
+        "x": 125,
+        "y": -110,
+        "z": -125
+      }
+    },
+    {
+      "name": "c4p1_c4p3",
+      "kind": "edge",
+      "startVertexId": "v025",
+      "endVertexId": "v023",
+      "vertexIds": [
+        "v025",
+        "v023"
+      ],
+      "start": {
+        "x": 50,
+        "y": 0,
+        "z": -110
+      },
+      "end": {
+        "x": 125,
+        "y": 110,
+        "z": -125
+      }
+    },
+    {
+      "name": "s3p1_c4p1",
+      "kind": "edge",
+      "startVertexId": "v022",
+      "endVertexId": "v023",
+      "vertexIds": [
+        "v022",
+        "v023"
+      ],
+      "start": {
+        "x": 0,
+        "y": 0,
+        "z": -80
+      },
+      "end": {
+        "x": 125,
+        "y": 110,
+        "z": -125
+      }
+    },
+    {
+      "name": "s1p1_s1t1",
+      "kind": "edge",
+      "startVertexId": "v009",
+      "endVertexId": "v003",
+      "vertexIds": [
+        "v009",
+        "v003"
+      ],
+      "start": {
+        "x": -125,
+        "y": 110,
+        "z": 125
+      },
+      "end": {
+        "x": 125,
+        "y": 110,
+        "z": 125
+      }
+    },
+    {
+      "name": "s2p2_s2t2",
+      "kind": "edge",
+      "startVertexId": "v009",
+      "endVertexId": "v016",
+      "vertexIds": [
+        "v009",
+        "v016"
+      ],
+      "start": {
+        "x": -125,
+        "y": 110,
+        "z": 125
+      },
+      "end": {
+        "x": -125,
+        "y": 110,
+        "z": -125
+      }
+    },
+    {
+      "name": "s3p3_s3t3",
+      "kind": "edge",
+      "startVertexId": "v016",
+      "endVertexId": "v023",
+      "vertexIds": [
+        "v016",
+        "v023"
+      ],
+      "start": {
+        "x": -125,
+        "y": 110,
+        "z": -125
+      },
+      "end": {
+        "x": 125,
+        "y": 110,
+        "z": -125
+      }
+    },
+    {
+      "name": "s4p4_s4t4",
+      "kind": "edge",
+      "startVertexId": "v023",
+      "endVertexId": "v003",
+      "vertexIds": [
+        "v023",
+        "v003"
+      ],
+      "start": {
+        "x": 125,
+        "y": 110,
+        "z": -125
+      },
+      "end": {
+        "x": 125,
+        "y": 110,
+        "z": 125
+      }
+    },
+    {
+      "name": "s1p1_s1b1",
+      "kind": "edge",
+      "startVertexId": "v010",
+      "endVertexId": "v007",
+      "vertexIds": [
+        "v010",
+        "v007"
+      ],
+      "start": {
+        "x": -125,
+        "y": -110,
+        "z": 125
+      },
+      "end": {
+        "x": 125,
+        "y": -110,
+        "z": 125
+      }
+    },
+    {
+      "name": "s2p2_s2b2",
+      "kind": "edge",
+      "startVertexId": "v010",
+      "endVertexId": "v017",
+      "vertexIds": [
+        "v010",
+        "v017"
+      ],
+      "start": {
+        "x": -125,
+        "y": -110,
+        "z": 125
+      },
+      "end": {
+        "x": -125,
+        "y": -110,
+        "z": -125
+      }
+    },
+    {
+      "name": "s3p3_s3b3",
+      "kind": "edge",
+      "startVertexId": "v017",
+      "endVertexId": "v024",
+      "vertexIds": [
+        "v017",
+        "v024"
+      ],
+      "start": {
+        "x": -125,
+        "y": -110,
+        "z": -125
+      },
+      "end": {
+        "x": 125,
+        "y": -110,
+        "z": -125
+      }
+    },
+    {
+      "name": "s4p4_s4b4",
+      "kind": "edge",
+      "startVertexId": "v024",
+      "endVertexId": "v007",
+      "vertexIds": [
+        "v024",
+        "v007"
+      ],
+      "start": {
+        "x": 125,
+        "y": -110,
+        "z": -125
+      },
+      "end": {
+        "x": 125,
+        "y": -110,
+        "z": 125
+      }
+    },
+    {
+      "name": "c1p9_c1p10",
+      "kind": "edge",
+      "startVertexId": "v006",
+      "endVertexId": "v008",
+      "vertexIds": [
+        "v006",
+        "v008"
+      ],
+      "start": {
+        "x": 50,
+        "y": 0,
+        "z": 110
+      },
+      "end": {
+        "x": 0,
+        "y": 0,
+        "z": 80
+      }
+    },
+    {
+      "name": "c2p9_c2p10",
+      "kind": "edge",
+      "startVertexId": "v014",
+      "endVertexId": "v015",
+      "vertexIds": [
+        "v014",
+        "v015"
+      ],
+      "start": {
+        "x": -110,
+        "y": 0,
+        "z": 50
+      },
+      "end": {
+        "x": -80,
+        "y": 0,
+        "z": 0
+      }
+    },
+    {
+      "name": "c3p9_c3p10",
+      "kind": "edge",
+      "startVertexId": "v021",
+      "endVertexId": "v022",
+      "vertexIds": [
+        "v021",
+        "v022"
+      ],
+      "start": {
+        "x": -50,
+        "y": 0,
+        "z": -110
+      },
+      "end": {
+        "x": 0,
+        "y": 0,
+        "z": -80
+      }
+    },
+    {
+      "name": "c4p9_c4p10",
+      "kind": "edge",
+      "startVertexId": "v028",
+      "endVertexId": "v001",
+      "vertexIds": [
+        "v028",
+        "v001"
+      ],
+      "start": {
+        "x": 110,
+        "y": 0,
+        "z": -50
+      },
+      "end": {
+        "x": 80,
+        "y": 0,
+        "z": 0
+      }
+    },
+    {
+      "name": "c1p9_s1p1",
+      "kind": "edge",
+      "startVertexId": "v008",
+      "endVertexId": "v003",
+      "vertexIds": [
+        "v008",
+        "v003"
+      ],
+      "start": {
+        "x": 0,
+        "y": 0,
+        "z": 80
+      },
+      "end": {
+        "x": 125,
+        "y": 110,
+        "z": 125
+      }
+    },
+    {
+      "name": "c2p9_s2p1",
+      "kind": "edge",
+      "startVertexId": "v015",
+      "endVertexId": "v009",
+      "vertexIds": [
+        "v015",
+        "v009"
+      ],
+      "start": {
+        "x": -80,
+        "y": 0,
+        "z": 0
+      },
+      "end": {
+        "x": -125,
+        "y": 110,
+        "z": 125
+      }
+    },
+    {
+      "name": "c3p9_s3p1",
+      "kind": "edge",
+      "startVertexId": "v022",
+      "endVertexId": "v016",
+      "vertexIds": [
+        "v022",
+        "v016"
+      ],
+      "start": {
+        "x": 0,
+        "y": 0,
+        "z": -80
+      },
+      "end": {
+        "x": -125,
+        "y": 110,
+        "z": -125
+      }
+    },
+    {
+      "name": "c4p9_s4p1",
+      "kind": "edge",
+      "startVertexId": "v001",
+      "endVertexId": "v023",
+      "vertexIds": [
+        "v001",
+        "v023"
+      ],
+      "start": {
+        "x": 80,
+        "y": 0,
+        "z": 0
+      },
+      "end": {
+        "x": 125,
+        "y": 110,
+        "z": -125
+      }
+    },
+    {
+      "name": "s3p2_c4p2",
+      "kind": "edge",
+      "startVertexId": "v022",
+      "endVertexId": "v024",
+      "vertexIds": [
+        "v022",
+        "v024"
+      ],
+      "start": {
+        "x": 0,
+        "y": 0,
+        "z": -80
+      },
+      "end": {
+        "x": 125,
+        "y": -110,
+        "z": -125
+      }
+    }
+  ],
+  "researchSimulation": {
+    "objective": "Train and evaluate robust bipedal locomotion with compliant-actuator and foot-IMU-aware sim-to-real experiments.",
+    "robot": {
+      "model": "EVAL-03-like",
+      "totalDofs": 27,
+      "activeLowerBodyDofs": 12,
+      "upperBodyMode": "fixed_for_locomotion_baseline",
+      "nominalMassKg": 1.73,
+      "nominalHeightM": 0.24
+    },
+    "actuatorModels": {
+      "baseline": {
+        "type": "high_gear_pd",
+        "gearRatio": 61.4,
+        "stallTorqueNm": 1.33,
+        "backlashDeg": 0.22,
+        "backDriveTorqueNm": 0.135,
+        "motorNoLoadSpeedRpm": 156.5,
+        "controlMode": "target_position"
+      },
+      "sea": {
+        "type": "bidirectional_force_sensing_series_elastic_actuator",
+        "springTravelDeg": [
+          -40.0,
+          40.0
+        ],
+        "springStiffnessNmPerDegMeasured": 0.012,
+        "springStiffnessNmPerRadMeasured": 0.68755,
+        "springStiffnessNmPerDegDesign": 0.015,
+        "springTorqueLimitNmDesign": 0.6,
+        "sensorModel": "motor_angle_and_output_angle_difference",
+        "hardStops": true,
+        "dampingModel": "configurable",
+        "enabledJoints": [
+          "left_knee",
+          "right_knee",
+          "left_ankle",
+          "right_ankle"
+        ],
+        "hipMode": "configurable_rigid_or_sea"
+      },
+      "comparisonModes": [
+        "rigid_pd",
+        "sea_passive",
+        "sea_damped",
+        "sea_impedance"
+      ]
+    },
+    "control": {
+      "policyHz": 100,
+      "lowLevelControllerHz": 1000,
+      "physicsHz": 1000,
+      "actionType": "target_joint_position",
+      "targetPositionLowPass": {
+        "enabled": true,
+        "currentWeight": 0.2,
+        "previousWeight": 0.8,
+        "formula": "q_cmd[t] = 0.8*q_cmd[t-1] + 0.2*action[t]"
+      },
+      "orientationEstimator": "Madgwick_or_equivalent",
+      "jointVelocityObservation": "finite_difference_at_low_level_rate"
+    },
+    "observations": {
+      "policy": [
+        "base_velocity_command",
+        "base_imu_linear_acceleration",
+        "base_imu_angular_velocity",
+        "base_projected_gravity",
+        "joint_positions",
+        "joint_velocities",
+        "last_actions",
+        "left_foot_imu_linear_acceleration",
+        "right_foot_imu_linear_acceleration",
+        "left_foot_imu_angular_velocity",
+        "right_foot_imu_angular_velocity"
+      ],
+      "historyLengthSteps": 100,
+      "teacherHistoryLengthSteps": 5,
+      "privilegedOnly": [
+        "contact_forces",
+        "contact_flags",
+        "height_scan",
+        "friction_coefficient",
+        "restitution_coefficient",
+        "added_base_mass",
+        "com_displacement",
+        "base_push_force",
+        "base_push_torque"
+      ],
+      "sensorLimits": {
+        "clipLinearAcceleration": true,
+        "estimateJointVelocityFromPosition": true
+      }
+    },
+    "observationNoise": {
+      "imuAccelerationScale": 4.0,
+      "imuAngularVelocityScale": 0.1,
+      "projectedGravityScale": 0.05,
+      "jointPositionScale": 0.05,
+      "jointVelocityScale": 1.0
+    },
+    "domainRandomization": {
+      "jointEncoderOffsetRad": [
+        -0.01,
+        0.01
+      ],
+      "imuAccelerometerOffsetMps2": [
+        -0.1,
+        0.1
+      ],
+      "imuGyroscopeOffsetRadps": [
+        -0.005,
+        0.005
+      ],
+      "addedBaseMassKg": [
+        0.0,
+        0.2
+      ],
+      "comDisplacementM": [
+        -0.05,
+        0.05
+      ],
+      "frictionCoefficient": [
+        0.1,
+        1.0
+      ],
+      "restitutionCoefficient": [
+        0.0,
+        0.1
+      ],
+      "kpScale": [
+        0.9,
+        1.1
+      ],
+      "kdScale": [
+        0.5,
+        1.5
+      ],
+      "systemDelayMs": [
+        0.0,
+        10.0
+      ]
+    },
+    "terrainSuite": {
+      "training": [
+        "flat",
+        "slopes",
+        "rough",
+        "upward_stairs",
+        "downward_stairs",
+        "discrete_steps"
+      ],
+      "evaluation": [
+        "flat",
+        "thin_turf",
+        "thick_turf",
+        "pet_cushion",
+        "human_cushion",
+        "bubble_wrap",
+        "uneven_urethane"
+      ],
+      "descendingStepHeightsMm": [
+        10,
+        20,
+        25
+      ],
+      "externalDisturbances": [
+        "push",
+        "unexpected_payload"
+      ],
+      "payloadMassesKg": [
+        0.33,
+        0.55
+      ]
+    },
+    "training": {
+      "algorithm": "PPO",
+      "teacherStudent": true,
+      "teacherEnvironmentCount": 4096,
+      "studentEnvironmentCount": 2048,
+      "symmetricDataAugmentation": true,
+      "randomNetworkDistillation": true,
+      "studentFineTuning": true,
+      "recommendedSeedSweep": [
+        42,
+        123,
+        456
+      ]
+    },
+    "evaluation": {
+      "ablationPolicies": [
+        "with_foot_imus",
+        "without_foot_imus",
+        "base_imu_angular_velocity_only"
+      ],
+      "metrics": [
+        "velocity_tracking",
+        "terrain_success_rate",
+        "walking_speed",
+        "step_descent_success",
+        "payload_robustness",
+        "fall_rate",
+        "peak_joint_torque",
+        "sea_spring_energy"
+      ],
+      "requiredBaselines": [
+        "rigid_pd",
+        "sea_passive",
+        "sea_damped"
+      ],
+      "stagedValidation": [
+        "single_leg_drop",
+        "single_leg_hopping",
+        "flat_biped_stability",
+        "terrain_locomotion",
+        "sim_to_real_export"
+      ]
+    }
+  },
+  "legacyCompatibility": {
+    "originalTopLevelFieldsPreserved": [
+      "exportDate",
+      "panelCount",
+      "lineCount",
+      "panels",
+      "lines"
+    ],
+    "embeddedPanelPoints": true,
+    "embeddedLineEndpoints": true,
+    "legacyLoaderCanIgnore": [
+      "schemaVersion",
+      "source",
+      "units",
+      "coordinateSystem",
+      "geometry",
+      "topology",
+      "researchSimulation",
+      "legacyCompatibility"
+    ]
+  }
+}
