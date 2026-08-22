@@ -71,8 +71,13 @@ def _zero_load(top_body, bottom_body):
         pass
 
 
-async def replay_once(force_scale=None, target_deg=0.0, settle_steps=30):
-    """Run one deterministic 60 Hz replay over the embedded FEA time history."""
+async def replay_once(force_scale=None, target_deg=None, settle_steps=30):
+    """Run one deterministic 60 Hz replay over the embedded FEA time history.
+
+    ``target_deg=None`` preserves the knee target already authored by the
+    stage.  The automatic GUI replay uses that mode so the load case cannot
+    overwrite a user's bend command.
+    """
 
     stage = omni.usd.get_context().get_stage()
     samples, calibration = _profile(stage)
@@ -84,7 +89,8 @@ async def replay_once(force_scale=None, target_deg=0.0, settle_steps=30):
     knee = stage.GetPrimAtPath("/World/PanelCreaseLeg/Physics/KneeActuator")
     target_attr = knee.GetAttribute("drive:angular:physics:targetPosition")
     target_before = float(target_attr.Get())
-    target_attr.Set(float(target_deg))
+    replay_target_deg = target_before if target_deg is None else float(target_deg)
+    target_attr.Set(replay_target_deg)
     app_utils.pause()
     app_utils.play()
     await app_utils.update_app_async(steps=settle_steps)
@@ -138,13 +144,14 @@ async def replay_once(force_scale=None, target_deg=0.0, settle_steps=30):
         _set_attr(calibration, "replayTimeS", float(end_time_s))
         _set_attr(calibration, "currentForceTotalN", 0.0)
         _set_attr(calibration, "replayComplete", True)
+        _set_attr(calibration, "forceReplayEnabled", False)
         target_attr.Set(target_before)
         app_utils.pause()
 
     result = {
         "caseId": "compression_v1",
         "forceScale": float(force_scale),
-        "targetDeg": float(target_deg),
+        "targetDeg": float(replay_target_deg),
         "frameCount": frame_count,
         "replayDtS": replay_dt_s,
         "maxAppliedForceTotalN": max_force_total_n,
@@ -166,10 +173,13 @@ async def _run_forever():
         enabled = calibration.GetAttribute("forceReplayEnabled")
         if not enabled or not bool(enabled.Get()):
             continue
+        complete = calibration.GetAttribute("replayComplete")
+        if complete and bool(complete.Get()):
+            continue
         if not omni.timeline.get_timeline_interface().is_playing():
             continue
         try:
-            await replay_once()
+            await replay_once(target_deg=None)
         except Exception as error:
             print(f"FEA compression replay paused: {error}")
             await omni.kit.app.get_app().next_update_async()

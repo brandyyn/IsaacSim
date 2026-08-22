@@ -37,7 +37,7 @@ _build\windows-x86_64\release\python.bat skills\isaac-sim-remote\scripts\isaacsi
   --arg output_path=$env:PANEL_CREASE_PROJECT_ROOT/fea/compression_v1/results/replay_summary.json
 ```
 
-The FEA stage launcher is `open_fea_compression_v1.py`. It starts the visual-shell controller and the compression replay when the timeline plays.
+The FEA stage launcher is `open_fea_compression_v1.py`. It starts the visual-shell controller and runs the compression replay once at the stage's existing knee target. After the one-second replay, the load controller disables itself so later knee target commands can bend the joint normally. To replay again, set `forceReplayEnabled=true` and `replayComplete=false` on `/World/PanelCreaseLeg/FEACalibration` before playing.
 
 ## Important limitation
 
