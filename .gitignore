@@ -239,3 +239,4 @@ filename.csv
 # Reproducible panel-crease knee checkpoint assets
 !/input_improved.usd
 !/panel_crease_leg_v8.usd
+!/panel_crease_leg_fea_compression_v1.usd

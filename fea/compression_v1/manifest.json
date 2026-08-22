@@ -1,0 +1,82 @@
+{
+  "case_id": "compression_v1",
+  "status": "replay_ready_frame_mapping_review_required",
+  "prepared_date_utc": "2026-08-22",
+  "source_geometry": {
+    "asset": "input_improved.usd",
+    "topology": "input_improved.json",
+    "baseline_stage": "panel_crease_leg_v8.usd",
+    "baseline_git_commit": "d45a67c76fbee4e5c736da97f4dbc4bcd8fedaf1",
+    "asset_sha256": {
+      "input_improved.usd": "E2301111B501794A06157BFDA4F7B2D88E2FEB73524A3BDA8D393067F114D1C6",
+      "input_improved.json": "E8AA138473AA55D2C9F18C67317E07F60C8EDE4FBEA19EEF177E1086A83144FC",
+      "panel_crease_leg_v8.usd": "ECE2B1653F4795CD1B36E57E7D70577554A93B9AB6E5B9125C17CFD891C6A96D",
+      "panel_crease_leg_fea_compression_v1.usd": "158D98749046A11CC1C2B503F69084C358221672E384F0C8F8B2B7173CF54D4E"
+    }
+  },
+  "units": {
+    "time": "s",
+    "length": "m (not supplied in these workbooks)",
+    "force": "N",
+    "stress": "Pa",
+    "angle": "rad (not supplied in these workbooks)"
+  },
+  "frames": {
+    "fea_frame": "Ansys global X/Y/Z; confirm with FEA owner",
+    "isaac_frame": "v8 world frame, Z along leg, Y knee revolute axis",
+    "assumed_transform": "[Fx, Fy, Fz] -> [Fx, -Fz, Fy]",
+    "joint_axis_in_isaac": [0.0, 1.0, 0.0],
+    "neutral_angle_rad": 0.0,
+    "positive_angle_direction": "v8 knee actuator convention; confirm against Ansys compression setup"
+  },
+  "analysis": {
+    "software": "Ansys",
+    "analysis_type": "compression transient time history",
+    "time_start_s": 0.01,
+    "time_end_s": 1.0,
+    "sample_count": 52,
+    "material_model": "not supplied",
+    "mesh_and_convergence": "not supplied",
+    "boundary_conditions": "not supplied",
+    "loads": "not supplied"
+  },
+  "results": {
+    "raw_files": [
+      {
+        "path": "raw/compression v1 force reaction.xlsx",
+        "sha256": "675B72A144E3D5C77AFD48AD8090C3AE734D09F9A0CB2A59E139D4F1387EEED7"
+      },
+      {
+        "path": "raw/compression v1, equivalent stresses .xlsx",
+        "sha256": "ADDF4C49F8F393982A02B92AF31FA7B532AF31DDE5052F7D9EF1E39CE9265FA9"
+      }
+    ],
+    "processed_files": [
+      {
+        "path": "processed/compression_profile.json",
+        "sha256": "E3B7E9A51030D065A83866AD31BA7A177BC3457B7FC947A732997E8D3AC44E13"
+      }
+    ],
+    "summary": {
+      "peak_force_total_N": 639.69,
+      "final_force_total_N": 639.69,
+      "peak_equivalent_stress_maximum_Pa": 1967900000.0,
+      "peak_equivalent_stress_average_Pa": 111790000.0,
+      "final_equivalent_stress_maximum_Pa": 1967900000.0,
+      "final_equivalent_stress_average_Pa": 111790000.0
+    }
+  },
+  "isaac_application": {
+    "mode": "equal_and_opposite_interface_force_replay",
+    "top_body": "/World/PanelCreaseLeg/OriginalJointShell/TopShell",
+    "bottom_body": "/World/PanelCreaseLeg/OriginalJointShell/BottomShell",
+    "force_scale": 1.0,
+    "stress_role": "reference telemetry and structural acceptance signal, not a PhysX material law"
+  },
+  "limitations": [
+    "No displacement or knee-angle column was supplied; stiffness, damping, and torque-vs-angle cannot be identified from these files alone.",
+    "The Ansys-to-Isaac frame transform is an explicit assumption pending confirmation.",
+    "Material properties, thickness, mesh details, boundary conditions, and convergence evidence are missing from the handoff.",
+    "The current replay is a load validation case, not yet the calibrated ML training environment."
+  ]
+}

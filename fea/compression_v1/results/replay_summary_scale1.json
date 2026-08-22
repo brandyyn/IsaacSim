@@ -1,0 +1,11 @@
+{
+  "caseId": "compression_v1",
+  "forceScale": 1.0,
+  "targetDeg": 0.0,
+  "frameCount": 61,
+  "replayDtS": 0.01666666753590107,
+  "maxAppliedForceTotalN": 639.69,
+  "maxReferenceEquivalentStressMaximumPa": 1967900000.0,
+  "maxRelativeInterfaceTranslationM": 9.094947017729282e-13,
+  "status": "completed"
+}

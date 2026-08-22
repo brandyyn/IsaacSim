@@ -8,6 +8,10 @@ The current canonical asset is:
 
 - `panel_crease_leg_v8.usd`
 
+The current FEA load-replay asset is:
+
+- `panel_crease_leg_fea_compression_v1.usd`
+
 The v8 stage is a stable reduced-order physical knee using the original panel geometry as a continuous driven visual shell.
 
 The final stage must be launched with `open_knee_gui.py`. Opening the USD directly loads the physics bodies but does not start the Python visual-shell controller, so the lower physical interface can move while the panel shell remains in its neutral pose.
@@ -60,6 +64,8 @@ Optional comparison/reference assets:
 - `dofbot.usd`
 - Earlier generated prototype USDs
 
+The first Ansys handoff is stored under `fea/compression_v1/`. It contains the two raw workbooks, a machine-readable force/stress profile, the case manifest, and replay validation results.
+
 ## Final v8 architecture
 
 The earlier approach made every source triangle a separate rigid body and every source edge a closed-loop PhysX revolute hinge. That produced endpoint separation, redundant constraints, and visible jitter. The v8 model intentionally removes that unstable graph.
@@ -108,6 +114,14 @@ These are the files needed to reproduce and run the final checkpoint:
 - `query_panel_crease_leg_pose.py` — v8-compatible pose query.
 - `set_panel_crease_leg_targets.py` — live target command script.
 
+FEA compression replay files:
+
+- `panel_crease_leg_fea_compression_v1.usd` — v8 stage with the embedded `compression_v1` force/stress profile.
+- `build_fea_calibrated_panel_crease_leg.py` and `build_fea_calibrated_panel_crease_leg_live.py` — rebuild the FEA stage.
+- `fea_compression_controller.py` — equal-and-opposite force replay controller.
+- `run_fea_compression_replay.py` and `open_fea_compression_v1.py` — run or launch the replay.
+- `fea/compression_v1/` — raw workbooks, processed profile, manifest, and replay summaries.
+
 ## Launching
 
 Use the Isaac Sim 6.0.1 installation already associated with the project. Launch `open_knee_gui.py` through Isaac Sim's Kit executable, not with ordinary system Python.
@@ -138,6 +152,15 @@ The v8 checkpoint was tested in the live Isaac Sim Python server:
 - Physical knee moved to approximately 44.7 degrees for a 45-degree target.
 - The physical model used two interface bodies and one knee revolute instead of the unstable closed panel hinge loop.
 - The v8 smoke test completed with stable top/bottom shell poses and no observed translational chatter in the sampled settled frames.
+
+The first FEA compression replay was also run against the v8 physical interface bodies:
+
+- 52 Ansys samples from 0.01 to 1.0 seconds were replayed at full force scale.
+- Peak applied total reaction force was 639.69 N.
+- The replay completed at neutral and at a 45-degree knee target.
+- Measured top/bottom interface translation stayed below `1e-12 m` in both runs.
+- Equivalent stress is recorded as reference telemetry; it is not yet a calibrated material or failure model.
+- The workbooks contain no displacement or knee-angle channel, so angle-dependent stiffness, damping, and torque are not identified yet.
 
 ## Important failure history
 
@@ -189,7 +212,7 @@ Do not commit `_build/`, generated caches, `.idea/`, `tmp/`, simulator logs, or 
 
 ## Machine-learning status
 
-No trained machine-learning model, weights, policy checkpoint, dataset, or RL training run has been created in this conversation. The current progress is a deterministic physics/visual-controller simulation. The shared rules and handoff templates are in `PROJECT_RULES.md`, `ML_PROGRESS.md`, `fea/`, and `ml/`. The intended next step is to import a reviewed Ansys FEA case, calibrate the knee response in Isaac Sim, validate it without a policy, and only then begin stabilization learning.
+No trained machine-learning model, weights, policy checkpoint, dataset, or RL training run has been created in this conversation. The current progress is a deterministic physics/visual-controller simulation with a first Ansys compression load replay. The shared rules and handoff templates are in `PROJECT_RULES.md`, `ML_PROGRESS.md`, `fea/`, and `ml/`. The next calibration input is the missing displacement/angle and reaction-torque data, followed by non-ML response validation and then stabilization learning.
 
 ## Conversation intent in one sentence
 

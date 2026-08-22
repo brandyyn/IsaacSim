@@ -7,10 +7,10 @@ This is the shared progress log. Update it whenever the FEA model, simulator env
 - Phase: `0 - deterministic simulation baseline`
 - Baseline commit: `5131a9740b3ce82e42331e923e1a45ffa396f71c`
 - Simulation: `panel_crease_leg_v8.usd`, launched with `open_knee_gui.py`
-- FEA case: `not imported yet`
+- FEA case: `compression_v1` imported and replayed; frame mapping still requires FEA-owner confirmation
 - ML policy: `none trained yet`
-- Last validated behavior: stable physical knee target near 45 degrees with the continuous source-panel visual shell
-- Current owner/action: receive and package the Ansys FEA export using `fea/manifest.template.json`
+- Last validated behavior: full-scale 639.69 N compression replay completed at neutral and 45 degrees with interface translation below `1e-12 m`
+- Current owner/action: provide FEA displacement/angle and reaction-torque channels, plus frame/material/boundary-condition metadata
 
 ## Roadmap
 
@@ -26,6 +26,7 @@ This is the shared progress log. Update it whenever the FEA model, simulator env
 | Date | Owner | Phase | Git commit | FEA case | Result | Next action |
 |---|---|---|---|---|---|---|
 | 2026-08-22 | Codex | Simulation baseline | `5131a974` | None | v8 portable physics/visual-controller checkpoint committed and pushed | Import the first reviewed Ansys FEA case |
+| 2026-08-22 | Codex | FEA load replay | pending | `compression_v1` | 52 samples, 639.69 N peak force, neutral/45° replay stable | Add angle/displacement/torque data and confirm frame mapping |
 
 ## Run index
 
@@ -34,4 +35,3 @@ Add one row for every completed training or evaluation run. The detailed record 
 | Run ID | Baseline commit | FEA case | Seed | Algorithm | Evaluation result | Checkpoint |
 |---|---|---|---:|---|---|---|
 | None yet | — | — | — | — | — | — |
-

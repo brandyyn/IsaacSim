@@ -1,0 +1,1001 @@
+{
+  "schemaVersion": 1,
+  "caseId": "compression_v1",
+  "analysisName": "Ansys compression v1",
+  "sourceFiles": [
+    "raw/compression v1 force reaction.xlsx",
+    "raw/compression v1, equivalent stresses .xlsx"
+  ],
+  "sourceColumns": {
+    "force": [
+      "Time (s)",
+      "Force reaction (X) (N)",
+      "Force reaction (Y) (N)",
+      "Force reaction (Z) (N)",
+      "Force reaction (Total) (N)"
+    ],
+    "stress": [
+      "Time (s)",
+      "Minimum (Pa)",
+      "Maximum (Pa)",
+      "Average (Pa)"
+    ]
+  },
+  "units": {
+    "time": "s",
+    "force": "N",
+    "stress": "Pa",
+    "angle": "rad"
+  },
+  "frameMapping": {
+    "status": "assumption_requires_review",
+    "ansysToIsaac": "[Fx, Fy, Fz] -> [Fx, -Fz, Fy]",
+    "note": "This uses the v8 source-to-Isaac axis mapping. Confirm Ansys global axes against the FEA model before treating the replay as a validated physical load."
+  },
+  "application": {
+    "mode": "equal_and_opposite_interface_force_replay",
+    "topBody": "/World/PanelCreaseLeg/OriginalJointShell/TopShell",
+    "bottomBody": "/World/PanelCreaseLeg/OriginalJointShell/BottomShell",
+    "forceScale": 1,
+    "note": "The force history is a compression/load replay. It is not an angle-dependent knee torque or stiffness curve because the supplied workbooks contain time, force, and stress but no displacement or knee-angle channel."
+  },
+  "summary": {
+    "sampleCount": 52,
+    "startTimeS": 0.01,
+    "endTimeS": 1,
+    "peakForceTotalN": 639.69,
+    "peakForceComponentsN": {
+      "xAbs": 7.4574,
+      "yAbs": 529.96,
+      "zAbs": 358.18
+    },
+    "finalForceTotalN": 639.69,
+    "peakEquivalentStressMaximumPa": 1967900000,
+    "peakEquivalentStressAveragePa": 111790000,
+    "finalEquivalentStressMaximumPa": 1967900000,
+    "finalEquivalentStressAveragePa": 111790000
+  },
+  "limitations": [
+    "No displacement or joint-angle channel was supplied, so this case cannot identify angle-dependent stiffness, damping, or torque directly.",
+    "Equivalent stress is recorded as a structural reference/telemetry signal; it is not converted into a PhysX material law without thickness, material/yield data, and a calibrated failure criterion.",
+    "The Ansys-to-Isaac frame mapping is an explicit assumption until confirmed by the FEA owner."
+  ],
+  "samples": [
+    {
+      "timeS": 0.01,
+      "forceAnsysN": {
+        "x": 0.6339,
+        "y": 10.011,
+        "z": -54.409,
+        "total": 55.326
+      },
+      "forceIsaacN": {
+        "x": 0.6339,
+        "y": 54.409,
+        "z": 10.011,
+        "total": 55.326
+      },
+      "equivalentStressMinimumPa": 3.7158,
+      "equivalentStressMaximumPa": 45263000,
+      "equivalentStressAveragePa": 3688200
+    },
+    {
+      "timeS": 0.02,
+      "forceAnsysN": {
+        "x": 1.1877,
+        "y": 19.821,
+        "z": -99.58,
+        "total": 101.54
+      },
+      "forceIsaacN": {
+        "x": 1.1877,
+        "y": 99.58,
+        "z": 19.821,
+        "total": 101.54
+      },
+      "equivalentStressMinimumPa": 1.6336,
+      "equivalentStressMaximumPa": 88260000,
+      "equivalentStressAveragePa": 7160400
+    },
+    {
+      "timeS": 0.035,
+      "forceAnsysN": {
+        "x": 1.9684,
+        "y": 34.088,
+        "z": -155.25,
+        "total": 158.96
+      },
+      "forceIsaacN": {
+        "x": 1.9684,
+        "y": 155.25,
+        "z": 34.088,
+        "total": 158.96
+      },
+      "equivalentStressMinimumPa": 2.7687,
+      "equivalentStressMaximumPa": 150290000,
+      "equivalentStressAveragePa": 12012000
+    },
+    {
+      "timeS": 0.055,
+      "forceAnsysN": {
+        "x": 2.895,
+        "y": 52.321,
+        "z": -210.72,
+        "total": 217.13
+      },
+      "forceIsaacN": {
+        "x": 2.895,
+        "y": 210.72,
+        "z": 52.321,
+        "total": 217.13
+      },
+      "equivalentStressMinimumPa": 10.062,
+      "equivalentStressMaximumPa": 226840000,
+      "equivalentStressAveragePa": 17894000
+    },
+    {
+      "timeS": 0.075,
+      "forceAnsysN": {
+        "x": 3.6638,
+        "y": 69.735,
+        "z": -248.25,
+        "total": 257.88
+      },
+      "forceIsaacN": {
+        "x": 3.6638,
+        "y": 248.25,
+        "z": 69.735,
+        "total": 257.88
+      },
+      "equivalentStressMinimumPa": 10.225,
+      "equivalentStressMaximumPa": 295390000,
+      "equivalentStressAveragePa": 23189000
+    },
+    {
+      "timeS": 0.095,
+      "forceAnsysN": {
+        "x": 4.3598,
+        "y": 86.433,
+        "z": -273.68,
+        "total": 287.04
+      },
+      "forceIsaacN": {
+        "x": 4.3598,
+        "y": 273.68,
+        "z": 86.433,
+        "total": 287.04
+      },
+      "equivalentStressMinimumPa": 14.621,
+      "equivalentStressMaximumPa": 356930000,
+      "equivalentStressAveragePa": 27980000
+    },
+    {
+      "timeS": 0.115,
+      "forceAnsysN": {
+        "x": 4.9822,
+        "y": 102.51,
+        "z": -290.14,
+        "total": 307.76
+      },
+      "forceIsaacN": {
+        "x": 4.9822,
+        "y": 290.14,
+        "z": 102.51,
+        "total": 307.76
+      },
+      "equivalentStressMinimumPa": 13.531,
+      "equivalentStressMaximumPa": 411610000,
+      "equivalentStressAveragePa": 32333000
+    },
+    {
+      "timeS": 0.135,
+      "forceAnsysN": {
+        "x": 5.5187,
+        "y": 118.03,
+        "z": -299.91,
+        "total": 322.35
+      },
+      "forceIsaacN": {
+        "x": 5.5187,
+        "y": 299.91,
+        "z": 118.03,
+        "total": 322.35
+      },
+      "equivalentStressMinimumPa": 8.4093,
+      "equivalentStressMaximumPa": 459740000,
+      "equivalentStressAveragePa": 36303000
+    },
+    {
+      "timeS": 0.155,
+      "forceAnsysN": {
+        "x": 5.9556,
+        "y": 133.03,
+        "z": -304.71,
+        "total": 332.53
+      },
+      "forceIsaacN": {
+        "x": 5.9556,
+        "y": 304.71,
+        "z": 133.03,
+        "total": 332.53
+      },
+      "equivalentStressMinimumPa": 17.692,
+      "equivalentStressMaximumPa": 501700000,
+      "equivalentStressAveragePa": 39938000
+    },
+    {
+      "timeS": 0.175,
+      "forceAnsysN": {
+        "x": 6.2827,
+        "y": 147.5,
+        "z": -305.89,
+        "total": 339.65
+      },
+      "forceIsaacN": {
+        "x": 6.2827,
+        "y": 305.89,
+        "z": 147.5,
+        "total": 339.65
+      },
+      "equivalentStressMinimumPa": 28.869,
+      "equivalentStressMaximumPa": 539660000,
+      "equivalentStressAveragePa": 43281000
+    },
+    {
+      "timeS": 0.195,
+      "forceAnsysN": {
+        "x": 6.4951,
+        "y": 161.45,
+        "z": -304.51,
+        "total": 344.73
+      },
+      "forceIsaacN": {
+        "x": 6.4951,
+        "y": 304.51,
+        "z": 161.45,
+        "total": 344.73
+      },
+      "equivalentStressMinimumPa": 30.027,
+      "equivalentStressMaximumPa": 572790000,
+      "equivalentStressAveragePa": 46367000
+    },
+    {
+      "timeS": 0.215,
+      "forceAnsysN": {
+        "x": 6.5939,
+        "y": 174.86,
+        "z": -301.41,
+        "total": 348.52
+      },
+      "forceIsaacN": {
+        "x": 6.5939,
+        "y": 301.41,
+        "z": 174.86,
+        "total": 348.52
+      },
+      "equivalentStressMinimumPa": 43.499,
+      "equivalentStressMaximumPa": 601060000,
+      "equivalentStressAveragePa": 49231000
+    },
+    {
+      "timeS": 0.235,
+      "forceAnsysN": {
+        "x": 6.5853,
+        "y": 187.7,
+        "z": -297.22,
+        "total": 351.59
+      },
+      "forceIsaacN": {
+        "x": 6.5853,
+        "y": 297.22,
+        "z": 187.7,
+        "total": 351.59
+      },
+      "equivalentStressMinimumPa": 50.647,
+      "equivalentStressMaximumPa": 624810000,
+      "equivalentStressAveragePa": 51900000
+    },
+    {
+      "timeS": 0.255,
+      "forceAnsysN": {
+        "x": 6.4797,
+        "y": 199.96,
+        "z": -292.45,
+        "total": 354.33
+      },
+      "forceIsaacN": {
+        "x": 6.4797,
+        "y": 292.45,
+        "z": 199.96,
+        "total": 354.33
+      },
+      "equivalentStressMinimumPa": 53.171,
+      "equivalentStressMaximumPa": 644420000,
+      "equivalentStressAveragePa": 54403000
+    },
+    {
+      "timeS": 0.275,
+      "forceAnsysN": {
+        "x": 6.2899,
+        "y": 211.62,
+        "z": -287.46,
+        "total": 357.02
+      },
+      "forceIsaacN": {
+        "x": 6.2899,
+        "y": 287.46,
+        "z": 211.62,
+        "total": 357.02
+      },
+      "equivalentStressMinimumPa": 52.251,
+      "equivalentStressMaximumPa": 660240000,
+      "equivalentStressAveragePa": 56760000
+    },
+    {
+      "timeS": 0.295,
+      "forceAnsysN": {
+        "x": 6.0299,
+        "y": 222.68,
+        "z": -282.55,
+        "total": 359.8
+      },
+      "forceIsaacN": {
+        "x": 6.0299,
+        "y": 282.55,
+        "z": 222.68,
+        "total": 359.8
+      },
+      "equivalentStressMinimumPa": 50.419,
+      "equivalentStressMaximumPa": 672660000,
+      "equivalentStressAveragePa": 58993000
+    },
+    {
+      "timeS": 0.315,
+      "forceAnsysN": {
+        "x": 5.714,
+        "y": 233.13,
+        "z": -277.9,
+        "total": 362.78
+      },
+      "forceIsaacN": {
+        "x": 5.714,
+        "y": 277.9,
+        "z": 233.13,
+        "total": 362.78
+      },
+      "equivalentStressMinimumPa": 48.068,
+      "equivalentStressMaximumPa": 682030000,
+      "equivalentStressAveragePa": 61119000
+    },
+    {
+      "timeS": 0.335,
+      "forceAnsysN": {
+        "x": 5.3554,
+        "y": 242.97,
+        "z": -273.66,
+        "total": 366
+      },
+      "forceIsaacN": {
+        "x": 5.3554,
+        "y": 273.66,
+        "z": 242.97,
+        "total": 366
+      },
+      "equivalentStressMinimumPa": 46.627,
+      "equivalentStressMaximumPa": 707980000,
+      "equivalentStressAveragePa": 63154000
+    },
+    {
+      "timeS": 0.355,
+      "forceAnsysN": {
+        "x": 4.9662,
+        "y": 252.22,
+        "z": -269.91,
+        "total": 369.45
+      },
+      "forceIsaacN": {
+        "x": 4.9662,
+        "y": 269.91,
+        "z": 252.22,
+        "total": 369.45
+      },
+      "equivalentStressMinimumPa": 45.994,
+      "equivalentStressMaximumPa": 739080000,
+      "equivalentStressAveragePa": 65109000
+    },
+    {
+      "timeS": 0.375,
+      "forceAnsysN": {
+        "x": 4.5567,
+        "y": 260.9,
+        "z": -266.7,
+        "total": 373.12
+      },
+      "forceIsaacN": {
+        "x": 4.5567,
+        "y": 266.7,
+        "z": 260.9,
+        "total": 373.12
+      },
+      "equivalentStressMinimumPa": 46.198,
+      "equivalentStressMaximumPa": 769070000,
+      "equivalentStressAveragePa": 66997000
+    },
+    {
+      "timeS": 0.395,
+      "forceAnsysN": {
+        "x": 4.1356,
+        "y": 269.03,
+        "z": -264.05,
+        "total": 376.98
+      },
+      "forceIsaacN": {
+        "x": 4.1356,
+        "y": 264.05,
+        "z": 269.03,
+        "total": 376.98
+      },
+      "equivalentStressMinimumPa": 47.3,
+      "equivalentStressMaximumPa": 797750000,
+      "equivalentStressAveragePa": 68826000
+    },
+    {
+      "timeS": 0.415,
+      "forceAnsysN": {
+        "x": 3.7099,
+        "y": 276.63,
+        "z": -261.96,
+        "total": 381
+      },
+      "forceIsaacN": {
+        "x": 3.7099,
+        "y": 261.96,
+        "z": 276.63,
+        "total": 381
+      },
+      "equivalentStressMinimumPa": 49.33,
+      "equivalentStressMaximumPa": 824990000,
+      "equivalentStressAveragePa": 70602000
+    },
+    {
+      "timeS": 0.435,
+      "forceAnsysN": {
+        "x": 3.2851,
+        "y": 283.74,
+        "z": -260.42,
+        "total": 385.15
+      },
+      "forceIsaacN": {
+        "x": 3.2851,
+        "y": 260.42,
+        "z": 283.74,
+        "total": 385.15
+      },
+      "equivalentStressMinimumPa": 51.821,
+      "equivalentStressMaximumPa": 850660000,
+      "equivalentStressAveragePa": 72334000
+    },
+    {
+      "timeS": 0.455,
+      "forceAnsysN": {
+        "x": 2.8653,
+        "y": 290.4,
+        "z": -259.39,
+        "total": 389.39
+      },
+      "forceIsaacN": {
+        "x": 2.8653,
+        "y": 259.39,
+        "z": 290.4,
+        "total": 389.39
+      },
+      "equivalentStressMinimumPa": 56.079,
+      "equivalentStressMaximumPa": 874660000,
+      "equivalentStressAveragePa": 74025000
+    },
+    {
+      "timeS": 0.475,
+      "forceAnsysN": {
+        "x": 2.4538,
+        "y": 296.64,
+        "z": -258.85,
+        "total": 393.71
+      },
+      "forceIsaacN": {
+        "x": 2.4538,
+        "y": 258.85,
+        "z": 296.64,
+        "total": 393.71
+      },
+      "equivalentStressMinimumPa": 62.298,
+      "equivalentStressMaximumPa": 923620000,
+      "equivalentStressAveragePa": 75680000
+    },
+    {
+      "timeS": 0.495,
+      "forceAnsysN": {
+        "x": 2.0525,
+        "y": 302.51,
+        "z": -258.76,
+        "total": 398.09
+      },
+      "forceIsaacN": {
+        "x": 2.0525,
+        "y": 258.76,
+        "z": 302.51,
+        "total": 398.09
+      },
+      "equivalentStressMinimumPa": 66.031,
+      "equivalentStressMaximumPa": 979700000,
+      "equivalentStressAveragePa": 77303000
+    },
+    {
+      "timeS": 0.515,
+      "forceAnsysN": {
+        "x": 1.6625,
+        "y": 308.03,
+        "z": -259.09,
+        "total": 402.51
+      },
+      "forceIsaacN": {
+        "x": 1.6625,
+        "y": 259.09,
+        "z": 308.03,
+        "total": 402.51
+      },
+      "equivalentStressMinimumPa": 62.744,
+      "equivalentStressMaximumPa": 1035900000,
+      "equivalentStressAveragePa": 78895000
+    },
+    {
+      "timeS": 0.535,
+      "forceAnsysN": {
+        "x": 1.2837,
+        "y": 313.25,
+        "z": -259.8,
+        "total": 406.97
+      },
+      "forceIsaacN": {
+        "x": 1.2837,
+        "y": 259.8,
+        "z": 313.25,
+        "total": 406.97
+      },
+      "equivalentStressMinimumPa": 59.413,
+      "equivalentStressMaximumPa": 1091800000,
+      "equivalentStressAveragePa": 80459000
+    },
+    {
+      "timeS": 0.555,
+      "forceAnsysN": {
+        "x": 0.91499,
+        "y": 318.21,
+        "z": -260.86,
+        "total": 411.47
+      },
+      "forceIsaacN": {
+        "x": 0.91499,
+        "y": 260.86,
+        "z": 318.21,
+        "total": 411.47
+      },
+      "equivalentStressMinimumPa": 56.073,
+      "equivalentStressMaximumPa": 1147300000,
+      "equivalentStressAveragePa": 81997000
+    },
+    {
+      "timeS": 0.575,
+      "forceAnsysN": {
+        "x": 0.55442,
+        "y": 322.96,
+        "z": -262.26,
+        "total": 416.04
+      },
+      "forceIsaacN": {
+        "x": 0.55442,
+        "y": 262.26,
+        "z": 322.96,
+        "total": 416.04
+      },
+      "equivalentStressMinimumPa": 52.764,
+      "equivalentStressMaximumPa": 1202100000,
+      "equivalentStressAveragePa": 83510000
+    },
+    {
+      "timeS": 0.595,
+      "forceAnsysN": {
+        "x": 0.1996,
+        "y": 327.55,
+        "z": -263.97,
+        "total": 420.68
+      },
+      "forceIsaacN": {
+        "x": 0.1996,
+        "y": 263.97,
+        "z": 327.55,
+        "total": 420.68
+      },
+      "equivalentStressMinimumPa": 49.533,
+      "equivalentStressMaximumPa": 1256100000,
+      "equivalentStressAveragePa": 84999000
+    },
+    {
+      "timeS": 0.615,
+      "forceAnsysN": {
+        "x": -0.15155,
+        "y": 332.03,
+        "z": -265.99,
+        "total": 425.43
+      },
+      "forceIsaacN": {
+        "x": -0.15155,
+        "y": 265.99,
+        "z": 332.03,
+        "total": 425.43
+      },
+      "equivalentStressMinimumPa": 46.436,
+      "equivalentStressMaximumPa": 1309100000,
+      "equivalentStressAveragePa": 86466000
+    },
+    {
+      "timeS": 0.635,
+      "forceAnsysN": {
+        "x": -0.5005,
+        "y": 336.46,
+        "z": -268.31,
+        "total": 430.34
+      },
+      "forceIsaacN": {
+        "x": -0.5005,
+        "y": 268.31,
+        "z": 336.46,
+        "total": 430.34
+      },
+      "equivalentStressMinimumPa": 43.55,
+      "equivalentStressMaximumPa": 1361000000,
+      "equivalentStressAveragePa": 87912000
+    },
+    {
+      "timeS": 0.655,
+      "forceAnsysN": {
+        "x": -0.84804,
+        "y": 340.91,
+        "z": -270.91,
+        "total": 435.45
+      },
+      "forceIsaacN": {
+        "x": -0.84804,
+        "y": 270.91,
+        "z": 340.91,
+        "total": 435.45
+      },
+      "equivalentStressMinimumPa": 40.973,
+      "equivalentStressMaximumPa": 1411600000,
+      "equivalentStressAveragePa": 89337000
+    },
+    {
+      "timeS": 0.675,
+      "forceAnsysN": {
+        "x": -1.1947,
+        "y": 345.47,
+        "z": -273.81,
+        "total": 440.82
+      },
+      "forceIsaacN": {
+        "x": -1.1947,
+        "y": 273.81,
+        "z": 345.47,
+        "total": 440.82
+      },
+      "equivalentStressMinimumPa": 38.834,
+      "equivalentStressMaximumPa": 1460800000,
+      "equivalentStressAveragePa": 90744000
+    },
+    {
+      "timeS": 0.695,
+      "forceAnsysN": {
+        "x": -1.5408,
+        "y": 350.2,
+        "z": -276.98,
+        "total": 446.49
+      },
+      "forceIsaacN": {
+        "x": -1.5408,
+        "y": 276.98,
+        "z": 350.2,
+        "total": 446.49
+      },
+      "equivalentStressMinimumPa": 37.284,
+      "equivalentStressMaximumPa": 1508300000,
+      "equivalentStressAveragePa": 92133000
+    },
+    {
+      "timeS": 0.715,
+      "forceAnsysN": {
+        "x": -1.8871,
+        "y": 355.18,
+        "z": -280.42,
+        "total": 452.54
+      },
+      "forceIsaacN": {
+        "x": -1.8871,
+        "y": 280.42,
+        "z": 355.18,
+        "total": 452.54
+      },
+      "equivalentStressMinimumPa": 36.484,
+      "equivalentStressMaximumPa": 1554100000,
+      "equivalentStressAveragePa": 93505000
+    },
+    {
+      "timeS": 0.735,
+      "forceAnsysN": {
+        "x": -2.2342,
+        "y": 360.51,
+        "z": -284.13,
+        "total": 459.02
+      },
+      "forceIsaacN": {
+        "x": -2.2342,
+        "y": 284.13,
+        "z": 360.51,
+        "total": 459.02
+      },
+      "equivalentStressMinimumPa": 36.577,
+      "equivalentStressMaximumPa": 1597800000,
+      "equivalentStressAveragePa": 94862000
+    },
+    {
+      "timeS": 0.755,
+      "forceAnsysN": {
+        "x": -2.5828,
+        "y": 366.28,
+        "z": -288.08,
+        "total": 466.01
+      },
+      "forceIsaacN": {
+        "x": -2.5828,
+        "y": 288.08,
+        "z": 366.28,
+        "total": 466.01
+      },
+      "equivalentStressMinimumPa": 37.651,
+      "equivalentStressMaximumPa": 1639300000,
+      "equivalentStressAveragePa": 96204000
+    },
+    {
+      "timeS": 0.775,
+      "forceAnsysN": {
+        "x": -2.9339,
+        "y": 372.6,
+        "z": -292.28,
+        "total": 473.57
+      },
+      "forceIsaacN": {
+        "x": -2.9339,
+        "y": 292.28,
+        "z": 372.6,
+        "total": 473.57
+      },
+      "equivalentStressMinimumPa": 39.723,
+      "equivalentStressMaximumPa": 1678300000,
+      "equivalentStressAveragePa": 97532000
+    },
+    {
+      "timeS": 0.795,
+      "forceAnsysN": {
+        "x": -3.2884,
+        "y": 379.57,
+        "z": -296.72,
+        "total": 481.8
+      },
+      "forceIsaacN": {
+        "x": -3.2884,
+        "y": 296.72,
+        "z": 379.57,
+        "total": 481.8
+      },
+      "equivalentStressMinimumPa": 42.74,
+      "equivalentStressMaximumPa": 1714900000,
+      "equivalentStressAveragePa": 98848000
+    },
+    {
+      "timeS": 0.815,
+      "forceAnsysN": {
+        "x": -3.6473,
+        "y": 387.33,
+        "z": -301.4,
+        "total": 490.79
+      },
+      "forceIsaacN": {
+        "x": -3.6473,
+        "y": 301.4,
+        "z": 387.33,
+        "total": 490.79
+      },
+      "equivalentStressMinimumPa": 46.611,
+      "equivalentStressMaximumPa": 1748700000,
+      "equivalentStressAveragePa": 100150000
+    },
+    {
+      "timeS": 0.835,
+      "forceAnsysN": {
+        "x": -4.0119,
+        "y": 396.01,
+        "z": -306.31,
+        "total": 500.67
+      },
+      "forceIsaacN": {
+        "x": -4.0119,
+        "y": 306.31,
+        "z": 396.01,
+        "total": 500.67
+      },
+      "equivalentStressMinimumPa": 43.968,
+      "equivalentStressMaximumPa": 1783900000,
+      "equivalentStressAveragePa": 101440000
+    },
+    {
+      "timeS": 0.855,
+      "forceAnsysN": {
+        "x": -4.3835,
+        "y": 405.77,
+        "z": -311.47,
+        "total": 511.55
+      },
+      "forceIsaacN": {
+        "x": -4.3835,
+        "y": 311.47,
+        "z": 405.77,
+        "total": 511.55
+      },
+      "equivalentStressMinimumPa": 44.29,
+      "equivalentStressMaximumPa": 1816900000,
+      "equivalentStressAveragePa": 102720000
+    },
+    {
+      "timeS": 0.875,
+      "forceAnsysN": {
+        "x": -4.7636,
+        "y": 416.8,
+        "z": -316.87,
+        "total": 523.6
+      },
+      "forceIsaacN": {
+        "x": -4.7636,
+        "y": 316.87,
+        "z": 416.8,
+        "total": 523.6
+      },
+      "equivalentStressMinimumPa": 52.466,
+      "equivalentStressMaximumPa": 1847000000,
+      "equivalentStressAveragePa": 104000000
+    },
+    {
+      "timeS": 0.895,
+      "forceAnsysN": {
+        "x": -5.154,
+        "y": 429.28,
+        "z": -322.55,
+        "total": 536.98
+      },
+      "forceIsaacN": {
+        "x": -5.154,
+        "y": 322.55,
+        "z": 429.28,
+        "total": 536.98
+      },
+      "equivalentStressMinimumPa": 66.867,
+      "equivalentStressMaximumPa": 1874100000,
+      "equivalentStressAveragePa": 105260000
+    },
+    {
+      "timeS": 0.915,
+      "forceAnsysN": {
+        "x": -5.556,
+        "y": 443.46,
+        "z": -328.51,
+        "total": 551.91
+      },
+      "forceIsaacN": {
+        "x": -5.556,
+        "y": 328.51,
+        "z": 443.46,
+        "total": 551.91
+      },
+      "equivalentStressMinimumPa": 74.003,
+      "equivalentStressMaximumPa": 1898200000,
+      "equivalentStressAveragePa": 106510000
+    },
+    {
+      "timeS": 0.935,
+      "forceAnsysN": {
+        "x": -5.9707,
+        "y": 459.57,
+        "z": -334.78,
+        "total": 568.61
+      },
+      "forceIsaacN": {
+        "x": -5.9707,
+        "y": 334.78,
+        "z": 459.57,
+        "total": 568.61
+      },
+      "equivalentStressMinimumPa": 69.362,
+      "equivalentStressMaximumPa": 1919400000,
+      "equivalentStressAveragePa": 107760000
+    },
+    {
+      "timeS": 0.955,
+      "forceAnsysN": {
+        "x": -6.3985,
+        "y": 477.9,
+        "z": -341.4,
+        "total": 587.35
+      },
+      "forceIsaacN": {
+        "x": -6.3985,
+        "y": 341.4,
+        "z": 477.9,
+        "total": 587.35
+      },
+      "equivalentStressMinimumPa": 65.222,
+      "equivalentStressMaximumPa": 1937600000,
+      "equivalentStressAveragePa": 109010000
+    },
+    {
+      "timeS": 0.975,
+      "forceAnsysN": {
+        "x": -6.8391,
+        "y": 498.76,
+        "z": -348.4,
+        "total": 608.43
+      },
+      "forceIsaacN": {
+        "x": -6.8391,
+        "y": 348.4,
+        "z": 498.76,
+        "total": 608.43
+      },
+      "equivalentStressMinimumPa": 62.019,
+      "equivalentStressMaximumPa": 1952800000,
+      "equivalentStressAveragePa": 110240000
+    },
+    {
+      "timeS": 0.9875,
+      "forceAnsysN": {
+        "x": -7.1836,
+        "y": 514.17,
+        "z": -353.43,
+        "total": 623.97
+      },
+      "forceIsaacN": {
+        "x": -7.1836,
+        "y": 353.43,
+        "z": 514.17,
+        "total": 623.97
+      },
+      "equivalentStressMinimumPa": 58.559,
+      "equivalentStressMaximumPa": 1960900000,
+      "equivalentStressAveragePa": 111020000
+    },
+    {
+      "timeS": 1,
+      "forceAnsysN": {
+        "x": -7.4574,
+        "y": 529.96,
+        "z": -358.18,
+        "total": 639.69
+      },
+      "forceIsaacN": {
+        "x": -7.4574,
+        "y": 358.18,
+        "z": 529.96,
+        "total": 639.69
+      },
+      "equivalentStressMinimumPa": 54.359,
+      "equivalentStressMaximumPa": 1967900000,
+      "equivalentStressAveragePa": 111790000
+    }
+  ]
+}
