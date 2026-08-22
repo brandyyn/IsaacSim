@@ -26,7 +26,7 @@ This is the shared progress log. Update it whenever the FEA model, simulator env
 | Date | Owner | Phase | Git commit | FEA case | Result | Next action |
 |---|---|---|---|---|---|---|
 | 2026-08-22 | Codex | Simulation baseline | `5131a974` | None | v8 portable physics/visual-controller checkpoint committed and pushed | Import the first reviewed Ansys FEA case |
-| 2026-08-22 | Codex | FEA load replay | pending | `compression_v1` | 52 samples, 639.69 N peak force, neutral/45° replay stable | Add angle/displacement/torque data and confirm frame mapping |
+| 2026-08-22 | Codex | FEA load replay | `6b6732d8` | `compression_v1` | 52 samples, 639.69 N peak force, neutral/45° replay stable | Add angle/displacement/torque data and confirm frame mapping |
 
 ## Run index
 

@@ -2,6 +2,7 @@
   "case_id": "compression_v1",
   "status": "replay_ready_frame_mapping_review_required",
   "prepared_date_utc": "2026-08-22",
+  "integration_git_commit": "6b6732d81141f9391ad308f41c371d347ee646be",
   "source_geometry": {
     "asset": "input_improved.usd",
     "topology": "input_improved.json",
