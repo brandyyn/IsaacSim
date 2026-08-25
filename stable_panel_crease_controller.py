@@ -62,6 +62,61 @@ def _custom_json(prim, key, default):
     return value
 
 
+def _reference_crease_prims(stage):
+    """Return one visible crease prim for every canonical source edge.
+
+    Historical stages can contain a second dynamic visual crease layer.  The
+    source joint has one fold line per shared panel edge, so duplicate edge
+    prims are hidden rather than allowed to render as extra fan lines.
+    """
+
+    visual = stage.GetPrimAtPath(VISUAL_ROOT)
+    expected_raw = visual.GetCustomDataByKey("referenceCreaseEdgeKeys")
+    expected = set()
+    if expected_raw:
+        expected = {
+            tuple(sorted(str(vertex_id) for vertex_id in edge))
+            for edge in _custom_json(visual, "referenceCreaseEdgeKeys", [])
+            if len(edge) == 2
+        }
+
+    result = []
+    seen = set()
+    baked_mesh_exists = stage.GetPrimAtPath(f"{VISUAL_ROOT}/BakedCreaseMesh").IsValid()
+    for prim in stage.Traverse():
+        path = str(prim.GetPath())
+        if (
+            prim.GetTypeName() == "Cylinder"
+            and prim.GetName().startswith("Crease_")
+            and not path.startswith(f"{VISUAL_ROOT}/CreaseLines/")
+        ):
+            # Older manually saved stages placed a second animated crease
+            # shell below OriginalJointShell.  It is not part of the
+            # canonical source visual and must not render alongside it.
+            UsdGeom.Imageable(prim).MakeInvisible()
+            continue
+        if not path.startswith(f"{VISUAL_ROOT}/"):
+            continue
+        if prim.GetTypeName() != "Cylinder" or not prim.GetName().startswith("Crease_"):
+            continue
+        vertex_ids = _custom_json(prim, "sourceVertexIds", [])
+        edge = tuple(sorted(str(vertex_id) for vertex_id in vertex_ids))
+        if len(edge) != 2 or (expected and edge not in expected) or edge in seen:
+            UsdGeom.Imageable(prim).MakeInvisible()
+            continue
+        # Once the welded prism mesh exists, the authored cylinders are only
+        # a fallback/debug layer.  Leaving them inherited makes them render
+        # at their authored local origin (which looks like a wireframe on the
+        # floor) and can also create a duplicate crease layer.
+        if baked_mesh_exists:
+            UsdGeom.Imageable(prim).MakeInvisible()
+        else:
+            UsdGeom.Imageable(prim).MakeVisible()
+        seen.add(edge)
+        result.append(prim)
+    return result
+
+
 def _set_visual_transform(prim, midpoint, delta):
     length = math.sqrt(sum(float(value) * float(value) for value in delta))
     if length < 1.0e-9:
@@ -109,8 +164,7 @@ def _make_updater(stage):
             continue
         if prim.GetTypeName() == "Mesh" and prim.GetCustomDataByKey("sourceVertexIds"):
             mesh_prims.append(prim)
-        if prim.GetTypeName() == "Cylinder" and prim.GetName().startswith("Crease_"):
-            crease_prims.append(prim)
+    crease_prims = _reference_crease_prims(stage)
 
     def world_points():
         top_position, top_quaternion = _pose(TOP_BODY)

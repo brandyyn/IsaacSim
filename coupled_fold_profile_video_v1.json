@@ -1,0 +1,51 @@
+{
+  "schemaVersion": "geometry-fold-profile-2.0",
+  "name": "video_derived_geometry_fold_v2",
+  "calibrationStatus": "provisional_visual_measurement",
+  "units": {
+    "angle": "degree",
+    "command": "degree",
+    "compression": "normalized_0_to_1"
+  },
+  "sourceVideos": [
+    "video_2026-08-21_21-16-48.mp4",
+    "video_2026-08-21_21-17-33.mp4",
+    "video_2026-08-21_21-18-38.mp4"
+  ],
+  "measurementMethod": "Frame-by-frame visual measurement of the physical joint: the end plates stay close to their measured relationship while the triangular side facets contract symmetrically. Values are an initial video-derived compression envelope, not metrology or FEA output.",
+  "axisConvention": {
+    "foldCommand": "KneeActuator about Y",
+    "positiveDirection": "the existing Isaac Sim joint drive sign convention",
+    "independentLateralOrTwist": "not authored; the source papers specify one knee revolute and the videos do not identify separate torsional actuators"
+  },
+  "samples": [
+    {
+      "foldDeg": 0.0,
+      "compressionFraction": 0.0
+    },
+    {
+      "foldDeg": 15.0,
+      "compressionFraction": 0.13
+    },
+    {
+      "foldDeg": 30.0,
+      "compressionFraction": 0.25
+    },
+    {
+      "foldDeg": 45.0,
+      "compressionFraction": 0.38
+    },
+    {
+      "foldDeg": 60.0,
+      "compressionFraction": 0.50
+    },
+    {
+      "foldDeg": 90.0,
+      "compressionFraction": 0.75
+    },
+    {
+      "foldDeg": 120.0,
+      "compressionFraction": 1.0
+    }
+  ]
+}

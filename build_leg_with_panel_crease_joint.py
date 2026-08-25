@@ -200,14 +200,22 @@ def _load_topology(source_usd: Path, topology_json: Path):
         )
 
     lines = []
+    line_edges_seen: set[tuple[str, str]] = set()
     for item in topology["lines"]:
         vertex_ids = list(item["vertexIds"])
         if len(vertex_ids) != 2:
             continue
+        edge = _edge_key(vertex_ids[0], vertex_ids[1])
+        if edge in line_edges_seen:
+            raise RuntimeError(
+                f"topology contains a duplicate named fold line for edge {edge}"
+            )
+        line_edges_seen.add(edge)
         lines.append(
             {
                 "name": item["name"],
                 "vertexIds": vertex_ids,
+                "edgeKey": edge,
                 "a": _source_to_joint(vertices[vertex_ids[0]]),
                 "b": _source_to_joint(vertices[vertex_ids[1]]),
             }
@@ -246,6 +254,8 @@ def _load_topology(source_usd: Path, topology_json: Path):
         },
         "panels": panels,
         "lines": lines,
+        "referenceEdgeKeys": sorted(line_edges_seen),
+        "referenceLineNames": [line["name"] for line in lines],
         "panel_by_name": panel_by_name,
         "edge_owners": edge_owners,
         "line_by_edge": line_by_edge,
