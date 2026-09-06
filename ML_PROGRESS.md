@@ -63,4 +63,14 @@ Add one row for every completed training or evaluation run. The detailed record 
 
 | Run ID | Baseline commit | FEA case | Seed | Algorithm | Evaluation result | Checkpoint |
 |---|---|---|---:|---|---|---|
-| None yet | — | — | — | — | — | — |
+| `20260906-exact-knee-cable-v1` | `65e98b1c`; implementation `0c766aa9` | `exact_joint_cable_v1` | 0 (unused) | FEM evaluation only | 7/7 tests, 7 live patterns, 45 updates in 10.004 s; mesh convergence FAIL; no ML | None |
+
+### 2026-09-06: exact knee-only cable FEM handoff
+
+Implementation commit: `0c766aa9ea0b220f038ec8f43c556b55d6a0372a`.
+The immutable run above links that commit, the source JSON checksum, the FEA case
+checksum, input configuration and all 15 gap/mesh and 7 live cases. Both rigid
+roofs stay rigid to rendered float precision. Hip/ankle origami copies are deferred.
+The material/mesh checks are exploratory: 22-25% response changes still exceed the
+5% convergence threshold. Next: knee crease convergence and measured force-motion
+calibration, then nonlinear folding/contact and loaded-leg checks. No training occurred.

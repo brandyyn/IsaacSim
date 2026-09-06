@@ -1,0 +1,2 @@
+# Preserve immutable evaluation/configuration bytes and checksums.
+*.json -text

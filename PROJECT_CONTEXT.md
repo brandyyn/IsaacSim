@@ -32,6 +32,11 @@ joint only**. The user deferred hip/ankle copies; those leg sections are rigid. 
 neutral surface envelope is 30 x 30 x 26.4 mm, with rigid
 original roof plates, PLA 0.4 mm on PET 80 um, and a provisional 0.2 mm PET gap.
 
+Reproducible implementation: `0c766aa9ea0b220f038ec8f43c556b55d6a0372a`.
+Case: `fea/exact_joint_cable_v1/manifest.json`. Immutable evaluation:
+`ml/runs/20260906-exact-knee-cable-v1/run_manifest.json`. Presentation brief:
+`output/pdf/Exact_Knee_Cable_FEM_Brief.pdf`. This is an evaluation record, not a policy.
+
 Run `exact_joint/launch.ps1` with the built runtime, or send `exact_joint/open_live.py`
 through the Python server. Cable tensions, rather than joint position commands,
 drive custom live quasistatic TET10 FEM inside Kit. Seven implementation tests and

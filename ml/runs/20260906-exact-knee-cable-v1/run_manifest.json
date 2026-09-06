@@ -1,0 +1,136 @@
+{
+  "run_id": "20260906-exact-knee-cable-v1",
+  "status": "evaluation_completed_implementation_passed_physics_validation_incomplete",
+  "run_type": "deterministic structural implementation evaluation; not ML training",
+  "baseline_commit": "65e98b1c050b63c3f41dc46d7e5703428ae35fe4",
+  "simulator_implementation_commit": "0c766aa9ea0b220f038ec8f43c556b55d6a0372a",
+  "canonical_ml_baseline_commit": "5131a9740b3ce82e42331e923e1a45ffa396f71c",
+  "isaac_sim_version": "6.0.1-rc.7",
+  "runtime_build_commit": "5131a9740b3ce82e42331e923e1a45ffa396f71c",
+  "runtime": {
+    "kit": "110.1.2+production.326809.f9bf0dda.gl",
+    "python": "3.12.13",
+    "numpy": "2.3.1",
+    "scipy": "1.17.0",
+    "os": "Windows x86_64",
+    "gpu": "NVIDIA GeForce RTX 5070 12GB"
+  },
+  "stage": "Generated in memory by exact_joint/scene.py; /World/ExactLeg/Knee only",
+  "environment_version": "exact_joint-cable-tet10-v1",
+  "fea_case_id": "exact_joint_cable_v1",
+  "fea_artifact_sha256": "657ed88af8362f4f22af5221088139045a53ad9203baaf1af29f018d06d80c95",
+  "algorithm": "No policy; sparse FEM assembly/static condensation and bounded six-coordinate Newton equilibrium",
+  "seed": 0,
+  "seed_usage": "No random sampling in this deterministic evaluation",
+  "randomization": {},
+  "observations": [
+    "bottom cap translation (m)",
+    "bottom cap rotation vector (rad)",
+    "cable lengths (m)",
+    "Gauss-point strain (-) and stress (Pa)",
+    "rigid roof distance error (m)",
+    "equilibrium residual (N-equivalent)"
+  ],
+  "actions": [
+    "12 nonnegative constant cable tensions (N); seven tested family patterns"
+  ],
+  "reward_version": null,
+  "training": {
+    "command": null,
+    "steps": 0,
+    "wall_time_s": 0
+  },
+  "evaluation": {
+    "command": "python skills/isaac-sim-remote/scripts/isaacsim_send.py --context exact_joint_validation --file exact_joint/validate_live.py --timeout 180 --execution-timeout 165",
+    "conditions": "One exact JSON knee; 30 mm roof, PLA 0.4 mm / PET 80 um, rigid roofs, provisional elastic constants. No payload/gravity/contact. Seven live cases at 0.25 N/active cable. Gap/mesh studies at 0.1 N/active cable. True-scale display.",
+    "completed_utc": "2026-09-06T06:41:22Z",
+    "metrics": {
+      "unit_tests_passed": true,
+      "unit_test_count": 7,
+      "live_cable_pattern_count": 7,
+      "gap_mesh_case_count": 15,
+      "active_origami_joints": [
+        "Knee"
+      ],
+      "live_demo": {
+        "duration_s": 10.003809100016952,
+        "fem_updates": 45,
+        "error": null
+      },
+      "live_case_solve_ms_min": 14.563299948349595,
+      "live_case_solve_ms_max": 15.698499977588654,
+      "max_rendered_roof_rigidity_error_m": 4.191286165355912e-9,
+      "mesh_convergence_pass": false,
+      "convergence_tolerance_fraction": 0.05,
+      "refinement_2_to_3_relative_changes": {
+        "compression": 0.2455471225605408,
+        "bend_x": 0.2201960676348773,
+        "twist_cw": 0.2156707544012202
+      },
+      "large_folding_validated": false,
+      "dynamic_leg_validated": false,
+      "ml_ready": false
+    }
+  },
+  "artifacts": {
+    "config": "config.json",
+    "config_sha256": "924d804fb7a741e1e2a0746a2605516a54c1dc3f666089210a168c6bd4773de1",
+    "metrics": "metrics.json",
+    "metrics_sha256": "c482525e2a16acd9881b9255541fe98ba6e130b031274cbc368fcc48a559de87",
+    "checkpoint": null,
+    "checkpoint_sha256": null,
+    "source_and_artifact_hashes": [
+      {
+        "sha256": "657ed88af8362f4f22af5221088139045a53ad9203baaf1af29f018d06d80c95",
+        "path": "fea/exact_joint_cable_v1/manifest.json"
+      },
+      {
+        "sha256": "d578618a0f90342bd0093b4febe130dc0b07c18f1b223c4d6bf02c9f3d93ce35",
+        "path": "exact_joint/source_joint.json"
+      },
+      {
+        "sha256": "d89c644dca2312c715c9b36fa7ef98c36b1509023c9aed0da8ce53fbafa6fda5",
+        "path": "exact_joint/neutral_preview.png"
+      },
+      {
+        "sha256": "5dc0fe3e8e14b493e19176f3387b96b1a2340806c64f1d7086c7c5312b7a0413",
+        "path": "exact_joint/whole_leg_preview.png"
+      },
+      {
+        "sha256": "0f59eda4ba864d277eb947c8aebf6f44abe894a66e25ce10e20605d45c696ed9",
+        "path": "output/pdf/Exact_Knee_Cable_FEM_Brief.pdf"
+      },
+      {
+        "sha256": "db31bd037f4e2fea63e54e9ebd4a69d8ab3d0ea2fbe94a7150a814a3bdde2402",
+        "path": "exact_joint/validate_live.py"
+      },
+      {
+        "sha256": "282a6d382ce9ea92379e94fd36ae0fc9438650b93a57ad1be1558f4903b2b829",
+        "path": "exact_joint/test_exact_joint.py"
+      },
+      {
+        "sha256": "ebcaa2e13a85014338f4b52774ee0a55faa3ed09745abba2eb7cfc576e451e82",
+        "path": "exact_joint/open_live.py"
+      },
+      {
+        "sha256": "39ee58084f720dd05c4ea1a5396c577d65346e9db993ab7d0500b11de78ecec6",
+        "path": "exact_joint/open_gui.py"
+      }
+    ],
+    "validated_source_sha256": {
+      "exact_joint/mesh_utils.py": "6dd684ec4756cb6ca7d5412ba7b1354710fd3d4caf8a78afcd1f5ea5fc978db3",
+      "exact_joint/geometry.py": "204ac84db50bf77e6463c335ff7bdaa1474cfacd1b6386a21da5bee0e7a52a95",
+      "exact_joint/elements.py": "1552bf715fb341b602725b30fb594ea2a2943c512d141daf3a84e2554ae15e5a",
+      "exact_joint/mechanics.py": "a1661ae2d12de967b2f4026804f2fe593a301cf89114428a4222a395559752c9",
+      "exact_joint/scene.py": "7bd14b96c84b1b2b845f408ac5af03ab472b93415d4656493d6bb09269e7f51a",
+      "exact_joint/app.py": "225437cb750d4e2b0ef9f341afd5cabaa3dff07077de80f191d29f5e781c852f"
+    }
+  },
+  "notes": "Source-faithful knee only; hip/ankle origami repeats deferred. This case is NOT authoritative calibrated material response and is NOT promoted to the v8 ML baseline. Gaps/moduli/cable routing are provisional. Material and force inputs are not hardware ratings. Source bytes protected from newline conversion; presentation PDF visually inspected on both pages.",
+  "next_actions": [
+    "Converge crease-appropriate formulation and stress/displacement meshes",
+    "Measure PET crease rest-angle/hysteresis and cable force versus cap motion",
+    "Validate nonlinear folding and guide/bond/contact behavior",
+    "Validate loaded single-knee leg before ML or repeating this joint elsewhere"
+  ]
+}

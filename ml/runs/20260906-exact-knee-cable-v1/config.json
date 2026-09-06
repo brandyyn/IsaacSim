@@ -1,0 +1,11 @@
+{
+  "width_m": 0.03,
+  "pet_thickness_m": 0.00008,
+  "pla_thickness_m": 0.0004,
+  "pet_modulus_pa": 3500000000,
+  "pla_modulus_pa": 2200000000,
+  "pet_poisson": 0.35,
+  "pla_poisson": 0.35,
+  "hinge_gap_m": 0.0002,
+  "refinement": 1
+}
