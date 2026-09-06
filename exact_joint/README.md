@@ -18,7 +18,9 @@ Inside **Exact knee - cable FEM**:
 1. Use **Exact knee close-up** to compare the shape, or **Whole leg** for the assembly.
 2. Select a cable pattern and tension for the Knee, then click **Apply**.
    Tension is **newtons per active cable**, not a servo position. Start at 0.1 N;
-   the default 0.25 N is an experimental simulation input, not a hardware recommendation.
+   the default input is 0.1 N. These are experimental simulation inputs, not hardware recommendations.
+   **APPLIED** beside the button confirms a completed solve; **NOT APPLIED** explains
+   a rejected load. **LAST ACCEPTED** identifies the result still displayed after rejection.
 3. **Cable demo** cycles compression, positive/negative X/Y bending and both twist
    directions. The single knee solves its cable-loaded FEM equilibrium.
 4. **Stress / material** switches between the actual laminate and FEM stress colors.
@@ -31,6 +33,21 @@ Inside **Exact knee - cable FEM**:
 
 The small model-predicted movement is shown at **true scale**. There is no hidden
 deformation amplification, enlarged motion envelope or softened material for video.
+
+If Apply appears to do nothing, check the message immediately beneath it. For
+example, **40 N per cable exceeds this model's small-strain guard** and is rejected;
+it does not produce a 40 N result. Return to 0.1 N and Apply. At the default mesh,
+compression at 0.1/0.2 N per active cable is approximately 2.52/5.04 micrometres,
+so read the numerical outputs and stress field instead of expecting a large fold.
+The material/mesh fields require **Rebuild**; **Apply** changes cable loading only.
+Saved records distinguish accepted `commands` from `requested_commands` and record
+the rejection error. Never interpret an old displayed result as an accepted new load.
+
+`refresh_ui_live.py` can update trusted UI code through the Python server without
+replacing an already connected scene. It preserves the FEM and camera; it is not
+a loader for saved USD files or a repair for a disconnected stage. The reproducible
+button-click test is `validate_apply_live.py` (run inside Kit with `isaacsim.test.utils`
+enabled). It exercises accepted/rejected loads and recovery through the real Apply button.
 
 ## What is exact, and what is assumed
 

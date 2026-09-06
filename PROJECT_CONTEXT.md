@@ -37,6 +37,12 @@ Case: `fea/exact_joint_cable_v1/manifest.json`. Immutable evaluation:
 `ml/runs/20260906-exact-knee-cable-v1/run_manifest.json`. Presentation brief:
 `output/pdf/Exact_Knee_Cable_FEM_Brief.pdf`. This is an evaluation record, not a policy.
 
+The Apply-control follow-up reproduces a rejected 40 N/cable input. UI feedback now
+appears next to Apply, explicitly identifies the last accepted load and preserves
+accepted-versus-requested loads in saved results. The guards and FEM formulation
+are unchanged. A UI-only refresh preserves an already connected scene; real button
+tests verify 0.1/0.2 N acceptance, 40 N/negative input rejection and recovery.
+
 Run `exact_joint/launch.ps1` with the built runtime, or send `exact_joint/open_live.py`
 through the Python server. Cable tensions, rather than joint position commands,
 drive custom live quasistatic TET10 FEM inside Kit. Seven implementation tests and

@@ -35,6 +35,7 @@ class Workshop:
         self.scene=None
         self.results={}
         self.commands={"Knee":{"mode":"Compression","tension_n":0.0}}
+        self.accepted_commands={}
         self.status={}
         self.window=None
         self.task=None
@@ -79,32 +80,51 @@ class Workshop:
         self.demo=False
         self.paused=False
         self.dirty=True
+        self.feedback.text=f"Solving {mode}: {tension:.3f} N / active cable..."
 
     def apply_ui_command(self,joint,mode,tension):
         """Report invalid UI inputs without losing the last valid result."""
         try:
             self.command(joint,mode,tension)
         except ValueError as exc:
-            self.message.text="Cable input rejected: "+str(exc)
+            self.reject_command("Cable input rejected: "+str(exc),tension=tension)
+
+    def reject_command(self, reason: str, tension: float | None = None) -> None:
+        """Keep the last accepted result and put the rejection beside Apply."""
+        self.error=reason
+        self.demo=False
+        self.paused=True
+        requested=self.commands.get("Knee",{})
+        tension=requested.get("tension_n",0) if tension is None else tension
+        text=(f"NOT APPLIED: {tension:.3f} N / cable. {reason}\nLast accepted result is still displayed.")
+        self.feedback.text=text
+        self.message.text=text
 
     def calculate(self):
         started=time.perf_counter()
+        if any(not handle.GetPrim().IsValid() for handles in self.scene.modules.values()
+               for handle in handles.values() if hasattr(handle,"GetPrim")):
+            raise RuntimeError("Scene disconnected. Save scene edits, then Rebuild exact joint FEM.")
         next_results={}
         for name,command in self.commands.items():
             initial=self.results[name]["q"] if name in self.results else np.zeros(6)
             result=self.model.solve(tension_pattern(command["mode"],command["tension_n"]),initial=initial)
             if not result["stats"]["within_small_deformation_model"]:
-                raise ValueError(name+": load exceeds the small-strain FEM guard; reduce tension or validate nonlinear crease behavior")
+                raise ValueError(name+": small-strain model limit exceeded. Try 0.10 N; large folds need nonlinear FEM.")
             next_results[name]=result
+        self.scene.update(next_results,show_stress=self.show_stress,stress_scale_pa=self.stress_scale_pa)
         self.results=next_results
-        self.scene.update(self.results,show_stress=self.show_stress,stress_scale_pa=self.stress_scale_pa)
+        self.accepted_commands={name:dict(command) for name,command in self.commands.items()}
+        self.error=None
         self.solve_ms=(time.perf_counter()-started)*1000
         self.frames+=1
         self.dirty=False
+        self.feedback.text=(f"APPLIED - update {self.frames}. Read the values below. "
+                            "Motion is true scale (micrometres); use Stress / material to see the stress field.")
         for name,result in self.results.items():
             stats=result["stats"]
             command=self.commands[name]
-            self.status[name].text=(f"{command['mode']} | {command['tension_n']:.3f} N / active cable\n"
+            self.status[name].text=(f"LAST ACCEPTED: {command['mode']} | {command['tension_n']:.3f} N / active cable\n"
                 f"Bend X/Y: {stats['bend_xy_deg'][0]:.4f} / {stats['bend_xy_deg'][1]:.4f} deg\n"
                 f"Twist: {stats['twist_deg']:.4f} deg | compression: {stats['compression_m']*1e6:.2f} um\n"
                 f"PET / PLA peak: {stats['pet_peak_pa']/1e6:.2f} / {stats['pla_peak_pa']/1e6:.2f} MPa\n"
@@ -136,10 +156,7 @@ class Workshop:
                         self.calculate()
                         self.error=None
                     except (ValueError,RuntimeError,np.linalg.LinAlgError) as exc:
-                        self.error=str(exc)
-                        self.message.text="REJECTED: "+self.error+"\nLast valid geometry retained."
-                        self.demo=False
-                        self.paused=True
+                        self.reject_command(str(exc))
                     last_solve=time.perf_counter()
         except asyncio.CancelledError:
             pass
@@ -150,11 +167,13 @@ class Workshop:
         for name in self.commands:
             self.commands[name]["tension_n"]=0
         self.dirty=True
+        self.feedback.text="Removing cable loads..."
 
     def start_demo(self):
         self.demo=True
         self.paused=False
         self.phase=0
+        self.feedback.text="Cable demo: experimental 0-0.25 N / active cable; true-scale deformation."
 
     def toggle_stress(self):
         self.show_stress=not self.show_stress
@@ -165,7 +184,8 @@ class Workshop:
         folder=self.project/"exact_joint/results"/stamp
         folder.mkdir(parents=True,exist_ok=False)
         payload={"config":dataclasses.asdict(self.config),"source_sha256":self.model.source["sha256"],
-                 "commands":self.commands,"results":{name:r["stats"] for name,r in self.results.items()},
+                 "commands":self.accepted_commands,"requested_commands":self.commands,
+                 "results":{name:r["stats"] for name,r in self.results.items()},
                  "last_rejected_command_error":self.error,"update_ms":self.solve_ms,
                  "scope":"live custom quasistatic FEM inside Kit, not native PhysX dynamics or ML"}
         (folder/"result.json").write_text(json.dumps(payload,indent=2),encoding="utf-8")
@@ -195,13 +215,14 @@ class Workshop:
                         with ui.HStack(height=26):
                             combo=ui.ComboBox(0,*MODES)
                             field=ui.FloatField(width=80)
-                            field.model.set_value(.25)
+                            field.model.set_value(self.commands[name]["tension_n"] or .1)
                             ui.Label("N / cable",width=75)
                             ui.Button("Apply",width=55,clicked_fn=lambda key=name,box=combo,value=field.model:
                                       self.apply_ui_command(key,MODES[box.model.get_item_value_model().as_int],value.as_float))
+                        self.feedback=ui.Label("Start with 0.10 N per active cable, then Apply.",height=78,word_wrap=True)
                         self.status[name]=ui.Label("Initializing...",height=100,word_wrap=True)
                     ui.Separator(height=7)
-                    ui.Label("Material/mesh - rebuild at zero load",height=24)
+                    ui.Label("Material/mesh edits need Rebuild, not Apply",height=24)
                     fields={}
                     for label,value in (("PET exposed gap (mm)",self.config.hinge_gap_m*1000),
                                         ("PET E (GPa)",self.config.pet_modulus_pa/1e9),
@@ -235,6 +256,7 @@ class Workshop:
             await self.task
         if self.window:
             self.window.visible=False
+            self.window.destroy()
 
 
 async def open_workshop(project,config=None):
