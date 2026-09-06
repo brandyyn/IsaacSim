@@ -1,5 +1,8 @@
 """Render one original JSON knee joint between rigid upper and lower leg sections."""
 
+import dataclasses
+import json
+
 import numpy as np
 from pxr import Gf, Sdf, UsdGeom, UsdLux, UsdShade, Vt
 from isaacsim.core.experimental.objects import Cube
@@ -47,6 +50,67 @@ def set_points(prim,points):
 class ExactLegScene:
     """Display solved FEM nodes, exact rigid plates and cable endpoints; no animation skin."""
 
+    @classmethod
+    def attach(cls, stage, model):
+        """Bind a saved exact-knee scene without rebuilding its stage, lights or camera.
+
+        The active workshop supplies material constants; USD alone is not a solver
+        checkpoint. Reject incompatible source/topology before touching any geometry.
+        """
+        if stage is None:
+            raise ValueError("Open the saved exact-knee scene first.")
+        root="/World/ExactLeg/Knee"
+        original=stage.GetPrimAtPath(root+"/Original48Panels")
+        if not original or original.GetCustomDataByKey("source_sha256")!=model.source["sha256"]:
+            raise ValueError("Opened scene is not this source JSON knee; stage left unchanged.")
+        config=stage.GetPrimAtPath(root).GetCustomDataByKey("fem_config_json")
+        if config and json.loads(config)!=dataclasses.asdict(model.config):
+            raise ValueError("Saved FEM settings differ from the current workshop; restore its settings first.")
+        if UsdGeom.GetStageMetersPerUnit(stage)!=1 or UsdGeom.GetStageUpAxis(stage)!="Z":
+            raise ValueError("Saved knee must retain metre units and Z-up.")
+        candidate=cls.__new__(cls)
+        candidate.stage,candidate.model=stage,model
+        candidate.top_height,candidate.link_length=.145,.075
+        candidate.last_centers={}
+        names={"panels":"Original48Panels","roofs":"RigidSourceRoofs","creases":"Original76Edges",
+               "red":"RedCrossPlateCables","axial":"AxialCables","black":"BlackTopRouting",
+               "stress":"FEMStress","pet":"PETFilm","pla":"PLA48Panels"}
+        handles={"root":root}
+        for key,name in names.items():
+            prim=stage.GetPrimAtPath(root+"/"+name)
+            schema=UsdGeom.Mesh if key in ("panels","roofs","stress","pet","pla") else UsdGeom.BasisCurves
+            if not prim or not prim.IsA(schema):
+                raise ValueError("Missing exact-knee render object: "+name)
+            handles[key]=schema(prim)
+        for key,faces in (("pet",model.pet_surface),("pla",model.pla_surface),
+                          ("stress",np.concatenate([model.pet_surface,model.pla_surface]))):
+            if (len(handles[key].GetPointsAttr().Get())!=len(model.points)
+                    or not np.array_equal(handles[key].GetFaceVertexIndicesAttr().Get(),np.asarray(faces).ravel())):
+                raise ValueError("Saved FEM mesh differs from the active workshop configuration.")
+        candidate.modules={"Knee":handles}
+        roof_points=np.asarray(handles["roofs"].GetPointsAttr().Get())
+        for roof in model.source["roofs"]:
+            ids=roof["vertices"]
+            saved=roof_points[ids]
+            neutral=model.source["points"][ids]
+            if not np.allclose(np.linalg.norm(saved[:,None]-saved[None,:],axis=2),
+                               np.linalg.norm(neutral[:,None]-neutral[None,:],axis=2),atol=1e-7,rtol=0):
+                raise ValueError("Saved rigid-roof size does not match the active FEM.")
+        candidate.links=[]
+        for path in ("/World/ExactLeg/Link_0","/World/ExactLeg/Foot"):
+            prim=stage.GetPrimAtPath(path)
+            if not prim or not prim.GetAttribute("xformOp:transform"):
+                raise ValueError("Missing rigid leg transform: "+path)
+            op=UsdGeom.XformOp(prim.GetAttribute("xformOp:transform"))
+            if path.endswith("Foot"):
+                candidate.foot_op=op
+            else:
+                candidate.links.append(op)
+        candidate.mats={"RoofBlue":UsdShade.Material.Get(stage,"/World/Looks/RoofBlue")}
+        if not candidate.mats["RoofBlue"]:
+            raise ValueError("Missing exact-knee roof material.")
+        return candidate
+
     def __init__(self,stage,model):
         self.stage,self.model=stage,model
         self.modules={}
@@ -63,6 +127,7 @@ class ExactLegScene:
         for name in ("Knee",):
             root="/World/ExactLeg/"+name
             stage_utils.define_prim(root,"Xform")
+            stage.GetPrimAtPath(root).SetCustomDataByKey("fem_config_json",json.dumps(dataclasses.asdict(model.config)))
             source=model.source
             panel_mesh=mesh(stage,root+"/Original48Panels",source["points"],
                             [p["vertices"] for p in source["sides"]],self.mats["PanelBlue"])

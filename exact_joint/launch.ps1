@@ -11,6 +11,8 @@ $env:PANEL_CREASE_PROJECT_ROOT = $jointProject
 $jointArguments = @(
     ('"' + $jointExperience + '"'), '--no-ros-env', '--enable', 'isaacsim.code_editor.python_server',
     '--/app/window/width=1600', '--/app/window/height=1000',
-    '--exec', ('"' + (Join-Path $PSScriptRoot 'open_gui.py') + '"')
+    # Kit splits --exec again after Windows parses argv; preserve inner quotes
+    # so a project path containing spaces remains one Python-script argument.
+    '--exec', ('"\"' + (Join-Path $PSScriptRoot 'open_gui.py') + '\""')
 )
 Start-Process -FilePath $jointKit -ArgumentList $jointArguments -WorkingDirectory $jointRuntime -WindowStyle Normal

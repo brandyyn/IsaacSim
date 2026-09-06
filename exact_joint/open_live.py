@@ -22,7 +22,7 @@ if "exact_joint.app" in sys.modules:
         await old.ACTIVE.close()
         old.ACTIVE=None
 import exact_joint
-for name in ("mesh_utils","geometry","elements","mechanics","scene","app"):
+for name in ("mesh_utils","geometry","elements","mechanics","scene","live_display","app"):
     qualified="exact_joint."+name
     module=sys.modules.get(qualified) or types.ModuleType(qualified)
     sys.modules[qualified]=module

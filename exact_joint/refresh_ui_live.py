@@ -1,12 +1,15 @@
 """Refresh trusted workshop UI code in Kit without replacing the user's scene.
 
 This maintenance script preserves the assembled FEM, current USD, camera, material
-settings and accepted result. It does not repair a closed/stale USD stage.
+settings and accepted result. A reopened matching knee can be reattached; unrelated
+stages and incompatible saved settings are rejected.
 """
 
 import asyncio
 import hashlib
 import os
+import sys
+import types
 from pathlib import Path
 
 import omni.kit.app
@@ -22,14 +25,10 @@ async def refresh() -> None:
     if lab is None:
         raise RuntimeError("No active workshop; use open_live.py to create one.")
     stage = omni.usd.get_context().get_stage()
-    if stage is None or any(
-        not handle.GetPrim().IsValid()
-        for handles in lab.scene.modules.values()
-        for handle in handles.values()
-        if hasattr(handle, "GetPrim")
-    ):
-        raise RuntimeError("Scene references are stale; UI-only refresh cannot replace the scene.")
-    path = Path(os.environ["PANEL_CREASE_PROJECT_ROOT"]) / "exact_joint/app.py"
+    if stage is None:
+        raise RuntimeError("No opened scene to reconnect.")
+    project = Path(os.environ["PANEL_CREASE_PROJECT_ROOT"])
+    path = project / "exact_joint/app.py"
     source = path.read_bytes()
     compiled = compile(source, str(path), "exec")
     # Recover accepted cable families from the actual result, not rejected inputs.
@@ -45,7 +44,12 @@ async def refresh() -> None:
     prior_error = lab.error
     if lab.task:
         lab.task.cancel()
-        await lab.task
+        try:
+            await lab.task
+        except RuntimeError:
+            pass  # Recover a prior controller that died on a reopened USD.
+    if getattr(lab,"live_display",None):
+        lab.live_display.close()
     lab.window.visible = False
     lab.window.destroy()
     # Previous builds hid windows without destroying them. Hide only this
@@ -53,10 +57,31 @@ async def refresh() -> None:
     for window in ui.Workspace.get_windows():
         if window.title == "Exact knee - cable FEM":
             window.visible = False
-    # Only this fixed, trusted repository module is executed; never attachments.
+    # Only fixed, trusted repository modules are executed; never attachments.
+    import exact_joint
+    for name in ("scene","live_display"):
+        qualified="exact_joint."+name
+        module=sys.modules.get(qualified) or types.ModuleType(qualified)
+        module_path=project/"exact_joint"/(name+".py")
+        module_source=module_path.read_bytes()
+        module.__file__=str(module_path)
+        module.__package__="exact_joint"
+        exec(compile(module_source,str(module_path),"exec"),module.__dict__)
+        module.LOADED_SOURCE_SHA256=hashlib.sha256(module_source).hexdigest()
+        sys.modules[qualified]=module
+        setattr(exact_joint,name,module)
     exec(compiled, app.__dict__)
     app.LOADED_SOURCE_SHA256 = hashlib.sha256(source).hexdigest()
     lab.__class__ = app.Workshop
+    defaults=app.Workshop(lab.project,lab.config)
+    for key,value in vars(defaults).items():
+        if not hasattr(lab,key):
+            setattr(lab,key,value)
+    lab.ramp=None
+    if not lab.connected():
+        lab.scene=app.ExactLegScene.attach(stage,lab.model)
+        prior_error=None
+    lab.live_display=app.LiveFemDisplay(lab.scene)
     lab.accepted_commands = accepted
     app.ACTIVE = lab
     lab.build_ui()

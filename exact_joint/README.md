@@ -15,24 +15,38 @@ NumPy and SciPy. With Isaac already open and its Python server enabled, send
 
 Inside **Exact knee - cable FEM**:
 
-1. Use **Exact knee close-up** to compare the shape, or **Whole leg** for the assembly.
+1. **Compare FEM** shows the actual knee on the left and a separate magnified
+   displacement plot on the right. The right plot is diagnostic, not another leg joint.
+   Use **Exact knee close-up** for the original shape, or **Whole leg** for the assembly.
 2. Select a cable pattern and tension for the Knee, then click **Apply**.
    Tension is **newtons per active cable**, not a servo position. Start at 0.1 N;
    the default input is 0.1 N. These are experimental simulation inputs, not hardware recommendations.
-   **APPLIED** beside the button confirms a completed solve; **NOT APPLIED** explains
+   Apply first validates the full target, then ramps the cable load over about 2.4 s,
+   recomputing equilibrium and stress at intermediate steps. Changing families first
+   unloads the old cables, then loads the new ones. **APPLIED** confirms the completed target; **NOT APPLIED** explains
    a rejected load. **LAST ACCEPTED** identifies the result still displayed after rejection.
 3. **Cable demo** cycles compression, positive/negative X/Y bending and both twist
-   directions. The single knee solves its cable-loaded FEM equilibrium.
+   directions (eight seconds per mode, 0-0.25 N per active cable). Gold cable highlights,
+   direction chevrons and twelve live tension bars identify the pulling family. Moving
+   chevrons indicate opposing force directions, **not cable speed or simulated spools**.
 4. **Stress / material** switches between the actual laminate and FEM stress colors.
-   Red means 20 MPa or above on the present display scale, not yield or failure.
-5. **Pause** freezes this custom solver; **Neutral** removes cable loads. The Isaac
-   timeline Play button is not this quasistatic workshop's controller.
+   The diagnostic plot always shows stress. **Stress max MPa / Update display** changes
+   the color scale; the viewport legend states its current maximum. Red is not failure.
+5. **Play / replay load** replays the selected input from zero, or resumes a paused
+   ramp/demo. The native Isaac timeline **Play** does the same; **Pause/Stop** freezes
+   the custom FEM. Panel **Pause** freezes both FEM and glyphs; **Neutral** removes loads.
 6. Change gap, PET/PLA modulus or refinement and **Rebuild** at zero load. Save each
    comparison with **Save FEM results and inputs**. Results are immutable timestamped
    directories under `exact_joint/results/`.
 
-The small model-predicted movement is shown at **true scale**. There is no hidden
-deformation amplification, enlarged motion envelope or softened material for video.
+The actual leg remains **true scale (1x)**. The diagnostic view defaults to explicitly
+labelled **500x displacement**: `x_plot = x_reference + gain * u_FEM`. **Display gain /
+Update display** accepts 1-1000x without changing a force, stiffness, stress or solver
+result. This standard deformation plot may exaggerate/distort small displacements;
+it is not a physical large-fold prediction. Grey edges mark its neutral reference.
+Record the full application/viewport overlay to retain the gain and true-response
+legend; a bare USD render does not include the UI legend. Do not present that isolated
+magnified mesh as a physically simulated large fold.
 
 If Apply appears to do nothing, check the message immediately beneath it. For
 example, **40 N per cable exceeds this model's small-strain guard** and is rejected;
@@ -43,11 +57,22 @@ The material/mesh fields require **Rebuild**; **Apply** changes cable loading on
 Saved records distinguish accepted `commands` from `requested_commands` and record
 the rejection error. Never interpret an old displayed result as an accepted new load.
 
-`refresh_ui_live.py` can update trusted UI code through the Python server without
-replacing an already connected scene. It preserves the FEM and camera; it is not
-a loader for saved USD files or a repair for a disconnected stage. The reproducible
+While the workshop is running, reopening a USD now pauses with an explicit
+disconnection message instead of silently killing the controller. **Reconnect opened
+knee** binds a matching original-knee USD to the **current workshop FEM settings**;
+it does not infer material properties from a legacy USD. Source identity, mesh topology,
+rigid-roof size, units and available saved configuration are checked before attachment.
+New scenes embed FEM configuration; legacy scenes still require the matching settings.
+It retains the scene, camera, lights and rigid leg objects, and resumes updating the
+controller-owned knee meshes after attachment. An unrelated scene is rejected.
+
+`refresh_ui_live.py` updates trusted UI/render code through the Python server without
+replacing the current stage; it can attach a matching reopened scene. The reproducible
 button-click test is `validate_apply_live.py` (run inside Kit with `isaacsim.test.utils`
 enabled). It exercises accepted/rejected loads and recovery through the real Apply button.
+`validate_visible_live.py` additionally tests load ramps, all seven cable families,
+1x versus magnified coordinates, live demo, panel and native Play/Pause, and reconnect.
+Run it on a fresh generated workshop: it exports/reopens its own timestamped test USD.
 
 ## What is exact, and what is assumed
 
@@ -158,12 +183,16 @@ Run `open_live.py`, then `validate_live.py` through the Python server. The latte
 its async work in a function, checks all seven expected live modes, records source
 hashes, compares three meshes and gap candidates, and saves its own immutable report.
 Offline tests need Python with NumPy and SciPy: `python -m unittest exact_joint.test_exact_joint -v`.
-Do not merely open an exported USD and expect the Python FEM controller to run.
+After restarting Isaac, use the launcher to start the Python controller; opening a
+USD alone still cannot start Python. For a saved scene, then open it and Reconnect.
 
 The versioned case is `fea/exact_joint_cable_v1/manifest.json`. The implementation
 commit, immutable validation report and case checksum are linked in
 `ml/runs/20260906-exact-knee-cable-v1/run_manifest.json` (evaluation only; no training).
 Source bytes are preserved across checkouts so the recorded hashes remain comparable.
+The visible-control follow-up is recorded separately in
+`ml/runs/20260906-exact-knee-visible-fem-v1/`; it changes no structural formulation,
+material, small-strain guard or convergence claim.
 
 Next, still on the knee alone: converge a crease-appropriate formulation, characterize PET crease rest angles
 and hysteresis, measure cable force versus cap displacement/rotation, and verify guide

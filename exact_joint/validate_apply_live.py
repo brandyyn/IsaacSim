@@ -4,12 +4,13 @@ import hashlib
 import io
 import json
 import unittest
+import time
 from datetime import datetime, timezone
 
 import numpy as np
 import omni.kit.app
 import omni.usd
-from omni.kit.ui_test import Vec2, emulate_mouse_move_and_click
+from omni.kit.ui_test import WidgetRef, emulate_mouse_move
 from omni.ui_query import OmniUIQuery
 
 from exact_joint import app
@@ -24,12 +25,19 @@ def find_widget(kind: str, text: str) -> tuple[str, object]:
 
 
 async def click(text: str) -> None:
-    _, button = find_widget("Button", text)
-    await emulate_mouse_move_and_click(
-        Vec2(button.screen_position_x + button.computed_width / 2,
-             button.screen_position_y + button.computed_height / 2)
-    )
+    path, button = find_widget("Button", text)
+    target=WidgetRef(button,path,app.ACTIVE.window)
+    await emulate_mouse_move(target.center)
+    for _ in range(5):
+        await omni.kit.app.get_app().next_update_async()
+    await target.click()
     for _ in range(40):
+        await omni.kit.app.get_app().next_update_async()
+    deadline=time.perf_counter()+10
+    while text == "Apply" and (app.ACTIVE.ramp is not None or app.ACTIVE.dirty):
+        if app.ACTIVE.error:
+            break
+        assert time.perf_counter()<deadline,"FEM ramp did not finish"
         await omni.kit.app.get_app().next_update_async()
 
 

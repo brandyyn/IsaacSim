@@ -43,6 +43,16 @@ accepted-versus-requested loads in saved results. The guards and FEM formulation
 are unchanged. A UI-only refresh preserves an already connected scene; real button
 tests verify 0.1/0.2 N acceptance, 40 N/negative input rejection and recovery.
 
+The visible-FEM follow-up adds real 2.4 s cable-load ramps on Apply, native timeline
+Play/Pause integration, twelve live tension bars and gold force-direction glyphs.
+The leg remains 1x; a separate labelled 500x displacement/stress diagnostic is not a
+second physical joint or a validated large fold. Reopening a saved matching USD now
+pauses safely and can be reconnected to the current FEM settings without replacing
+the stage. The launcher preserves script paths containing spaces. Reproducible
+checks and implementation commit are linked in
+`ml/runs/20260906-exact-knee-visible-fem-v1/run_manifest.json`. Structural convergence,
+large-deformation validity, material calibration and ML status are unchanged.
+
 Run `exact_joint/launch.ps1` with the built runtime, or send `exact_joint/open_live.py`
 through the Python server. Cable tensions, rather than joint position commands,
 drive custom live quasistatic TET10 FEM inside Kit. Seven implementation tests and
