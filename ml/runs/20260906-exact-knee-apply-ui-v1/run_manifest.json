@@ -1,0 +1,68 @@
+{
+  "run_id": "20260906-exact-knee-apply-ui-v1",
+  "status": "passed_ui_regression_not_structural_validation",
+  "parent_run_id": "20260906-exact-knee-cable-v1",
+  "baseline_commit": "0cbbe36bac3e6aeb0e064b37b64bc95743d8cd44",
+  "simulator_implementation_commit": "c9ebbab80edb1d6d10b5ae0b84556987c0810e75",
+  "isaac_sim_version": "6.0.1-rc.7",
+  "stage": "Existing in-memory exact knee scene retained; no replacement or saved-stage overwrite",
+  "environment_version": "exact_joint-cable-tet10-v1-ui-feedback",
+  "fea_case_id": "exact_joint_cable_v1",
+  "fea_artifact_sha256": "657ed88af8362f4f22af5221088139045a53ad9203baaf1af29f018d06d80c95",
+  "algorithm": "Live UI button regression plus deterministic FEM implementation unit tests; no ML",
+  "seed": 0,
+  "randomization": {},
+  "observations": [
+    "Apply feedback",
+    "accepted versus requested cable tensions",
+    "rendered FEM mesh points",
+    "compression (m)",
+    "stress (Pa)",
+    "rejected result export"
+  ],
+  "actions": [
+    "Real Apply button clicks with Compression tensions 0.1, 0.2, 40, -1, 0.1 N per active cable",
+    "Real Stress / material button clicks"
+  ],
+  "reward_version": null,
+  "training": {
+    "command": null,
+    "steps": 0,
+    "wall_time_s": 0
+  },
+  "evaluation": {
+    "command": "python skills/isaac-sim-remote/scripts/isaacsim_send.py --context apply_ui_validation --file exact_joint/validate_apply_live.py --timeout 50",
+    "conditions": "Kit UI test extension enabled, one active connected knee workshop, refinement 1 and original PLA/PET constants. Scene, camera and FEM instance preserved. Structural formulation and safety/model guards unchanged.",
+    "completed_utc": "2026-09-06T11:42:01Z",
+    "metrics": {
+      "real_click_cases": 5,
+      "all_passed": true,
+      "numeric_tests_passed": 7,
+      "rejected_load_preserves_displayed_mesh": true,
+      "rejected_export_preserves_accepted_load": true,
+      "scene_and_fem_preserved": true,
+      "compression_m_at_0_1_n": 0.0000025214703375062557,
+      "compression_m_at_0_2_n": 0.000005042932839162451,
+      "compression_ratio": 1.9999968923489029,
+      "stress_view_enabled": true
+    }
+  },
+  "artifacts": {
+    "config": "config.json",
+    "config_sha256": "924d804fb7a741e1e2a0746a2605516a54c1dc3f666089210a168c6bd4773de1",
+    "metrics": "metrics.json",
+    "metrics_sha256": "afe326609eafee02e2db19cf6e171191f1a15015306bd9e0b1d6642ca234c779",
+    "checkpoint": null,
+    "checkpoint_sha256": null,
+    "source_sha256": {
+      "exact_joint/app.py": "9fe2d88f9ce96ad9fa0a44fcb70d4e1047c25fc23e5be571e16cfb7ac4642e35",
+      "exact_joint/refresh_ui_live.py": "e022f532177f5d50e022b38749cee76a2f21e15e5e04e21f39cba6a4c2d5c9ec",
+      "exact_joint/validate_apply_live.py": "44525d5f3dfb37d2b4d8e31efd1daa78174b1c77e21a3630582f540d32f858e3"
+    }
+  },
+  "notes": "40 N/cable exceeded the existing model guard; prior UI kept old geometry with low-visibility feedback. New UI shows NOT APPLIED beside Apply and labels the LAST ACCEPTED result. Default input is 0.1 N. Material fields still require Rebuild. No motion amplification, guard relaxation, material change, native PhysX migration or ML training. Existing mesh-convergence and large-folding limitations remain.",
+  "tooling": {
+    "diff_whitespace_check": "passed",
+    "repo_format": "unavailable: local Packman/packmanapi setup denied/missing; bundled Black and isort absent; no broad formatting run performed"
+  }
+}
