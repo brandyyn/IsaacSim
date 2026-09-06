@@ -66,6 +66,7 @@ Add one row for every completed training or evaluation run. The detailed record 
 | `20260906-exact-knee-cable-v1` | `65e98b1c`; implementation `0c766aa9` | `exact_joint_cable_v1` | 0 (unused) | FEM evaluation only | 7/7 tests, 7 live patterns, 45 updates in 10.004 s; mesh convergence FAIL; no ML | None |
 | `20260906-exact-knee-apply-ui-v1` | `0cbbe36b`; implementation `c9ebbab8` | `exact_joint_cable_v1` unchanged | 0 (unused) | Apply UI regression | 5/5 real-click cases; 7/7 numeric tests; rejected-load recovery and accepted-result export verified; no ML | None |
 | `20260906-exact-knee-visible-fem-v1` | `95414aa3`; implementation linked in run manifest | `exact_joint_cable_v1` unchanged | 0 (unused) | Visible FEM/control regression | Live load ramps, cable glyphs/bars, labelled diagnostic magnification, native Play/Pause and saved-USD reconnect; no ML or new structural validation | None |
+| `20260906-exact-knee-demo-tweaks-v1` | `5e7844e5`; simulator `a1d9bd7b` | `exact_joint_cable_v1` baseline plus recorded sensitivity configurations | 0 (unused) | Clean-launch and demonstration checks | Apply/visible regressions rerun; seven real-UI rebuild comparisons, display/save checks and baseline restoration passed. Gap trend is counterintuitive and not fit for optimization; mesh convergence still FAIL. No ML. | None |
 
 ### 2026-09-06: exact knee-only cable FEM handoff
 

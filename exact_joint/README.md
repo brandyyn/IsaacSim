@@ -74,6 +74,137 @@ enabled). It exercises accepted/rejected loads and recovery through the real App
 1x versus magnified coordinates, live demo, panel and native Play/Pause, and reconnect.
 Run it on a fresh generated workshop: it exports/reopens its own timestamped test USD.
 
+## Practical controls and demonstration guide
+
+### What each visible module represents
+
+| Part | Meaning / what it does |
+|---|---|
+| Left knee and attached leg | The original JSON knee at true scale. The thigh/mount support the fixed top plate; the solved bottom plate carries rigid shank/foot display geometry. No additional origami hip or ankle. |
+| Two square roof plates | Rigid boundary constraints; they do not bend. The bottom plate can translate/rotate according to cable/FEM equilibrium. |
+| PLA triangular panels | The original 48 side facets with 0.4 mm PLA, represented by elastic finite elements rather than perfectly rigid panels. |
+| PET film / exposed borders | The 80 um backing film and PET-only gaps between PLA facets. These provide the modeled compliant regions. |
+| White crease lines | The original 76-edge registry. They show panel boundaries; they are not separate actuators or an independently calibrated hinge model. |
+| Black/red routing | Black top X is the guide/return reference. Axial and red diagonal spans between plates are the modeled ideal pull-only actuators; crossings are not welded. |
+| Gold cables and chevrons | A currently loaded cable family and opposing pull directions. Chevron animation is a visual cue, not motor speed or material travelling along a cable. |
+| Right-hand FEM plot | A separate diagnostic copy, normally at 500x displacement, with unscaled stress colors and grey neutral-reference edges. Not a second physical knee. |
+| Stage / Property / Content panels | General Isaac scene tree, selected-prim attributes and asset browser. Editing these is not the same as changing this custom FEM's inputs. Use the workshop controls below. |
+
+### Every workshop control
+
+Enter a value, press Enter to commit the field, then use the appropriate button.
+Scroll **inside Exact knee - cable FEM** to reveal the display and material fields.
+
+| Control | What changes | How to use / what to expect |
+|---|---|---|
+| Cable pattern dropdown | Selects the tension family for the next Apply | Does not immediately change the current solve. Compression loads A0-A3; Bend X+ loads A0/A1, X- A2/A3, Y+ A1/A2, Y- A0/A3; Twist CW/CCW loads the corresponding four diagonal cables. |
+| N / cable | Force in each active strand, not total force, displacement or spool rotation | Start at 0.10 N, then compare 0.20 N. Compression has four axial strands, so these correspond approximately to 0.40/0.80 N total axial pull near neutral. Diagonal resultants require vector projection. |
+| Apply | Full-target validity check followed by a roughly 2.4 s load ramp | Watch LAST ACCEPTED, compression/angles and stresses change. Identical already-applied inputs need not produce a new deformation; use Play / replay load to replay from zero. |
+| Play / replay load | Resume a paused ramp/demo, or replay the selected manual load from zero | A convenience visualization of equilibrium states, not a calibrated loading rate. |
+| Native timeline Play/Pause/Stop | Workshop replay/resume/freeze through its Python controller | Does not convert this model to native PhysX deformable dynamics. If the timeline is already stopped, use the workshop Pause to freeze a demo started independently. |
+| Cable demo | Automatic compression, X+/X-/Y+/Y- bending, CW and CCW twist | Approximately 8 s per mode, 56 s per full cycle; 0-0.25 N per active cable. It ignores the manual input amplitude until Apply is pressed. |
+| Pause | Freeze load ramp, FEM output and chevrons | Useful for explaining a frame or saving a steady result. It does not remove cable tension. |
+| Neutral | Remove all tensions and return to zero-load equilibrium | Stops the demo. The dropdown may retain its prior label; zero force is what makes the state neutral. |
+| Whole leg | Camera only | Shows assembly context. The diagnostic may be less prominent at this zoom. |
+| Exact knee close-up | Camera only | Compare the original panel/roof shape at true scale. |
+| Compare FEM | Camera/diagnostic visibility only | Frames true-scale knee and magnified plot together. |
+| Stress / material | Actual knee's shading only | Switch PLA/PET material appearance versus stress colors. The right diagnostic always shows stress. No force/stiffness changes. |
+| Display gain + Update display | Right-hand displacement magnification only, 1-1000x | Compare 500 and 1000: apparent displacement doubles, but all physical results stay the same. This field is not a bending-angle limit. |
+| Stress max MPa + Update display | Color-map range only; must be positive | Compare 5 and 20 MPa: the same stress gets a different color. Peak stress numbers remain unchanged. Red means saturation of this display scale, not material failure. |
+| PET exposed gap (mm) + Rebuild | PLA inset, exposed PET border and associated discretization | Baseline 0.20 mm total gap, about 0.10 mm setback per adjacent panel edge. Try 0.10/0.20/0.40 as numerical studies, not a manufacturing recommendation. See the warning below. |
+| PET E (GPa) + Rebuild | Film elastic stiffness, not its thickness or strength | Baseline 3.5 GPa. Lower E generally increases displacement under the same force. E remains an assumed isotropic constant until measured. |
+| PLA E (GPa) + Rebuild | Panel elastic stiffness | Baseline 2.2 GPa. Useful to distinguish film-dominated flexibility from panel deformation. Changing E alone does not identify a new printable material. |
+| Refinement 1-4 + Rebuild | Numerical mesh density, not physical joint size | Use whole numbers. Baseline 1 has 1,152 elements/2,616 nodes; 2 has 4,608 elements/9,552 nodes. Larger values cost more memory and rebuild time and are for convergence studies. |
+| Rebuild exact joint FEM | Reassemble mesh/material matrices and create a new neutral workshop scene | Save scene edits and results first. Current camera/display choices may reset. Then re-enter the same load and Apply for a fair comparison. Invalid settings retain the old model. |
+| Reconnect opened knee | Attach a matching saved USD to the running workshop | Uses the current FEM settings; does not recover unknown material constants from an old USD. Rejects incompatible geometry/configuration. |
+| Save FEM results and inputs | Timestamped JSON snapshot | Saves configuration, accepted/requested loads, results and display settings under `exact_joint/results/`. It is not a movie, full nodal stress export, or saved USD. Use File > Save As separately for scene edits. |
+
+There is currently **no GUI slider for joint width or laminate thickness**. The
+30 mm width, 0.4 mm PLA and 80 um PET are active configuration values. Width
+(10-40 mm), thickness and Poisson ratios can be changed in `JointConfig` through
+a controlled code/config rebuild, but require new validation and a matching case
+record. Scaling the USD with a gizmo will not correctly rescale the FEM.
+
+The workshop accepts cable tensions, not arbitrary external loads. Dragging the
+mesh, adding a generic PhysX force, or changing a USD physics material does not feed
+that force/property into this custom FEM. Payload, gravity and ground reaction are
+not included. Multiple motion components can arise from one family, but the GUI
+does not currently expose independently adjustable arbitrary 12-cable mixtures.
+
+### What each output means
+
+| Output | Interpretation |
+|---|---|
+| A0-A3 / CW0-CW3 / CCW0-CCW3 | Actual solved per-strand tensions. Bars use 0.25 N as 100%; that is a display range, not cable rated capacity. Numeric labels remain authoritative if a valid load exceeds that bar range. |
+| RAMPING TO / LAST ACCEPTED | Requested endpoint versus most recently solved intermediate load. During a ramp, these need not match yet. During the demo, the dropdown may differ from the active family. |
+| APPLIED / NOT APPLIED | New target accepted versus rejected. A rejection preserves the last accepted geometry/results. Never describe the old frame as the rejected force case. |
+| Bend X/Y, twist (degrees) | Solved signed bottom-cap orientation components. Mode +/- names label cable families; read the result rather than assuming the same Euler-angle sign. |
+| Compression (um) | True reduction in plate separation. 1 um = 0.001 mm. This value is never multiplied by display gain. |
+| PET / PLA peak (MPa) | Maximum modeled von Mises stress for each material, derived from element integration-point stresses. These peaks are mesh-sensitive and are not strength/fatigue allowables. |
+| Max principal strain (%) | Largest absolute principal strain used for the small-deformation check. The 1% strain/2 degree cap-rotation guards are model-use limits, not material failure criteria. |
+| Update count / update ms | Number of accepted FEM updates and solve/update timing. Not policy-training steps, motor frequency, physical timestep accuracy or viewport FPS. |
+
+### Measured tweak examples (unconverged, simulation only)
+
+All rows use Compression at **0.10 N per active cable**, unchanged 0.4 mm PLA /
+80 um PET, 30 mm source width, and baseline values except the named edit. Each
+configuration was rebuilt using the real UI button before Apply.
+
+| One experiment | Compression (um) | What it demonstrates |
+|---|---:|---|
+| Baseline: PET E 3.5 GPa, PLA E 2.2 GPa, gap 0.20 mm, refinement 1 | 2.521 | Reference numerical state |
+| PET E 1.75 GPa | 4.402 | Film stiffness strongly influences compliance |
+| PLA E 1.1 GPa | 2.817 | Panels are elastic too, but this response is less sensitive to this edit |
+| PET E 7.0 GPa and PLA E 4.4 GPa | 1.261 | Doubling both moduli approximately halves displacement under force control; stress need not halve |
+| PET gap 0.10 mm | 2.569 | Gap changes both physical discretization and element layout |
+| PET gap 0.40 mm | 1.673 | Counterintuitive stiffening on this unconverged formulation; not evidence that a wider physical PET hinge is stiffer |
+| Refinement 2 | 4.984 | Nearly doubles the response without changing the design: mesh convergence is still inadequate |
+| Original baseline restored | 2.521 | Repeatable recovery of the original configuration |
+
+**Do not use the gap table to choose the best physical crease.** Mesh/element
+effects are still entangled with the geometry study. The non-monotonic gap response
+and existing failed convergence require formulation/convergence work before an
+optimization or engineering claim. These tests confirm that controls affect the
+calculation, not that the resulting predictions match hardware.
+
+### A repeatable 3-minute demonstration
+
+1. **Neutral > Whole leg:** explain that there is one original origami knee between
+   rigid leg sections. Then **Exact knee close-up** and material shading show the
+   triangular facets, roof plates and PLA/PET construction.
+2. **Compare FEM:** set gain **500**, stress max **5 MPa**, and **Update display**.
+   Say: "Left is true scale; right is a magnified displacement plot."
+3. Choose **Compression, 0.10 N/cable > Apply**. Watch the ramp and read about
+   **2.52 um** true compression. Change to **0.20 N > Apply** and read about
+   **5.04 um**. There are four active axial cables; this is not 0.20 N total.
+4. Choose **Bend X+**, then **Bend X-**, each at **0.10 N > Apply**. Point out the
+   switched axial pair, signed bend output and magnified shape. Repeat **Twist CW**
+   and **Twist CCW** to show the red diagonal families and reversed twist.
+5. **Cable demo** for one full roughly 56 s cycle. **Pause** on a useful phase;
+   point at active cable numbers, stress peaks and the true-versus-display legend.
+   Record the full app view so these qualifiers remain visible.
+6. Optionally change gain **500 > 1000** or stress maximum **5 > 20** and press
+   **Update display**: prove that a larger-looking deformation/redder picture does
+   not change the physical numbers. Restore **500 / 5** afterward.
+7. For a separate stiffness demonstration, **Neutral**, save results/scene edits,
+   set PET E **7.0**, PLA E **4.4**, and **Rebuild**. Reapply **Compression 0.10 N**:
+   expect about **1.26 um**. Restore PET **3.5**, PLA **2.2**, gap **0.20**, refinement
+   **1**, Rebuild and repeat the same load. Do this outside the main 3-minute clip
+   if rebuild time interrupts the presentation.
+8. **Pause > Save FEM results and inputs** for a reproducible screenshot/result.
+   Finish with **Cable demo** if you want the model to keep moving.
+
+Suggested narration: "This is our exact original knee geometry with a trial cable
+routing and live small-deformation quasistatic FEM. Loads produce calculated
+compression, bending and twist. Displacement is magnified for inspection; the
+material/crease model and mesh are not yet validated for large folding, strength
+or walking."
+
+The repeatable real-control checks are `validate_apply_live.py`,
+`validate_visible_live.py`, and `validate_tweaks_live.py`. The last one backs up
+test-owned stages, exercises the material/display controls, restores the baseline
+and leaves Cable demo active. Do not run rebuild tests on an unsaved design scene.
+
 ## What is exact, and what is assumed
 
 | Item | Implementation / provenance |
