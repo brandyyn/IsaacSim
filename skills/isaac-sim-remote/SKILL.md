@@ -428,6 +428,9 @@ app_utils.update_app(steps=120)
 
 See `references/api-reference.md` for full details. See `references/pitfalls.md` for common issues.
 
+If a reload reports success but the viewport remains unchanged, use the loaded-code
+and source-hash checks in `references/pitfalls.md` before validating the new stage.
+
 ## Important Notes
 
 - **Lighting in headless mode**: No lights = black image. Always add a `DomeLight` with intensity 1000–5000.

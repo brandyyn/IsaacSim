@@ -32,3 +32,6 @@ docs/*/*.ico filter=lfs diff=lfs merge=lfs -text
 docs/**/*content/video/** filter=lfs diff=lfs merge=lfs -text
 *.mp4 filter=lfs diff=lfs merge=lfs -text
 *.xlsx filter=lfs diff=lfs merge=lfs -text
+
+# Small knee-only handoff brief, intentionally stored with the source checkpoint.
+output/pdf/Exact_Knee_Cable_FEM_Brief.pdf -filter -diff -merge -text

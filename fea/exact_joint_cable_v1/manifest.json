@@ -1,0 +1,294 @@
+{
+  "case_id": "exact_joint_cable_v1",
+  "status": "exploratory_implementation_passed_mesh_convergence_failed",
+  "starting_commit": "65e98b1c050b63c3f41dc46d7e5703428ae35fe4",
+  "geometry": {
+    "source_asset": "generated in memory by exact_joint/scene.py",
+    "source_topology": "exact_joint/source_joint.json",
+    "geometry_revision": "user supplied input.json; original 28 vertices, 48 triangular panels, 2 quadrilateral roofs, 76 edges",
+    "sha256": "d578618a0f90342bd0093b4febe130dc0b07c18f1b223c4d6bf02c9f3d93ce35",
+    "normalized_repository_topology": "input_improved.json",
+    "normalized_repository_sha256": "1b13569928af71320f3ebbf466c2a10a65bcf4eccf2bb7b7d281c947f18a4469",
+    "origami_joint_instances": [
+      "Knee"
+    ],
+    "neutral_reference_bounds_m": [
+      0.03,
+      0.03,
+      0.0264
+    ],
+    "finite_thickness_added_outward": true
+  },
+  "units": {
+    "length": "m",
+    "mass": "kg",
+    "time": "s",
+    "force": "N",
+    "torque": "N*m",
+    "stress": "Pa",
+    "angle": "rad",
+    "human_facing_angle_tables": "deg (explicitly labelled)"
+  },
+  "frames": {
+    "fea_frame": "Right-handed; bottom roof center at (0,0,0), upper roof center at (0,0,0.0264); +Z points toward upper roof",
+    "isaac_frame": "Right-handed Z-up; knee bottom roof center at world (0,0,0.1186)",
+    "source_to_fea": {
+      "rotation_matrix": [
+        [
+          1,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          -1
+        ],
+        [
+          0,
+          1,
+          0
+        ]
+      ],
+      "scale_m_per_source_unit": 0.00012,
+      "translation_m": [
+        0,
+        0,
+        0.0132
+      ],
+      "equation": "p_fea = scale * R * p_source + translation; no reflection"
+    },
+    "transform_fea_to_isaac": {
+      "rotation_matrix": [
+        [
+          1,
+          0,
+          0
+        ],
+        [
+          0,
+          1,
+          0
+        ],
+        [
+          0,
+          0,
+          1
+        ]
+      ],
+      "translation_m": [
+        0,
+        0,
+        0.1186
+      ],
+      "scale": 1
+    },
+    "joint_axes_in_isaac": {
+      "bend_x": [
+        1,
+        0,
+        0
+      ],
+      "bend_y": [
+        0,
+        1,
+        0
+      ],
+      "twist": [
+        0,
+        0,
+        1
+      ],
+      "compression": [
+        0,
+        0,
+        1
+      ]
+    },
+    "neutral_angle_rad": 0,
+    "zero_definition": "Original folded JSON shape is assumed stress free at zero cable tensions",
+    "positive_angle_direction": "Right-hand rotation-vector components of the bottom cap relative to fixed upper cap. Pattern names identify cable families, not Euler-angle signs.",
+    "compression_sign": "Positive bottom cap Z translation shortens cap separation."
+  },
+  "material": {
+    "model": "Provisional isotropic linear elasticity; perfect PLA/PET bond; no measured stock-grade identification",
+    "parameters": {
+      "width_m": 0.03,
+      "pet_thickness_m": 0.00008,
+      "pla_thickness_m": 0.0004,
+      "pet_modulus_pa": 3500000000,
+      "pla_modulus_pa": 2200000000,
+      "pet_poisson": 0.35,
+      "pla_poisson": 0.35,
+      "hinge_gap_m": 0.0002,
+      "refinement": 1
+    },
+    "confirmed_by_owner": [
+      "PLA thickness 0.0004 m",
+      "PET film thickness 0.00008 m"
+    ],
+    "provisional": [
+      "PET E 3.5e9 Pa",
+      "PLA E 2.2e9 Pa",
+      "Poisson ratio 0.35 each",
+      "PET exposed gap 0.0002 m"
+    ],
+    "gap_selection": "Owner requested least practical exposure. 0.1/0.2/0.4 mm numerical candidates only; manufacturing minimum and optimum NOT established."
+  },
+  "mesh": {
+    "element_type": "Quadratic TET10, four-point Gauss integration, physical PET and PLA thickness",
+    "element_count": 1152,
+    "node_count": 2616,
+    "material_element_counts": {
+      "PET": 1008,
+      "PLA": 144
+    },
+    "characteristic_length_m": null,
+    "characteristic_length_note": "Highly nonuniform layered mesh; physical film thickness 80e-6 m, exposed gap 200e-6 m. No single representative element length.",
+    "mesh_revision": "exact_joint geometry/elements implementation",
+    "refinement_levels": [
+      {
+        "refinement": 1,
+        "nodes": 2616,
+        "elements": 1152
+      },
+      {
+        "refinement": 2,
+        "nodes": 9552,
+        "elements": 4608
+      },
+      {
+        "refinement": 3,
+        "nodes": 20904,
+        "elements": 10368
+      }
+    ],
+    "convergence_tolerance_fraction": 0.05,
+    "convergence_pass": false,
+    "convergence_summary": "Refinement 2 to 3 at 0.1 N/active cable changes shortening by 24.6%, bend-X angle by 22.0%, CW twist by 21.6% (relative to refinement 2). Peak stress also changes. Not converged."
+  },
+  "boundary_conditions": [
+    "All upper roof PET clamp DOFs fixed",
+    "Lower roof PET clamp nodes constrained by six rigid-body coordinates using exact rotations",
+    "Both original roof quads remain rigid; roof flexure excluded",
+    "Interior FEM DOFs statically condensed exactly from assembled linear stiffness",
+    "Rigid unloaded upper/lower leg links and foot follow cap transforms; no other origami joint"
+  ],
+  "loads": [
+    {
+      "type": "ideal nonnegative constant-tension cable",
+      "count": 12,
+      "layout": "Four same-corner axial, four CW cross-plate, four reverse cross-plate; corners ordered (-x,-y),(+x,-y),(+x,+y),(-x,+y)",
+      "pattern_indices": {
+        "Compression": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "Bend X+": [
+          0,
+          1
+        ],
+        "Bend X-": [
+          2,
+          3
+        ],
+        "Bend Y+": [
+          1,
+          2
+        ],
+        "Bend Y-": [
+          0,
+          3
+        ],
+        "Twist CW": [
+          4,
+          5,
+          6,
+          7
+        ],
+        "Twist CCW": [
+          8,
+          9,
+          10,
+          11
+        ]
+      },
+      "mesh_study_tension_n_per_active_cable": 0.1,
+      "live_case_tension_n_per_active_cable": 0.25,
+      "demo_range_n_per_active_cable": [
+        0,
+        0.25
+      ],
+      "hardware_rating": false
+    }
+  ],
+  "solver": {
+    "software": "Custom NumPy/SciPy finite-element solver in Isaac Sim Kit Python; not native PhysX deformable dynamics",
+    "version": "exact_joint-cable-tet10-v1",
+    "isaac_sim_version": "6.0.1-rc.7",
+    "kit_version": "110.1.2",
+    "runtime_build_commit": "5131a9740b3ce82e42331e923e1a45ffa396f71c",
+    "analysis_type": "Quasistatic small-strain linear-elastic continuum with exact rigid-cap rotations and cable-length energy",
+    "time_step_s": null,
+    "display_update_minimum_interval_s": 0.2,
+    "equilibrium_energy": "0.5 u_b^T K_cap u_b + sum(T_i L_i(q))",
+    "interior_recovery": "u_f = -K_ff^-1 K_fb u_b",
+    "iterations_max": 15,
+    "target_residual_n_equivalent": 1e-7,
+    "accept_residual_n_equivalent": 0.00001,
+    "model_guards": {
+      "max_absolute_principal_strain": 0.01,
+      "max_cap_rotation_rad": 0.03490658503988659
+    },
+    "notes": "Guards are scope limits, not material allowables. At rejected load, retain last valid geometry."
+  },
+  "outputs": {
+    "raw_files": [
+      "ml/runs/20260906-exact-knee-cable-v1/metrics.json"
+    ],
+    "processed_files": [
+      "exact_joint/README.md",
+      "output/pdf/Exact_Knee_Cable_FEM_Brief.pdf"
+    ],
+    "response_model": null
+  },
+  "limitations": [
+    "NOT mesh converged",
+    "NOT validated large folding, buckling, crease rest angles or hysteresis",
+    "No gravity, payload transmission, foot contact, inertia, balance or walking",
+    "No plasticity, damage, bond failure or fatigue",
+    "No cable slack dynamics, stretch, friction, guides, spools or crossing contact; expanded routing is provisional",
+    "No deformation amplification; true-scale movements are small",
+    "No native PhysX force integration or calibrated reduced-order model; ML baseline unchanged and no training"
+  ],
+  "review": {
+    "prepared_by": "Codex",
+    "reviewed_by": [],
+    "date_utc": "2026-09-06",
+    "notes": "Source identity and implementation verified. Physical validation and owner review still required. Larger video motions are observational references, not force/displacement calibration."
+  },
+  "references": [
+    {
+      "file": "video_2026-08-21_21-18-38.mp4",
+      "sha256": "a46e249d5dac51e167041e8f74b4bfaba0360604ca45e174c1affb87821219c9",
+      "duration_s": 28.656466666666663
+    },
+    {
+      "file": "video_2026-08-21_21-16-48.mp4",
+      "sha256": "c3a85ebbf48ee7d76450f140dff85611c1af91662a62c6297533c4a4e607dfcd",
+      "duration_s": 6.3722
+    },
+    {
+      "file": "video_2026-08-21_21-17-33.mp4",
+      "sha256": "a2e440565ad19e6203adf6b33dba9c115ba5c211536061dd79788d3eb75be528",
+      "duration_s": 13.903955555555555
+    }
+  ],
+  "reproduction": {
+    "launch": "exact_joint/launch.ps1 -RuntimeRoot <built-release>",
+    "reload": "python skills/isaac-sim-remote/scripts/isaacsim_send.py --context exact_joint_open --file exact_joint/open_live.py --timeout 45",
+    "validate": "python skills/isaac-sim-remote/scripts/isaacsim_send.py --context exact_joint_validation --file exact_joint/validate_live.py --timeout 180 --execution-timeout 165"
+  }
+}

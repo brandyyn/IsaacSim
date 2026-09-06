@@ -22,6 +22,27 @@ The final stage must be launched with `open_knee_gui.py`. Opening the USD direct
 
 ## Project objective
 
+### Exact-joint cable FEM experiment (2026-09-06)
+
+`exact_joint/` is a separate source-faithful structural experiment based on shared
+checkpoint `65e98b1c`, not a replacement for v8 or the author's v9. The user's original
+JSON (SHA256 `d578618a0f90342bd0093b4febe130dc0b07c18f1b223c4d6bf02c9f3d93ce35`)
+is preserved byte-for-byte and its 28 vertices / 50 panels / 76 edges form **one knee
+joint only**. The user deferred hip/ankle copies; those leg sections are rigid. The
+neutral surface envelope is 30 x 30 x 26.4 mm, with rigid
+original roof plates, PLA 0.4 mm on PET 80 um, and a provisional 0.2 mm PET gap.
+
+Run `exact_joint/launch.ps1` with the built runtime, or send `exact_joint/open_live.py`
+through the Python server. Cable tensions, rather than joint position commands,
+drive custom live quasistatic TET10 FEM inside Kit. Seven implementation tests and
+all cable load modes pass, but mesh convergence fails (about 22-25% changes between
+refinements 2 and 3). Large folding, crease calibration, dynamic whole-leg loading
+and ML training are not complete. See `exact_joint/README.md` and the linked
+`fea/exact_joint_cable_v1/manifest.json`. The earlier new-sleeve redesign was rejected
+by the owner; it must not be mistaken for their joint or promoted as the baseline.
+
+### Canonical baseline objective
+
 Build a physically usable single-leg robot simulation in Isaac Sim using the original panel joint supplied by the project owner. The joint should form the knee section of a leg, bend around the intended knee axis, preserve the original triangular panel topology and fold-line appearance, and fit the paper-guided hip/knee/ankle layout.
 
 The source joint is not a simple two-piece hinge. It is a closed triangulated shell with two flat end interfaces. The flat interfaces connect to the thigh and shank; the side panels form the compressing/folding shell between them.

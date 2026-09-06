@@ -15,6 +15,11 @@ This is the shared progress log. Update it whenever the FEA model, simulator env
 - Current presentation showcase: `panel_crease_leg_constraints_v9_showcase.usd`, rebuilt with `build_panel_crease_showcase_live.py` and launched with `open_panel_crease_showcase_gui.py`; not the ML baseline. It keeps the original 50 surfaces/28 shared vertices/76 crease edges and adds three physical serial revolutes (X lateral ±22°, Z twist ±30°, Y fold −1.5°…127°). The launcher settles at exact neutral before enabling a conservative coupled envelope; the batched baked runtime measured `54.93 FPS` over a full 1,800-update cycle while commanding a bounded 60° fold peak together with ±16.5° lateral and ±22.5° twist. This is a reduced-order presentation envelope, not FEA-calibrated capacity.
 - FEA case: `compression_v1` imported and replayed; frame mapping still requires FEA-owner confirmation
 - ML policy: `none trained yet`
+- Source-faithful cable FEM experiment: `exact_joint/`, FEA case `exact_joint_cable_v1`.
+  Original 28/50/76 joint at the knee only; hip/ankle copies deferred; PLA 0.4 mm / PET 80 um;
+  rigid roofs; live custom cable-tension quasistatic FEM. Implementation checks pass,
+  but mesh convergence and large-folding/dynamic calibration remain incomplete.
+  This is not the ML baseline and has no trained policy.
 - Last validated behavior: full-scale 639.69 N compression replay completed at neutral and 45 degrees with interface translation below `1e-12 m`
 - Current owner/action: provide FEA displacement/angle and reaction-torque channels, plus frame/material/boundary-condition metadata
 

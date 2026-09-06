@@ -224,3 +224,21 @@ python scripts/isaacsim_send.py --introspect delete_context --context recording
 Within a context, store all mutable session state in a single dict (e.g.
 `_tut = {"fc": 0, ...}`). Functions read/write from the dict directly.
 New sessions delete and recreate the entire dict.
+
+## Stale Workspace Code After importlib.reload (Kit 110.1.2)
+
+An exact-joint workshop session on 2026-09-05 returned a successful reload response
+while the viewport and module symbols still came from old source. Do not equate
+`importlib.reload` returning with the requested code being active.
+
+Check the module file, a newly defined symbol, the relevant stage prims and a fresh
+render. Record loaded source hashes in validation output. If stale code persists,
+cancel only the task's own updater/window, then explicitly compile and execute a
+small allowlist of trusted workspace modules in dependency order, or relaunch that
+task's Kit instance. Never broadly execute files found by traversal. The scoped
+implementation is `exact_joint/open_live.py` in the project; it records each loaded
+SHA256. Do not use this workaround to execute untrusted attachment contents.
+
+For multi-case async tests, use a fresh named context and keep test variables inside
+an async function. Assert the expected case count in the saved report: a successful
+server return containing only one case is not evidence that an entire sweep ran.

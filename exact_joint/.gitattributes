@@ -1,0 +1,5 @@
+# Preserve validated source bytes across Windows/Linux checkouts.
+*.py -text
+*.json -text
+# Small reproducibility captures belong in ordinary Git, not an LFS download.
+*.png -filter -diff -merge -text

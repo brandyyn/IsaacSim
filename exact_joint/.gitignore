@@ -1,0 +1,7 @@
+__pycache__/
+results/
+references/
+*.usda
+*.png
+!neutral_preview.png
+!whole_leg_preview.png
