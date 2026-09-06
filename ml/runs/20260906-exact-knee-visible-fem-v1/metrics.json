@@ -1,0 +1,903 @@
+{
+  "apply_ui": {
+    "cases": [
+      {
+        "input_n": 0.1,
+        "applied": true,
+        "feedback": "APPLIED - update 1302. Read the values below. Actual knee 1x; diagnostic displacement 500x (display only).",
+        "accepted_commands": {
+          "Knee": {
+            "mode": "Compression",
+            "tension_n": 0.1
+          }
+        },
+        "stats": {
+          "cap_translation_m": [
+            -2.0479334292005907e-7,
+            1.2316392403797634e-7,
+            0.000002521470338024648
+          ],
+          "cap_rotation_vector_rad": [
+            0.000009031785637610745,
+            0.000015843643997593114,
+            -0.0000016434774434079036
+          ],
+          "compression_m": 0.000002521470338024648,
+          "bend_xy_deg": [
+            0.0005174831985019689,
+            0.0009077739331698652
+          ],
+          "twist_deg": -0.00009416432123222348,
+          "tensions_n": [
+            0.1,
+            0.1,
+            0.1,
+            0.1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "lengths_m": [
+            0.026397376352890977,
+            0.02639785166220351,
+            0.02639758070864246,
+            0.026397105399329927,
+            0.03996039045693695,
+            0.03996045768008051,
+            0.03996020497639672,
+            0.03996013775473624,
+            0.03996042098122416,
+            0.03996048875541489,
+            0.039960248482068216,
+            0.03996018070937815
+          ],
+          "max_principal_strain": 0.0017199923753028288,
+          "max_von_mises_pa": 4687976.342304152,
+          "pet_peak_pa": 4687976.342304152,
+          "pla_peak_pa": 57635.6163665331,
+          "cap_equilibrium_residual_n_equivalent": 2.5387498181031194e-10,
+          "force_balance_n": [
+            1.1066700181270662e-11,
+            2.6334303665146694e-11,
+            2.826600065120033e-11
+          ],
+          "strain_energy_j": 5.042935118964617e-7,
+          "newton_iterations": 2,
+          "within_small_deformation_model": true,
+          "solver": "live cable-loaded statically condensed 3D TET10 linear-elastic FEM; four Gauss points; exact rigid cap transforms",
+          "scope": "quasistatic; no gravity/payload/inertia/contact/plasticity/fatigue/slack dynamics; unconverged mesh"
+        },
+        "scene_point_change_m": 0.000002855435013771057
+      },
+      {
+        "input_n": 0.2,
+        "applied": true,
+        "feedback": "APPLIED - update 1324. Read the values below. Actual knee 1x; diagnostic displacement 500x (display only).",
+        "accepted_commands": {
+          "Knee": {
+            "mode": "Compression",
+            "tension_n": 0.2
+          }
+        },
+        "stats": {
+          "cap_translation_m": [
+            -4.0952127931014626e-7,
+            2.4629113410541246e-7,
+            0.000005042932839213905
+          ],
+          "cap_rotation_vector_rad": [
+            0.000018061655595003722,
+            0.00003168370136994692,
+            -0.0000032865123913745838
+          ],
+          "compression_m": 0.000005042932839213905,
+          "bend_xy_deg": [
+            0.001034856636612563,
+            0.0018153423678508229
+          ],
+          "twist_deg": -0.00018830328934321108,
+          "tensions_n": [
+            0.2,
+            0.2,
+            0.2,
+            0.2,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "lengths_m": [
+            0.026394752740890894,
+            0.026395703251902342,
+            0.026395161402266738,
+            0.02639421089125529,
+            0.03995879903488673,
+            0.039958933483821395,
+            0.03995842816319923,
+            0.03995829372019563,
+            0.039958860108761846,
+            0.039958995609830024,
+            0.03995851513553808,
+            0.0399583796404719
+          ],
+          "max_principal_strain": 0.0034400364490465365,
+          "max_von_mises_pa": 9376092.23073073,
+          "pet_peak_pa": 9376092.23073073,
+          "pla_peak_pa": 115273.3649644788,
+          "cap_equilibrium_residual_n_equivalent": 2.607893458381152e-11,
+          "force_balance_n": [
+            5.133882194011249e-13,
+            2.966436321030167e-12,
+            5.347500220409529e-12
+          ],
+          "strain_energy_j": 0.0000020171686899917305,
+          "newton_iterations": 2,
+          "within_small_deformation_model": true,
+          "solver": "live cable-loaded statically condensed 3D TET10 linear-elastic FEM; four Gauss points; exact rigid cap transforms",
+          "scope": "quasistatic; no gravity/payload/inertia/contact/plasticity/fatigue/slack dynamics; unconverged mesh"
+        },
+        "scene_point_change_m": 0.000003593042492866516
+      },
+      {
+        "input_n": 40,
+        "applied": false,
+        "feedback": "NOT APPLIED: 40.000 N / cable. Cable input rejected: Small-strain model limit exceeded. Try 0.10 N; large folds need nonlinear FEM.\nLast accepted result is still displayed.",
+        "accepted_commands": {
+          "Knee": {
+            "mode": "Compression",
+            "tension_n": 0.2
+          }
+        },
+        "stats": {
+          "cap_translation_m": [
+            -4.0952127931014626e-7,
+            2.4629113410541246e-7,
+            0.000005042932839213905
+          ],
+          "cap_rotation_vector_rad": [
+            0.000018061655595003722,
+            0.00003168370136994692,
+            -0.0000032865123913745838
+          ],
+          "compression_m": 0.000005042932839213905,
+          "bend_xy_deg": [
+            0.001034856636612563,
+            0.0018153423678508229
+          ],
+          "twist_deg": -0.00018830328934321108,
+          "tensions_n": [
+            0.2,
+            0.2,
+            0.2,
+            0.2,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "lengths_m": [
+            0.026394752740890894,
+            0.026395703251902342,
+            0.026395161402266738,
+            0.02639421089125529,
+            0.03995879903488673,
+            0.039958933483821395,
+            0.03995842816319923,
+            0.03995829372019563,
+            0.039958860108761846,
+            0.039958995609830024,
+            0.03995851513553808,
+            0.0399583796404719
+          ],
+          "max_principal_strain": 0.0034400364490465365,
+          "max_von_mises_pa": 9376092.23073073,
+          "pet_peak_pa": 9376092.23073073,
+          "pla_peak_pa": 115273.3649644788,
+          "cap_equilibrium_residual_n_equivalent": 2.607893458381152e-11,
+          "force_balance_n": [
+            5.133882194011249e-13,
+            2.966436321030167e-12,
+            5.347500220409529e-12
+          ],
+          "strain_energy_j": 0.0000020171686899917305,
+          "newton_iterations": 2,
+          "within_small_deformation_model": true,
+          "solver": "live cable-loaded statically condensed 3D TET10 linear-elastic FEM; four Gauss points; exact rigid cap transforms",
+          "scope": "quasistatic; no gravity/payload/inertia/contact/plasticity/fatigue/slack dynamics; unconverged mesh"
+        },
+        "scene_point_change_m": 0,
+        "rejected_export_preserves_accepted_load": true
+      },
+      {
+        "input_n": -1,
+        "applied": false,
+        "feedback": "NOT APPLIED: -1.000 N / cable. Cable input rejected: Cable tension must be finite and nonnegative\nLast accepted result is still displayed.",
+        "accepted_commands": {
+          "Knee": {
+            "mode": "Compression",
+            "tension_n": 0.2
+          }
+        },
+        "stats": {
+          "cap_translation_m": [
+            -4.0952127931014626e-7,
+            2.4629113410541246e-7,
+            0.000005042932839213905
+          ],
+          "cap_rotation_vector_rad": [
+            0.000018061655595003722,
+            0.00003168370136994692,
+            -0.0000032865123913745838
+          ],
+          "compression_m": 0.000005042932839213905,
+          "bend_xy_deg": [
+            0.001034856636612563,
+            0.0018153423678508229
+          ],
+          "twist_deg": -0.00018830328934321108,
+          "tensions_n": [
+            0.2,
+            0.2,
+            0.2,
+            0.2,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "lengths_m": [
+            0.026394752740890894,
+            0.026395703251902342,
+            0.026395161402266738,
+            0.02639421089125529,
+            0.03995879903488673,
+            0.039958933483821395,
+            0.03995842816319923,
+            0.03995829372019563,
+            0.039958860108761846,
+            0.039958995609830024,
+            0.03995851513553808,
+            0.0399583796404719
+          ],
+          "max_principal_strain": 0.0034400364490465365,
+          "max_von_mises_pa": 9376092.23073073,
+          "pet_peak_pa": 9376092.23073073,
+          "pla_peak_pa": 115273.3649644788,
+          "cap_equilibrium_residual_n_equivalent": 2.607893458381152e-11,
+          "force_balance_n": [
+            5.133882194011249e-13,
+            2.966436321030167e-12,
+            5.347500220409529e-12
+          ],
+          "strain_energy_j": 0.0000020171686899917305,
+          "newton_iterations": 2,
+          "within_small_deformation_model": true,
+          "solver": "live cable-loaded statically condensed 3D TET10 linear-elastic FEM; four Gauss points; exact rigid cap transforms",
+          "scope": "quasistatic; no gravity/payload/inertia/contact/plasticity/fatigue/slack dynamics; unconverged mesh"
+        },
+        "scene_point_change_m": 0
+      },
+      {
+        "input_n": 0.1,
+        "applied": true,
+        "feedback": "APPLIED - update 1348. Read the values below. Actual knee 1x; diagnostic displacement 500x (display only).",
+        "accepted_commands": {
+          "Knee": {
+            "mode": "Compression",
+            "tension_n": 0.1
+          }
+        },
+        "stats": {
+          "cap_translation_m": [
+            -2.0479334041759875e-7,
+            1.231639228112836e-7,
+            0.0000025214703375136194
+          ],
+          "cap_rotation_vector_rad": [
+            0.000009031785552666134,
+            0.000015843643806142777,
+            -0.0000016434774260446847
+          ],
+          "compression_m": 0.0000025214703375136194,
+          "bend_xy_deg": [
+            0.0005174831936350012,
+            0.0009077739222005689
+          ],
+          "twist_deg": -0.00009416432023738431,
+          "tensions_n": [
+            0.1,
+            0.1,
+            0.1,
+            0.1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "lengths_m": [
+            0.026397376352893086,
+            0.026397851662199878,
+            0.026397580708641375,
+            0.026397105399334587,
+            0.039960390456936626,
+            0.039960457680079074,
+            0.039960204976398114,
+            0.03996013775473875,
+            0.03996042098122349,
+            0.03996048875541323,
+            0.03996024848206918,
+            0.03996018070938011
+          ],
+          "max_principal_strain": 0.0017199923775856134,
+          "max_von_mises_pa": 4687976.3484631935,
+          "pet_peak_pa": 4687976.3484631935,
+          "pla_peak_pa": 57635.616471673326,
+          "cap_equilibrium_residual_n_equivalent": 1.5608299432672273e-12,
+          "force_balance_n": [
+            -1.3285050710820016e-13,
+            -2.3751115633838466e-13,
+            1.1619039064214576e-12
+          ],
+          "strain_energy_j": 5.042935116925043e-7,
+          "newton_iterations": 2,
+          "within_small_deformation_model": true,
+          "solver": "live cable-loaded statically condensed 3D TET10 linear-elastic FEM; four Gauss points; exact rigid cap transforms",
+          "scope": "quasistatic; no gravity/payload/inertia/contact/plasticity/fatigue/slack dynamics; unconverged mesh"
+        },
+        "scene_point_change_m": 0.000003593042492866516
+      }
+    ],
+    "source_sha256": "d578618a0f90342bd0093b4febe130dc0b07c18f1b223c4d6bf02c9f3d93ce35",
+    "ui_source_sha256": "1c8c04ba17527ff41f8f62059947bfb7fab8475ac5d59a82dbac7f2015a6a3e9",
+    "current_scene_and_fem_preserved": true,
+    "compression_ratio_0_2_over_0_1_n": 1.9999968919581277,
+    "stress_view_enabled": true,
+    "numeric_tests": {
+      "count": 7,
+      "passed": true,
+      "output": "test_cable_equilibrium_and_rigid_roofs (exact_joint.test_exact_joint.ExactJointTests.test_cable_equilibrium_and_rigid_roofs) ... ok\ntest_exact_source_identity (exact_joint.test_exact_joint.ExactJointTests.test_exact_source_identity) ... ok\ntest_material_and_force_scaling (exact_joint.test_exact_joint.ExactJointTests.test_material_and_force_scaling) ... ok\ntest_negative_tension_rejected (exact_joint.test_exact_joint.ExactJointTests.test_negative_tension_rejected) ... ok\ntest_quadratic_patch (exact_joint.test_exact_joint.ExactJointTests.test_quadratic_patch) ... ok\ntest_twist_reversal_and_compression (exact_joint.test_exact_joint.ExactJointTests.test_twist_reversal_and_compression) ... ok\ntest_zero_load (exact_joint.test_exact_joint.ExactJointTests.test_zero_load) ... ok\n\n----------------------------------------------------------------------\nRan 7 tests in 0.999s\n\nOK\n"
+    }
+  },
+  "visible_fem": {
+    "config": {
+      "width_m": 0.03,
+      "pet_thickness_m": 0.00008,
+      "pla_thickness_m": 0.0004,
+      "pet_modulus_pa": 3500000000,
+      "pla_modulus_pa": 2200000000,
+      "pet_poisson": 0.35,
+      "pla_poisson": 0.35,
+      "hinge_gap_m": 0.0002,
+      "refinement": 1
+    },
+    "source_sha256": "d578618a0f90342bd0093b4febe130dc0b07c18f1b223c4d6bf02c9f3d93ce35",
+    "source_hashes": {
+      "app.py": "1c8c04ba17527ff41f8f62059947bfb7fab8475ac5d59a82dbac7f2015a6a3e9",
+      "scene.py": "813987be32d0f7a5f2f7759dcf1b2cb9e5fe4563abb4f2683eeae1cd393d3834",
+      "live_display.py": "d1cdf145647a05c1c893f8ef20c54ba07807974a9df8e74b29d4e4cc02d2be38",
+      "validate_visible_live.py": "340f4c4d01624f0994bb628481e96477172ae29185a14e9d42d88cb476e662bb"
+    },
+    "apply_ramp": {
+      "samples_n": [
+        0.001516931292457069,
+        0.004946559018120401,
+        0.0100528900320924,
+        0.01700437897051096,
+        0.025404481865310493,
+        0.03519427698044647,
+        0.04696206435262667,
+        0.058676937228071484,
+        0.07193358456354045,
+        0.08517877588461836,
+        0.09874594835393674,
+        0.11234462928330369,
+        0.12640987960306982,
+        0.13927799182290482,
+        0.15162360854054802,
+        0.16339194082070127,
+        0.17326433133671473,
+        0.18213936471965794,
+        0.18985891878455996,
+        0.19502271260274415,
+        0.19839895683057784,
+        0.19989917808233496,
+        0.2
+      ],
+      "elapsed_s": 2.263331099995412,
+      "physical_and_magnified_coordinates_verified": true
+    },
+    "display_only_gain_preserves_solution": true,
+    "panel_pause_resume_replay": true,
+    "native_timeline_play_pause_real_clicks": true,
+    "cable_demo": {
+      "updates_in_3_seconds": 26,
+      "plot_change_m": 0.004093389958143234,
+      "glyph_change_m": 0.0032972097396850586
+    },
+    "patterns": [
+      {
+        "mode": "Compression",
+        "stats": {
+          "cap_translation_m": [
+            -4.095212790434205e-7,
+            2.4629113398741886e-7,
+            0.000005042932839149827
+          ],
+          "cap_rotation_vector_rad": [
+            0.00001806165558685924,
+            0.000031683701349715915,
+            -0.00000328651239029341
+          ],
+          "compression_m": 0.000005042932839149827,
+          "bend_xy_deg": [
+            0.0010348566361459185,
+            0.0018153423666916718
+          ],
+          "twist_deg": -0.00018830328928126438,
+          "tensions_n": [
+            0.2,
+            0.2,
+            0.2,
+            0.2,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "lengths_m": [
+            0.026394752740891137,
+            0.02639570325190198,
+            0.02639516140226662,
+            0.026394210891255775,
+            0.0399587990348867,
+            0.039958933483821235,
+            0.03995842816319936,
+            0.039958293720195895,
+            0.0399588601087618,
+            0.03995899560982986,
+            0.03995851513553819,
+            0.03995837964047212
+          ],
+          "max_principal_strain": 0.0034400364492820725,
+          "max_von_mises_pa": 9376092.231364878,
+          "pet_peak_pa": 9376092.231364878,
+          "pla_peak_pa": 115273.36497507984,
+          "cap_equilibrium_residual_n_equivalent": 3.129998218600661e-12,
+          "force_balance_n": [
+            4.865715781134615e-13,
+            -8.492323445348114e-14,
+            -2.594591208548991e-12
+          ],
+          "strain_energy_j": 0.000002017168689937212,
+          "newton_iterations": 3,
+          "within_small_deformation_model": true,
+          "solver": "live cable-loaded statically condensed 3D TET10 linear-elastic FEM; four Gauss points; exact rigid cap transforms",
+          "scope": "quasistatic; no gravity/payload/inertia/contact/plasticity/fatigue/slack dynamics; unconverged mesh"
+        }
+      },
+      {
+        "mode": "Bend X+",
+        "stats": {
+          "cap_translation_m": [
+            -3.46420460728934e-7,
+            -0.0000022868669811192597,
+            0.000002385945800785839
+          ],
+          "cap_rotation_vector_rad": [
+            -0.000173547202073952,
+            0.00002520057905875502,
+            -7.647860391109283e-7
+          ],
+          "compression_m": 0.000002385945800785839,
+          "bend_xy_deg": [
+            -0.009943522225141497,
+            0.0014438868213524272
+          ],
+          "twist_deg": -0.0000438190122715833,
+          "tensions_n": [
+            0.2,
+            0.2,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "lengths_m": [
+            0.026394632938829172,
+            0.026395388956196704,
+            0.026400595372240255,
+            0.02639983935487272,
+            0.03995866722371833,
+            0.03996064964638009,
+            0.039962127277777953,
+            0.0399601445964006,
+            0.03995870517492386,
+            0.0399606612418968,
+            0.039962123777827756,
+            0.039960167450425854
+          ],
+          "max_principal_strain": 0.0028259795502104286,
+          "max_von_mises_pa": 7613480.066472776,
+          "pet_peak_pa": 7613480.066472776,
+          "pla_peak_pa": 114159.63979324404,
+          "cap_equilibrium_residual_n_equivalent": 1.800419552191518e-12,
+          "force_balance_n": [
+            -1.4855678366870306e-13,
+            -2.2741448887876256e-13,
+            9.087730568069219e-13
+          ],
+          "strain_energy_j": 9.977806205653354e-7,
+          "newton_iterations": 3,
+          "within_small_deformation_model": true,
+          "solver": "live cable-loaded statically condensed 3D TET10 linear-elastic FEM; four Gauss points; exact rigid cap transforms",
+          "scope": "quasistatic; no gravity/payload/inertia/contact/plasticity/fatigue/slack dynamics; unconverged mesh"
+        }
+      },
+      {
+        "mode": "Bend X-",
+        "stats": {
+          "cap_translation_m": [
+            -6.315883254458119e-8,
+            0.0000025331870971105618,
+            0.000002656890920257518
+          ],
+          "cap_rotation_vector_rad": [
+            0.0001916105877168846,
+            0.0000064858429788337545,
+            -0.000002521772893420552
+          ],
+          "compression_m": 0.000002656890920257518,
+          "bend_xy_deg": [
+            0.01097847798619874,
+            0.00037161142927173187
+          ],
+          "twist_deg": -0.00014448694368349158,
+          "tensions_n": [
+            0,
+            0,
+            0.2,
+            0.2,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "lengths_m": [
+            0.026400120101897167,
+            0.02640031467717425,
+            0.026394566359615883,
+            0.026394371784338802,
+            0.03996211399997812,
+            0.039960265752084334,
+            0.039958283011701484,
+            0.03996013093832375,
+            0.039962137093223465,
+            0.039960316269267764,
+            0.03995837351438686,
+            0.03996019401388884
+          ],
+          "max_principal_strain": 0.001501008799924444,
+          "max_von_mises_pa": 5637285.939309274,
+          "pet_peak_pa": 5637285.939309274,
+          "pla_peak_pa": 112192.28848660963,
+          "cap_equilibrium_residual_n_equivalent": 1.1145033581463704e-12,
+          "force_balance_n": [
+            1.1466140164347483e-13,
+            -1.326738740571598e-13,
+            -4.108380302625392e-13
+          ],
+          "strain_energy_j": 0.0000011061497848765949,
+          "newton_iterations": 3,
+          "within_small_deformation_model": true,
+          "solver": "live cable-loaded statically condensed 3D TET10 linear-elastic FEM; four Gauss points; exact rigid cap transforms",
+          "scope": "quasistatic; no gravity/payload/inertia/contact/plasticity/fatigue/slack dynamics; unconverged mesh"
+        }
+      },
+      {
+        "mode": "Bend Y+",
+        "stats": {
+          "cap_translation_m": [
+            0.0000021047249844119904,
+            2.2985041753152468e-7,
+            0.0000022837724817264668
+          ],
+          "cap_rotation_vector_rad": [
+            0.000018389142841283306,
+            -0.00015790479365977684,
+            -0.0000012067871280986932
+          ],
+          "compression_m": 0.0000022837724817264668,
+          "bend_xy_deg": [
+            0.0010536202736687445,
+            -0.009047278241589332
+          ],
+          "twist_deg": -0.00006914380921076855,
+          "tensions_n": [
+            0,
+            0.2,
+            0.2,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "lengths_m": [
+            0.02640036072145943,
+            0.02639562357767227,
+            0.026395071903415813,
+            0.026399809047202967,
+            0.039960657296027824,
+            0.03995888542293972,
+            0.039960261988719034,
+            0.03996203407773693,
+            0.03996065360207366,
+            0.03995893192130365,
+            0.03996032004209132,
+            0.03996204194002222
+          ],
+          "max_principal_strain": 0.003442491384579146,
+          "max_von_mises_pa": 9350534.663080053,
+          "pet_peak_pa": 9350534.663080053,
+          "pla_peak_pa": 130190.94763868701,
+          "cap_equilibrium_residual_n_equivalent": 2.055271469017234e-12,
+          "force_balance_n": [
+            -3.0226710891201325e-13,
+            -6.069435780550194e-13,
+            -1.819988604268019e-12
+          ],
+          "strain_energy_j": 9.304251647359208e-7,
+          "newton_iterations": 3,
+          "within_small_deformation_model": true,
+          "solver": "live cable-loaded statically condensed 3D TET10 linear-elastic FEM; four Gauss points; exact rigid cap transforms",
+          "scope": "quasistatic; no gravity/payload/inertia/contact/plasticity/fatigue/slack dynamics; unconverged mesh"
+        }
+      },
+      {
+        "mode": "Bend Y-",
+        "stats": {
+          "cap_translation_m": [
+            -0.000002514335251108612,
+            1.6488136547296888e-8,
+            0.000002759062789011284
+          ],
+          "cap_rotation_vector_rad": [
+            -3.255954724261792e-7,
+            0.00018959399667597626,
+            -0.0000020802208970715047
+          ],
+          "compression_m": 0.000002759062789011284,
+          "bend_xy_deg": [
+            -0.00001865524639858824,
+            0.010862935830550799
+          ],
+          "twist_deg": -0.00011918787785711526,
+          "tensions_n": [
+            0.2,
+            0,
+            0,
+            0.2,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "lengths_m": [
+            0.026394392263158897,
+            0.026400080083001504,
+            0.0264000898508374,
+            0.026394402030994784,
+            0.039960123622496645,
+            0.03996203024361889,
+            0.03996014802700606,
+            0.03995824172088581,
+            0.039960188426107185,
+            0.039962045885130554,
+            0.03996017692666842,
+            0.039958319785578504
+          ],
+          "max_principal_strain": 0.0015292460876005199,
+          "max_von_mises_pa": 5738875.895414116,
+          "pet_peak_pa": 5738875.895414116,
+          "pla_peak_pa": 110992.0197213782,
+          "cap_equilibrium_residual_n_equivalent": 1.4826681503287854e-12,
+          "force_balance_n": [
+            -9.003218092926146e-13,
+            -2.6242858088111007e-13,
+            -8.356648706353553e-13
+          ],
+          "strain_energy_j": 0.000001120534999440247,
+          "newton_iterations": 3,
+          "within_small_deformation_model": true,
+          "solver": "live cable-loaded statically condensed 3D TET10 linear-elastic FEM; four Gauss points; exact rigid cap transforms",
+          "scope": "quasistatic; no gravity/payload/inertia/contact/plasticity/fatigue/slack dynamics; unconverged mesh"
+        }
+      },
+      {
+        "mode": "Twist CW",
+        "stats": {
+          "cap_translation_m": [
+            -2.6877818466151847e-7,
+            2.8556787976383093e-7,
+            0.000003368352104578358
+          ],
+          "cap_rotation_vector_rad": [
+            0.000013252157717888286,
+            0.00002158839950666557,
+            -0.00011433325360048691
+          ],
+          "compression_m": 0.000003368352104578358,
+          "bend_xy_deg": [
+            0.0007592927066767195,
+            0.0012369241781742457
+          ],
+          "twist_deg": -0.006550812889306824,
+          "tensions_n": [
+            0,
+            0,
+            0,
+            0,
+            0.2,
+            0.2,
+            0.2,
+            0.2,
+            0,
+            0,
+            0,
+            0
+          ],
+          "lengths_m": [
+            0.026396506724746964,
+            0.026397154362350666,
+            0.026396756799718275,
+            0.026396109162114847,
+            0.039958612658471684,
+            0.03995876622038679,
+            0.03995832578375185,
+            0.039958172223414974,
+            0.039961163495639995,
+            0.03996117513530822,
+            0.03996092512463859,
+            0.03996091348816818
+          ],
+          "max_principal_strain": 0.003530519968334876,
+          "max_von_mises_pa": 9400385.861022336,
+          "pet_peak_pa": 9400385.861022336,
+          "pla_peak_pa": 89796.32878976803,
+          "cap_equilibrium_residual_n_equivalent": 3.4468212237424298e-12,
+          "force_balance_n": [
+            4.713088812724909e-13,
+            5.490052856771399e-13,
+            -9.123812816369536e-13
+          ],
+          "strain_energy_j": 0.0000014050775165593684,
+          "newton_iterations": 3,
+          "within_small_deformation_model": true,
+          "solver": "live cable-loaded statically condensed 3D TET10 linear-elastic FEM; four Gauss points; exact rigid cap transforms",
+          "scope": "quasistatic; no gravity/payload/inertia/contact/plasticity/fatigue/slack dynamics; unconverged mesh"
+        }
+      },
+      {
+        "mode": "Twist CCW",
+        "stats": {
+          "cap_translation_m": [
+            -2.7236305728316424e-7,
+            3.987802289198649e-8,
+            0.000003294318098077713
+          ],
+          "cap_rotation_vector_rad": [
+            0.000010613465318166656,
+            0.000020277012761252073,
+            0.00010999004804141405
+          ],
+          "compression_m": 0.000003294318098077713,
+          "bend_xy_deg": [
+            0.0006081067687394229,
+            0.0011617872523526553
+          ],
+          "twist_deg": 0.006301965541214191,
+          "tensions_n": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0.2,
+            0.2,
+            0.2,
+            0.2
+          ],
+          "lengths_m": [
+            0.02639656083921143,
+            0.026397169137066894,
+            0.026396850733701394,
+            0.026396242435846096,
+            0.03996114590429845,
+            0.03996116999017738,
+            0.039960942704502705,
+            0.03996091862184833,
+            0.039958675770680976,
+            0.039958843190650115,
+            0.0399584583073303,
+            0.03995829088911032
+          ],
+          "max_principal_strain": 0.0034601588276886035,
+          "max_von_mises_pa": 9220251.293628206,
+          "pet_peak_pa": 9220251.293628206,
+          "pla_peak_pa": 84193.19316791146,
+          "cap_equilibrium_residual_n_equivalent": 4.388164784812974e-12,
+          "force_balance_n": [
+            -5.992363181182847e-13,
+            -2.4222290839759353e-13,
+            -5.646594303243546e-13
+          ],
+          "strain_energy_j": 0.0000013659508259662426,
+          "newton_iterations": 3,
+          "within_small_deformation_model": true,
+          "solver": "live cable-loaded statically condensed 3D TET10 linear-elastic FEM; four Gauss points; exact rigid cap transforms",
+          "scope": "quasistatic; no gravity/payload/inertia/contact/plasticity/fatigue/slack dynamics; unconverged mesh"
+        }
+      }
+    ],
+    "saved_usd_reconnect": {
+      "controller_survived": true,
+      "model_preserved": true,
+      "active_physical_origami_joints": [
+        "Knee"
+      ]
+    },
+    "incompatible_scene_rejected": true,
+    "all_passed": true
+  },
+  "stop_check": {
+    "frozen": true,
+    "physical_point_roundoff_m": 7.449672878578895e-9
+  },
+  "structural_convergence": "FAIL, unchanged; this run validates controls/display only"
+}

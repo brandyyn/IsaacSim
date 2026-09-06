@@ -1,0 +1,103 @@
+{
+  "run_id": "20260906-exact-knee-visible-fem-v1",
+  "status": "passed_controls_and_display_not_structural_validation",
+  "parent_run_id": "20260906-exact-knee-apply-ui-v1",
+  "baseline_commit": "95414aa353a4c4c490960f6c3389669497aef018",
+  "simulator_implementation_commit": "a1d9bd7ba8c25a64c82b8686ce8abbbde64041b9",
+  "isaac_sim_version": "6.0.1-rc.7",
+  "runtime_source_commit": "5131a9740b3ce82e42331e923e1a45ffa396f71c",
+  "stage": "One exact JSON knee with rigid leg links; separate nonphysical magnified diagnostic display",
+  "environment_version": "exact_joint-cable-tet10-v1-visible-fem",
+  "fea_case_id": "exact_joint_cable_v1",
+  "fea_artifact_sha256": "657ed88af8362f4f22af5221088139045a53ad9203baaf1af29f018d06d80c95",
+  "algorithm": "Deterministic control/display evaluation, custom TET10 quasistatic FEM inside Kit; no ML",
+  "seed": 0,
+  "randomization": {},
+  "observations": [
+    "accepted cable tensions (N)",
+    "true FEM displacement (m)",
+    "display-only magnified coordinates (m)",
+    "stress (Pa)",
+    "cable visibility/direction glyphs",
+    "Apply and native Play/Pause feedback",
+    "saved USD reconnect"
+  ],
+  "actions": [
+    "Five real Apply clicks: Compression 0.1, 0.2, 40, -1, 0.1 N/cable",
+    "Apply ramp from neutral to 0.2 N/cable",
+    "Display gain 500 -> 1000 -> 500, stress maximum 5 MPa",
+    "Real Cable demo, panel Pause/replay, native toolbar Play/Pause clicks",
+    "All seven cable patterns at 0.2 N/cable",
+    "Export/reopen a generated test USD and click Reconnect opened knee",
+    "Reject an unrelated empty USD"
+  ],
+  "reward_version": null,
+  "training": {
+    "command": null,
+    "steps": 0,
+    "wall_time_s": 0
+  },
+  "evaluation": {
+    "commands": [
+      "python skills/isaac-sim-remote/scripts/isaacsim_send.py --context apply_validation --file exact_joint/validate_apply_live.py --timeout 45",
+      "python skills/isaac-sim-remote/scripts/isaacsim_send.py --context visible_validation --file exact_joint/validate_visible_live.py --timeout 50"
+    ],
+    "conditions": "Connected workshop and isaacsim.test.utils enabled; visible regression begins on a fresh generated stage or its own prior reopen_test.usda. Current physical configuration is in config.json. No material/guard relaxation. Renderer updates independently of equilibrium solves.",
+    "apply_report_id": "20260906T173429_915318Z_apply",
+    "visible_report_id": "20260906T173430_101580Z_visible",
+    "recorded_utc": "2026-09-06 17:38:32 UTC",
+    "metrics": {
+      "real_apply_cases": 5,
+      "numeric_tests_passed": 7,
+      "all_visible_checks_passed": true,
+      "distinct_apply_ramp_samples": 23,
+      "demo_updates_in_3_seconds": 26,
+      "diagnostic_point_change_m": 0.004093389958143234,
+      "force_glyph_change_m": 0.0032972097396850586,
+      "native_play_pause_real_clicks": true,
+      "saved_usd_reconnect": true,
+      "display_gain_does_not_change_solution": true,
+      "compression_ratio_0_2_over_0_1_n": 1.9999968919581277
+    }
+  },
+  "artifacts": {
+    "config": "config.json",
+    "config_sha256": "924d804fb7a741e1e2a0746a2605516a54c1dc3f666089210a168c6bd4773de1",
+    "metrics": "metrics.json",
+    "metrics_sha256": "0a53f048c00b85736c7d0a6b64ba4e5b984e8764d337175dd932f299988aa344",
+    "checkpoint": null,
+    "checkpoint_sha256": null,
+    "source_sha256": {
+      "exact_joint/app.py": "1c8c04ba17527ff41f8f62059947bfb7fab8475ac5d59a82dbac7f2015a6a3e9",
+      "exact_joint/scene.py": "813987be32d0f7a5f2f7759dcf1b2cb9e5fe4563abb4f2683eeae1cd393d3834",
+      "exact_joint/live_display.py": "d1cdf145647a05c1c893f8ef20c54ba07807974a9df8e74b29d4e4cc02d2be38",
+      "exact_joint/validate_visible_live.py": "340f4c4d01624f0994bb628481e96477172ae29185a14e9d42d88cb476e662bb"
+    }
+  },
+  "display": {
+    "actual_leg_gain": 1,
+    "diagnostic_default_gain": 500,
+    "diagnostic_gain_range": [
+      1,
+      1000
+    ],
+    "stress_scale_at_validation_pa": 5000000,
+    "formula": "x_display = x_reference + gain * u_FEM",
+    "force_glyphs": "Direction cues only, not cable speed, displacement control or motor/spool dynamics"
+  },
+  "tooling": {
+    "kit_compatible_syntax": "17 Python files passed with PyCF_ALLOW_TOP_LEVEL_AWAIT",
+    "diff_whitespace_check": "passed",
+    "formatter": "Local Packman/packmanapi unavailable; no Black/isort run claimed.",
+    "launcher_path_fix": "Second-process log confirmed the full spaced path was executed; its remote port was occupied by the existing workshop. Duplicate test process closed. A further forced clean restart was blocked for unsaved-stage safety; current session retained and validated in place.",
+    "viewport_qa": "Full-app image inspected; diagnostic gain and true-response labels visible, cable family and tension bars visible."
+  },
+  "limitations": [
+    "Small-deformation quasistatic model, not nonlinear folding or native PhysX FEM dynamics.",
+    "Mesh convergence still FAIL (about 22-25% movement changes at prior refinement 2->3).",
+    "No measured material calibration, cable motors/guides/friction, gravity/payload, contact or fatigue.",
+    "Only one physical origami knee; hip/ankle copies remain deferred.",
+    "Legacy USD lacks material metadata: reconnect uses current workshop constants. New scenes embed configuration; incompatible saved settings are rejected.",
+    "Magnified diagnostic roof displacements are a visualization, not large-fold rigid-body kinematics."
+  ]
+}
