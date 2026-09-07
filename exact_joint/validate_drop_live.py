@@ -1,5 +1,6 @@
 """Real UI and world-space checks of the explicitly limited pre-impact preview."""
 
+import ast
 import hashlib
 import io
 import json
@@ -129,6 +130,16 @@ async def run():
     report["return_restores_scene_and_working_cable_demo"] = True
     await click(lab.window, "Neutral", scroll=True)
     await advance(.2)
+    # Maintenance reload must cancel the newly restored updater safely even
+    # before that updater has entered its first frame/CancelledError handler.
+    await lab.open_drop_preview()
+    refresh_path = lab.project / "exact_joint/refresh_ui_live.py"
+    await eval(compile(refresh_path.read_bytes(), str(refresh_path), "exec",
+                       flags=ast.PyCF_ALLOW_TOP_LEVEL_AWAIT),
+               {"__name__": "drop_refresh_regression", "__file__": str(refresh_path)})
+    assert app.ACTIVE is lab and lab.drop_preview is None and lab.connected()
+    assert lab.window.visible and not lab.task.done() and lab.model is model
+    report["maintenance_refresh_during_preview_restores_live_updater"] = True
     stream = io.StringIO()
     suite = unittest.TestSuite([unittest.defaultTestLoader.loadTestsFromName(name)
                                for name in ("exact_joint.test_exact_joint", "exact_joint.test_drop_test")])
@@ -136,7 +147,7 @@ async def run():
     assert tests.wasSuccessful(), stream.getvalue()
     report["numeric_tests"] = {"count": tests.testsRun, "passed": True, "output": stream.getvalue()}
     report["source_sha256"] = {name: hashlib.sha256((lab.project / "exact_joint" / name).read_bytes()).hexdigest()
-                               for name in ("app.py", "geometry.py", "mechanics.py", "drop_test.py", "drop_preview.py", "validate_drop_live.py")}
+                               for name in ("app.py", "geometry.py", "mechanics.py", "drop_test.py", "drop_preview.py", "refresh_ui_live.py", "validate_drop_live.py")}
     stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S_%fZ")
     output = lab.project / "exact_joint/results" / (stamp + "_drop_validation")
     output.mkdir(parents=True, exist_ok=False)

@@ -375,6 +375,9 @@ uses the documented default 70 mm / 50 g case.
   It is now rejected before Rebuild, preserving the scene and assembled FEM.
 - Fixed: malformed or nonfinite initial six-DOF solver states are explicitly
   rejected. These add two numerical regression tests (nine FEM tests total).
+- Fixed: maintenance refresh during the preview could cancel the FEM updater
+  before its first frame and abort the refresh. Cancellation is now handled by
+  the caller, and the active-preview refresh is covered by a regression check.
 - **Still open:** PET outer-layer normals are regenerated when mesh refinement
   inserts vertices. PET reference volume increases **0.766%** from refinement
   1 to 4, while PLA volume stays constant. Thus the refinement sweep does not

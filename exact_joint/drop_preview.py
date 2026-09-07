@@ -61,7 +61,10 @@ class DropPreview:
         self.suspended = True
         if self.lab.task:
             self.lab.task.cancel()
-            await self.lab.task
+            try:
+                await self.lab.task
+            except asyncio.CancelledError:
+                pass
         self.lab.window.visible = False
         self.lab.live_display.close()
         self.diagnostic = UsdGeom.Imageable(self.stage.GetPrimAtPath("/World/ExactFemDisplay"))
@@ -186,7 +189,10 @@ class DropPreview:
         self.running = False
         if self.task:
             self.task.cancel()
-            await self.task
+            try:
+                await self.task
+            except asyncio.CancelledError:
+                pass
         if self.op and self.root.IsValid():
             order = self.root.GetAttribute("xformOpOrder")
             if self.original_order_authored:

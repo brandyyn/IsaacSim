@@ -48,8 +48,8 @@ async def refresh() -> None:
         lab.task.cancel()
         try:
             await lab.task
-        except RuntimeError:
-            pass  # Recover a prior controller that died on a reopened USD.
+        except (RuntimeError, asyncio.CancelledError):
+            pass  # Recover a failed controller or one cancelled before its first frame.
     if getattr(lab,"live_display",None):
         lab.live_display.close()
     lab.window.visible = False

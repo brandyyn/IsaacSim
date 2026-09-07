@@ -420,7 +420,10 @@ class Workshop:
             await self.drop_preview.restore()
         if self.task:
             self.task.cancel()
-            await self.task
+            try:
+                await self.task
+            except asyncio.CancelledError:
+                pass  # A task cancelled before its first frame cannot catch this itself.
         if self.window:
             self.window.visible=False
             self.window.destroy()
