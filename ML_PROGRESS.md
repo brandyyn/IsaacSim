@@ -78,6 +78,14 @@ Add one row for every completed training or evaluation run. The detailed record 
 
 ### 2026-09-06: exact knee-only cable FEM handoff
 
+Latest evaluation: `20260907-exact-knee-drop-readiness-v1`, baseline `825c018a`,
+implementation `ac4a49da`, case `exact_joint_drop_70mm_v1`. Thirteen numeric tests,
+five Apply cases and actual drop-preview controls/maintenance-refresh checks pass.
+Four-level mesh audit fails reference-geometry invariance and 5% convergence.
+70 mm / assumed 50 g pre-impact preview only; survival remains indeterminate.
+The run manifest links exact commits, case/config/metric hashes and a QA screenshot.
+No checkpoint or training run was produced.
+
 Implementation commit: `0c766aa9ea0b220f038ec8f43c556b55d6a0372a`.
 The immutable run above links that commit, the source JSON checksum, the FEA case
 checksum, input configuration and all 15 gap/mesh and 7 live cases. Both rigid

@@ -1,0 +1,93 @@
+{
+  "run_id": "20260907-exact-knee-drop-readiness-v1",
+  "status": "operational_checks_passed_structural_validation_failed_survival_indeterminate",
+  "parent_run_id": "20260906-exact-knee-demo-tweaks-v1",
+  "baseline_commit": "825c018a42d90f02688d69a556827f55c386f46d",
+  "simulator_implementation_commit": "ac4a49dab906f1f132d131126c3f71f19c24baa1",
+  "initial_preview_commit": "0561064237b72a425e0b6fdc9e83258959624148",
+  "isaac_sim_version": "6.0.1-rc.7",
+  "runtime_source_commit": "5131a9740b3ce82e42331e923e1a45ffa396f71c",
+  "stage": "Generated original-JSON knee-only leg; preview owns a reversible root translation and stops at first foot contact",
+  "environment_version": "exact_joint-drop-preimpact-v1",
+  "fea_case_id": "exact_joint_drop_70mm_v1",
+  "fea_artifact_sha256": "5221e27bece9eeacb0beb9b4bc90ddf0f1416dfdb8f74fe42c6894cc9c4a730e",
+  "algorithm": "Deterministic UI, analytic ballistic and quasistatic mesh-readiness evaluation; no ML",
+  "seed": 0,
+  "randomization": {},
+  "reward_version": null,
+  "training": {
+    "command": null,
+    "steps": 0,
+    "wall_time_s": 0
+  },
+  "observations": [
+    "World-space foot/floor clearance and physical elapsed time",
+    "Incident speed and kinetic energy before contact",
+    "UI pause/replay/return, exact local FEM mesh preservation, diagnostic visibility",
+    "Mesh PET/PLA volumes and compression at four refinement levels",
+    "Accepted and rejected cable loads, numeric patch/equilibrium tests"
+  ],
+  "actions": [
+    "Choose authorized provisional 50 g mass; 70 mm height specified by user",
+    "Run 13 numerical tests (9 FEM implementation, 4 ballistics)",
+    "Exercise actual preview, pause/resume, save, return, cable demo and fractional Rebuild rejection buttons",
+    "Repeat five actual Apply accepted/rejected-load cases",
+    "Reproduce four-level reference-volume/response audit",
+    "Refresh workshop while preview active; verify cancellation recovery and live updater",
+    "Visually inspect full-app screenshot and remove stale cable-direction glyphs from preview"
+  ],
+  "evaluation": {
+    "commands": [
+      "python skills/isaac-sim-remote/scripts/isaacsim_send.py --context drop_validation --file exact_joint/validate_drop_live.py --timeout 45",
+      "Return to cable FEM, then send exact_joint/validate_apply_live.py --timeout 45",
+      "python skills/isaac-sim-remote/scripts/isaacsim_send.py --context drop_mesh_audit --file exact_joint/audit_drop_mesh_live.py --timeout 180"
+    ],
+    "conditions": "Baseline 30 mm source joint; PLA 0.4 mm, PET 80 um, assumed 0.2 mm gap and elastic moduli. Upright foot-first release, zero cable tensions, rigid horizontal floor, no payload. Local stage safety export preserved before initial code refresh.",
+    "recorded_utc": "2026-09-07T04:22:34Z",
+    "metrics": {
+      "numeric_tests_passed": 13,
+      "apply_real_click_cases_passed": 5,
+      "drop_ui_passed": true,
+      "maintenance_refresh_passed": true,
+      "initial_foot_clearance_m": 0.07,
+      "contact_foot_clearance_m": 0,
+      "contact_time_s": 0.1194619265114655,
+      "incident_speed_m_s": 1.1719214990774767,
+      "incident_energy_j": 0.034335000000000004,
+      "mesh_refinements": 4,
+      "pet_volume_change_fraction": 0.007658623125924358,
+      "compression_ref3_to_ref4_change_fraction": 0.15681116940850015,
+      "mesh_converged": false,
+      "fixed_reference_geometry": false,
+      "survives": null
+    },
+    "known_failure_fixed": "An active-preview maintenance refresh exposed CancelledError from a newly created updater cancelled before its first frame. Parent callers now handle cancellation; the final regression includes this case."
+  },
+  "artifacts": {
+    "config": "config.json",
+    "config_sha256": "183d454e259fcb37d10f3f59ea652ee5d5d39ed62182f6abfd0b14884994fbc8",
+    "metrics": "metrics.json",
+    "metrics_sha256": "2f34239f0201fb89ce0a8a4b69cca4afd3f3258545170825f64350e27d44bc99",
+    "preview": "preview.png",
+    "preview_sha256": "e841dece5ab2665b389e135bc1879cd33dc34856e2ecf4c1e5ac0d3fd2967e4e",
+    "checkpoint": null,
+    "checkpoint_sha256": null,
+    "source_sha256": {
+      "app.py": "4b89199332e1a91c8661f8c6133d8778e9606248e0f7dd6d34a739e0a4699eeb",
+      "geometry.py": "9543d13cd963a947d67394f1ac86c777bcf91f9eae96138855fe9e5b4a5f9be2",
+      "mechanics.py": "e5e9f34da66582c177a0af00056ca4c2e221a2740d43807edcb98bc342215486",
+      "drop_test.py": "0d20a9e480724bcd6636d0039596058a69e2d29ae91e8dcb6653f4f98cd3ef3c",
+      "drop_preview.py": "63131cfd661d16c8ff09072a9159402fef283c5bf2276f468acc7a938f3d005c",
+      "refresh_ui_live.py": "9771f698d0c7d490381ac0c44173c0477d10f97f3a4c3da0c625f91e45ac1c13",
+      "validate_drop_live.py": "db3abe4cc6567e7058b46a9760f161b37a9fac812c2dc439108741a177265541"
+    }
+  },
+  "limitations": [
+    "Quasistatic FEM has no mass/inertia or transient impact integration",
+    "No foot contact, self-contact, impact damping or restitution model",
+    "No calibrated rate-dependent PLA/PET failure or adhesive separation law",
+    "Mesh response is unconverged; PET reference volume changes with refinement",
+    "Measured mass distribution, material coupons and impact data are unavailable"
+  ],
+  "notes": "No dynamic impact FEM, fracture calculation or survival verdict. Passing functional tests does not validate stresses. Earlier v8/v9 and FEA/ML artifacts preserved. Mass and landing orientation/surface are labelled assumptions, not measured Sony test replication."
+}

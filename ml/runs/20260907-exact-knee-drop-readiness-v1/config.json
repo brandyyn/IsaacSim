@@ -1,0 +1,20 @@
+{
+  "fem": {
+    "width_m": 0.03,
+    "pet_thickness_m": 0.00008,
+    "pla_thickness_m": 0.0004,
+    "pet_modulus_pa": 3500000000,
+    "pla_modulus_pa": 2200000000,
+    "pet_poisson": 0.35,
+    "pla_poisson": 0.35,
+    "hinge_gap_m": 0.0002,
+    "refinement": 1
+  },
+  "drop": {
+    "height_m": 0.07,
+    "upper_mass_kg": 0.03,
+    "lower_mass_kg": 0.02,
+    "gravity_m_s2": 9.81,
+    "playback_speed": 0.05
+  }
+}

@@ -1,0 +1,665 @@
+{
+  "drop_ui": {
+    "scope": "Operational/ballistic validation only; no impact FEM or survival assessment",
+    "fractional_refinement_real_click_rejected_without_rebuild": true,
+    "ballistics": {
+      "scope": "Analytic free fall to first contact only; no impact FEM",
+      "assumptions_si": {
+        "height_m": 0.07,
+        "upper_mass_kg": 0.03,
+        "lower_mass_kg": 0.02,
+        "gravity_m_s2": 9.81,
+        "playback_speed": 0.05
+      },
+      "total_mass_kg": 0.05,
+      "mass_provenance": "Provisional example authorized by user; includes knee and plates, no payload",
+      "orientation": "Upright, foot first; zero initial velocity and zero cable tension",
+      "surface": "Rigid horizontal plane; only first-contact height is evaluated",
+      "height_definition": "Initial lowest foot point to floor top, not center-of-mass height",
+      "contact": {
+        "time_s": 0.1194619265114655,
+        "clearance_m": 0,
+        "fallen_m": 0.07,
+        "incident_downward_speed_m_s": 1.1719214990774767,
+        "kinetic_energy_j": 0.034335000000000004,
+        "at_first_contact": true,
+        "impact_force_n": null,
+        "impact_stress_pa": null,
+        "survives": null
+      },
+      "mass_sensitivity": [
+        {
+          "mass_kg": 0.025,
+          "incident_energy_j": 0.017167500000000002
+        },
+        {
+          "mass_kg": 0.05,
+          "incident_energy_j": 0.034335000000000004
+        },
+        {
+          "mass_kg": 0.1,
+          "incident_energy_j": 0.06867000000000001
+        }
+      ],
+      "status": "SURVIVAL_INDETERMINATE",
+      "blockers": [
+        "Quasistatic FEM has no mass/inertia or transient impact integration",
+        "No foot contact, self-contact, impact damping or restitution model",
+        "No calibrated rate-dependent PLA/PET failure or adhesive separation law",
+        "Mesh response is unconverged; PET reference volume changes with refinement",
+        "Measured mass distribution, material coupons and impact data are unavailable"
+      ]
+    },
+    "world_gap_samples": [
+      {
+        "time_s": 0.04522734000347555,
+        "world_foot_gap_m": 0.059966762248010154
+      },
+      {
+        "time_s": 0.04795598500641062,
+        "world_foot_gap_m": 0.05871959627762844
+      },
+      {
+        "time_s": 0.05076228500111028,
+        "world_foot_gap_m": 0.057360749017291
+      },
+      {
+        "time_s": 0.05346306500141509,
+        "world_foot_gap_m": 0.055980041838610155
+      },
+      {
+        "time_s": 0.056192680005915464,
+        "world_foot_gap_m": 0.054511887210957434
+      },
+      {
+        "time_s": 0.05897167500224896,
+        "world_foot_gap_m": 0.05294208529013986
+      },
+      {
+        "time_s": 0.061698985006660226,
+        "world_foot_gap_m": 0.05132781889707053
+      },
+      {
+        "time_s": 0.0643779350037221,
+        "world_foot_gap_m": 0.0496711366822403
+      },
+      {
+        "time_s": 0.06700463500455954,
+        "world_foot_gap_m": 0.047978408445177735
+      },
+      {
+        "time_s": 0.0696325750031974,
+        "world_foot_gap_m": 0.046217148564770154
+      },
+      {
+        "time_s": 0.07225983500247819,
+        "world_foot_gap_m": 0.044388622183758754
+      },
+      {
+        "time_s": 0.07488607000559566,
+        "world_foot_gap_m": 0.04249313532626902
+      },
+      {
+        "time_s": 0.07763976500136775,
+        "world_foot_gap_m": 0.04043298809806139
+      },
+      {
+        "time_s": 0.08039097000146282,
+        "world_foot_gap_m": 0.038300416976608256
+      },
+      {
+        "time_s": 0.08306825500330885,
+        "world_foot_gap_m": 0.03615385687750928
+      },
+      {
+        "time_s": 0.08582231500186022,
+        "world_foot_gap_m": 0.03387237086507386
+      },
+      {
+        "time_s": 0.08857673000311475,
+        "world_foot_gap_m": 0.03151616903409081
+      },
+      {
+        "time_s": 0.0914042850024998,
+        "world_foot_gap_m": 0.029019984031006696
+      },
+      {
+        "time_s": 0.094156725006178,
+        "world_foot_gap_m": 0.02651477712262433
+      },
+      {
+        "time_s": 0.09691041000187392,
+        "world_foot_gap_m": 0.023934066785182957
+      },
+      {
+        "time_s": 0.09968941000406624,
+        "world_foot_gap_m": 0.02125421561956698
+      },
+      {
+        "time_s": 0.10236676500644529,
+        "world_foot_gap_m": 0.018600727795475107
+      },
+      {
+        "time_s": 0.10501977000385516,
+        "world_foot_gap_m": 0.015902008990394775
+      },
+      {
+        "time_s": 0.10769670000299805,
+        "world_foot_gap_m": 0.013108969065517097
+      },
+      {
+        "time_s": 0.11037398500484409,
+        "world_foot_gap_m": 0.010245246744507976
+      },
+      {
+        "time_s": 0.11302978500607418,
+        "world_foot_gap_m": 0.0073350330757625815
+      },
+      {
+        "time_s": 0.11570780500187532,
+        "world_foot_gap_m": 0.004330407441383424
+      },
+      {
+        "time_s": 0.11841066000633867,
+        "world_foot_gap_m": 0.0012265810026143298
+      }
+    ],
+    "initial_foot_gap_m": 0.07,
+    "contact_foot_gap_m": 0,
+    "paused_physical_time_s": 0.035965165001107385,
+    "paused_world_gap_m": 0.0636554163761035,
+    "hard_stop_at_contact": true,
+    "no_fem_updates_during_fall": true,
+    "unchanged_local_fem_mesh": true,
+    "save_real_click_passed": true,
+    "return_restores_scene_and_working_cable_demo": true,
+    "maintenance_refresh_during_preview_restores_live_updater": true,
+    "numeric_tests": {
+      "count": 13,
+      "passed": true,
+      "output": "test_cable_equilibrium_and_rigid_roofs (exact_joint.test_exact_joint.ExactJointTests.test_cable_equilibrium_and_rigid_roofs) ... ok\ntest_exact_source_identity (exact_joint.test_exact_joint.ExactJointTests.test_exact_source_identity) ... ok\ntest_invalid_initial_state_rejected (exact_joint.test_exact_joint.ExactJointTests.test_invalid_initial_state_rejected) ... ok\ntest_material_and_force_scaling (exact_joint.test_exact_joint.ExactJointTests.test_material_and_force_scaling) ... ok\ntest_negative_tension_rejected (exact_joint.test_exact_joint.ExactJointTests.test_negative_tension_rejected) ... ok\ntest_quadratic_patch (exact_joint.test_exact_joint.ExactJointTests.test_quadratic_patch) ... ok\ntest_refinement_input_is_not_truncated (exact_joint.test_exact_joint.ExactJointTests.test_refinement_input_is_not_truncated) ... ok\ntest_twist_reversal_and_compression (exact_joint.test_exact_joint.ExactJointTests.test_twist_reversal_and_compression) ... ok\ntest_zero_load (exact_joint.test_exact_joint.ExactJointTests.test_zero_load) ... ok\ntest_energy_conservation_and_mass_independent_fall (exact_joint.test_drop_test.DropTests.test_energy_conservation_and_mass_independent_fall) ... ok\ntest_invalid_inputs (exact_joint.test_drop_test.DropTests.test_invalid_inputs) ... ok\ntest_no_post_contact_or_survival_extrapolation (exact_joint.test_drop_test.DropTests.test_no_post_contact_or_survival_extrapolation) ... ok\ntest_seventy_mm_contact (exact_joint.test_drop_test.DropTests.test_seventy_mm_contact) ... ok\n\n----------------------------------------------------------------------\nRan 13 tests in 0.869s\n\nOK\n"
+    },
+    "source_sha256": {
+      "app.py": "4b89199332e1a91c8661f8c6133d8778e9606248e0f7dd6d34a739e0a4699eeb",
+      "geometry.py": "9543d13cd963a947d67394f1ac86c777bcf91f9eae96138855fe9e5b4a5f9be2",
+      "mechanics.py": "e5e9f34da66582c177a0af00056ca4c2e221a2740d43807edcb98bc342215486",
+      "drop_test.py": "0d20a9e480724bcd6636d0039596058a69e2d29ae91e8dcb6653f4f98cd3ef3c",
+      "drop_preview.py": "63131cfd661d16c8ff09072a9159402fef283c5bf2276f468acc7a938f3d005c",
+      "refresh_ui_live.py": "9771f698d0c7d490381ac0c44173c0477d10f97f3a4c3da0c625f91e45ac1c13",
+      "validate_drop_live.py": "db3abe4cc6567e7058b46a9760f161b37a9fac812c2dc439108741a177265541"
+    },
+    "all_operational_checks_passed": true
+  },
+  "apply_ui": {
+    "cases": [
+      {
+        "input_n": 0.1,
+        "applied": true,
+        "feedback": "APPLIED - update 51. Read the values below. Actual knee 1x; diagnostic displacement 500x (display only).",
+        "accepted_commands": {
+          "Knee": {
+            "mode": "Compression",
+            "tension_n": 0.1
+          }
+        },
+        "stats": {
+          "cap_translation_m": [
+            -2.0479334042096898e-7,
+            1.2316392281178818e-7,
+            0.0000025214703375065124
+          ],
+          "cap_rotation_vector_rad": [
+            0.000009031785552693444,
+            0.000015843643806461637,
+            -0.0000016434774259280465
+          ],
+          "compression_m": 0.0000025214703375065124,
+          "bend_xy_deg": [
+            0.000517483193636566,
+            0.0009077739222188384
+          ],
+          "twist_deg": -0.00009416432023070144,
+          "tensions_n": [
+            0.1,
+            0.1,
+            0.1,
+            0.1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "lengths_m": [
+            0.02639737635289309,
+            0.02639785166219989,
+            0.026397580708641386,
+            0.026397105399334587,
+            0.03996039045693663,
+            0.03996045768007908,
+            0.03996020497639812,
+            0.03996013775473875,
+            0.03996042098122349,
+            0.03996048875541323,
+            0.03996024848206918,
+            0.03996018070938011
+          ],
+          "max_principal_strain": 0.0017199923775747543,
+          "max_von_mises_pa": 4687976.34843407,
+          "pet_peak_pa": 4687976.34843407,
+          "pla_peak_pa": 57635.61647130893,
+          "cap_equilibrium_residual_n_equivalent": 1.40485585382616e-12,
+          "force_balance_n": [
+            5.89434596001226e-14,
+            -1.3179163884413409e-13,
+            7.654987754790454e-14
+          ],
+          "strain_energy_j": 5.042935116898485e-7,
+          "newton_iterations": 2,
+          "within_small_deformation_model": true,
+          "solver": "live cable-loaded statically condensed 3D TET10 linear-elastic FEM; four Gauss points; exact rigid cap transforms",
+          "scope": "quasistatic; no gravity/payload/inertia/contact/plasticity/fatigue/slack dynamics; unconverged mesh"
+        },
+        "scene_point_change_m": 0.0000035939738154411316
+      },
+      {
+        "input_n": 0.2,
+        "applied": true,
+        "feedback": "APPLIED - update 75. Read the values below. Actual knee 1x; diagnostic displacement 500x (display only).",
+        "accepted_commands": {
+          "Knee": {
+            "mode": "Compression",
+            "tension_n": 0.2
+          }
+        },
+        "stats": {
+          "cap_translation_m": [
+            -4.095212792261988e-7,
+            2.4629113407373597e-7,
+            0.000005042932839192809
+          ],
+          "cap_rotation_vector_rad": [
+            0.000018061655592778766,
+            0.00003168370136369571,
+            -0.000003286512391226272
+          ],
+          "compression_m": 0.000005042932839192809,
+          "bend_xy_deg": [
+            0.0010348566364850823,
+            0.0018153423674926552
+          ],
+          "twist_deg": -0.00018830328933471343,
+          "tensions_n": [
+            0.2,
+            0.2,
+            0.2,
+            0.2,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "lengths_m": [
+            0.026394752740890974,
+            0.026395703251902238,
+            0.026395161402266696,
+            0.026394210891255435,
+            0.03995879903488673,
+            0.03995893348382134,
+            0.039958428163199264,
+            0.03995829372019571,
+            0.03995886010876183,
+            0.039958995609829975,
+            0.039958515135538115,
+            0.03995837964047197
+          ],
+          "max_principal_strain": 0.0034400364491173623,
+          "max_von_mises_pa": 9376092.230921408,
+          "pet_peak_pa": 9376092.230921408,
+          "pla_peak_pa": 115273.3649676243,
+          "cap_equilibrium_residual_n_equivalent": 1.7824652775188353e-11,
+          "force_balance_n": [
+            1.1083269464549255e-12,
+            2.213646881901385e-12,
+            3.006261906079999e-12
+          ],
+          "strain_energy_j": 0.0000020171686899758584,
+          "newton_iterations": 2,
+          "within_small_deformation_model": true,
+          "solver": "live cable-loaded statically condensed 3D TET10 linear-elastic FEM; four Gauss points; exact rigid cap transforms",
+          "scope": "quasistatic; no gravity/payload/inertia/contact/plasticity/fatigue/slack dynamics; unconverged mesh"
+        },
+        "scene_point_change_m": 0.000003593042492866516
+      },
+      {
+        "input_n": 40,
+        "applied": false,
+        "feedback": "NOT APPLIED: 40.000 N / cable. Cable input rejected: Small-strain model limit exceeded. Try 0.10 N; large folds need nonlinear FEM.\nLast accepted result is still displayed.",
+        "accepted_commands": {
+          "Knee": {
+            "mode": "Compression",
+            "tension_n": 0.2
+          }
+        },
+        "stats": {
+          "cap_translation_m": [
+            -4.095212792261988e-7,
+            2.4629113407373597e-7,
+            0.000005042932839192809
+          ],
+          "cap_rotation_vector_rad": [
+            0.000018061655592778766,
+            0.00003168370136369571,
+            -0.000003286512391226272
+          ],
+          "compression_m": 0.000005042932839192809,
+          "bend_xy_deg": [
+            0.0010348566364850823,
+            0.0018153423674926552
+          ],
+          "twist_deg": -0.00018830328933471343,
+          "tensions_n": [
+            0.2,
+            0.2,
+            0.2,
+            0.2,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "lengths_m": [
+            0.026394752740890974,
+            0.026395703251902238,
+            0.026395161402266696,
+            0.026394210891255435,
+            0.03995879903488673,
+            0.03995893348382134,
+            0.039958428163199264,
+            0.03995829372019571,
+            0.03995886010876183,
+            0.039958995609829975,
+            0.039958515135538115,
+            0.03995837964047197
+          ],
+          "max_principal_strain": 0.0034400364491173623,
+          "max_von_mises_pa": 9376092.230921408,
+          "pet_peak_pa": 9376092.230921408,
+          "pla_peak_pa": 115273.3649676243,
+          "cap_equilibrium_residual_n_equivalent": 1.7824652775188353e-11,
+          "force_balance_n": [
+            1.1083269464549255e-12,
+            2.213646881901385e-12,
+            3.006261906079999e-12
+          ],
+          "strain_energy_j": 0.0000020171686899758584,
+          "newton_iterations": 2,
+          "within_small_deformation_model": true,
+          "solver": "live cable-loaded statically condensed 3D TET10 linear-elastic FEM; four Gauss points; exact rigid cap transforms",
+          "scope": "quasistatic; no gravity/payload/inertia/contact/plasticity/fatigue/slack dynamics; unconverged mesh"
+        },
+        "scene_point_change_m": 0,
+        "rejected_export_preserves_accepted_load": true
+      },
+      {
+        "input_n": -1,
+        "applied": false,
+        "feedback": "NOT APPLIED: -1.000 N / cable. Cable input rejected: Cable tension must be finite and nonnegative\nLast accepted result is still displayed.",
+        "accepted_commands": {
+          "Knee": {
+            "mode": "Compression",
+            "tension_n": 0.2
+          }
+        },
+        "stats": {
+          "cap_translation_m": [
+            -4.095212792261988e-7,
+            2.4629113407373597e-7,
+            0.000005042932839192809
+          ],
+          "cap_rotation_vector_rad": [
+            0.000018061655592778766,
+            0.00003168370136369571,
+            -0.000003286512391226272
+          ],
+          "compression_m": 0.000005042932839192809,
+          "bend_xy_deg": [
+            0.0010348566364850823,
+            0.0018153423674926552
+          ],
+          "twist_deg": -0.00018830328933471343,
+          "tensions_n": [
+            0.2,
+            0.2,
+            0.2,
+            0.2,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "lengths_m": [
+            0.026394752740890974,
+            0.026395703251902238,
+            0.026395161402266696,
+            0.026394210891255435,
+            0.03995879903488673,
+            0.03995893348382134,
+            0.039958428163199264,
+            0.03995829372019571,
+            0.03995886010876183,
+            0.039958995609829975,
+            0.039958515135538115,
+            0.03995837964047197
+          ],
+          "max_principal_strain": 0.0034400364491173623,
+          "max_von_mises_pa": 9376092.230921408,
+          "pet_peak_pa": 9376092.230921408,
+          "pla_peak_pa": 115273.3649676243,
+          "cap_equilibrium_residual_n_equivalent": 1.7824652775188353e-11,
+          "force_balance_n": [
+            1.1083269464549255e-12,
+            2.213646881901385e-12,
+            3.006261906079999e-12
+          ],
+          "strain_energy_j": 0.0000020171686899758584,
+          "newton_iterations": 2,
+          "within_small_deformation_model": true,
+          "solver": "live cable-loaded statically condensed 3D TET10 linear-elastic FEM; four Gauss points; exact rigid cap transforms",
+          "scope": "quasistatic; no gravity/payload/inertia/contact/plasticity/fatigue/slack dynamics; unconverged mesh"
+        },
+        "scene_point_change_m": 0
+      },
+      {
+        "input_n": 0.1,
+        "applied": true,
+        "feedback": "APPLIED - update 100. Read the values below. Actual knee 1x; diagnostic displacement 500x (display only).",
+        "accepted_commands": {
+          "Knee": {
+            "mode": "Compression",
+            "tension_n": 0.1
+          }
+        },
+        "stats": {
+          "cap_translation_m": [
+            -2.0479334042556731e-7,
+            1.2316392280751474e-7,
+            0.0000025214703375086727
+          ],
+          "cap_rotation_vector_rad": [
+            0.000009031785552392858,
+            0.000015843643806797598,
+            -0.0000016434774261188193
+          ],
+          "compression_m": 0.0000025214703375086727,
+          "bend_xy_deg": [
+            0.0005174831936193437,
+            0.0009077739222380874
+          ],
+          "twist_deg": -0.00009416432024163192,
+          "tensions_n": [
+            0.1,
+            0.1,
+            0.1,
+            0.1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "lengths_m": [
+            0.02639737635289308,
+            0.02639785166219989,
+            0.026397580708641392,
+            0.026397105399334583,
+            0.039960390456936626,
+            0.03996045768007908,
+            0.039960204976398114,
+            0.03996013775473874,
+            0.03996042098122349,
+            0.039960488755413234,
+            0.03996024848206919,
+            0.03996018070938011
+          ],
+          "max_principal_strain": 0.0017199923775773618,
+          "max_von_mises_pa": 4687976.348440556,
+          "pet_peak_pa": 4687976.348440556,
+          "pla_peak_pa": 57635.61647133043,
+          "cap_equilibrium_residual_n_equivalent": 1.168941170456594e-12,
+          "force_balance_n": [
+            -1.0775358876653415e-13,
+            -1.5318677904905176e-13,
+            -2.4052981828504016e-13
+          ],
+          "strain_energy_j": 5.042935116902878e-7,
+          "newton_iterations": 2,
+          "within_small_deformation_model": true,
+          "solver": "live cable-loaded statically condensed 3D TET10 linear-elastic FEM; four Gauss points; exact rigid cap transforms",
+          "scope": "quasistatic; no gravity/payload/inertia/contact/plasticity/fatigue/slack dynamics; unconverged mesh"
+        },
+        "scene_point_change_m": 0.000003593042492866516
+      }
+    ],
+    "source_sha256": "d578618a0f90342bd0093b4febe130dc0b07c18f1b223c4d6bf02c9f3d93ce35",
+    "ui_source_sha256": "30dbe704798a14932f1a651f81a348a628b53bc40ea781fa0dbd1b56c4e634cd",
+    "current_scene_and_fem_preserved": true,
+    "compression_ratio_0_2_over_0_1_n": 1.9999968923607392,
+    "stress_view_enabled": true,
+    "numeric_tests": {
+      "count": 9,
+      "passed": true,
+      "output": "test_cable_equilibrium_and_rigid_roofs (exact_joint.test_exact_joint.ExactJointTests.test_cable_equilibrium_and_rigid_roofs) ... ok\ntest_exact_source_identity (exact_joint.test_exact_joint.ExactJointTests.test_exact_source_identity) ... ok\ntest_invalid_initial_state_rejected (exact_joint.test_exact_joint.ExactJointTests.test_invalid_initial_state_rejected) ... ok\ntest_material_and_force_scaling (exact_joint.test_exact_joint.ExactJointTests.test_material_and_force_scaling) ... ok\ntest_negative_tension_rejected (exact_joint.test_exact_joint.ExactJointTests.test_negative_tension_rejected) ... ok\ntest_quadratic_patch (exact_joint.test_exact_joint.ExactJointTests.test_quadratic_patch) ... ok\ntest_refinement_input_is_not_truncated (exact_joint.test_exact_joint.ExactJointTests.test_refinement_input_is_not_truncated) ... ok\ntest_twist_reversal_and_compression (exact_joint.test_exact_joint.ExactJointTests.test_twist_reversal_and_compression) ... ok\ntest_zero_load (exact_joint.test_exact_joint.ExactJointTests.test_zero_load) ... ok\n\n----------------------------------------------------------------------\nRan 9 tests in 0.853s\n\nOK\n"
+    }
+  },
+  "mesh_audit": {
+    "baseline_config": {
+      "width_m": 0.03,
+      "pet_thickness_m": 0.00008,
+      "pla_thickness_m": 0.0004,
+      "pet_modulus_pa": 3500000000,
+      "pla_modulus_pa": 2200000000,
+      "pet_poisson": 0.35,
+      "pla_poisson": 0.35,
+      "hinge_gap_m": 0.0002,
+      "refinement": 1
+    },
+    "meshes": [
+      {
+        "refinement": 1,
+        "nodes": 2616,
+        "elements": 1152,
+        "pet_volume_m3": 2.4602862156514913e-7,
+        "pla_volume_m3": 0.0000011544462213554362,
+        "compression_m": 0.0000025214703375074746,
+        "peak_strain": 0.0017199923775901194
+      },
+      {
+        "refinement": 2,
+        "nodes": 9552,
+        "elements": 4608,
+        "pet_volume_m3": 2.471380514081064e-7,
+        "pla_volume_m3": 0.000001154446221355436,
+        "compression_m": 0.000004983536838192261,
+        "peak_strain": 0.004389240978609266
+      },
+      {
+        "refinement": 3,
+        "nodes": 20904,
+        "elements": 10368,
+        "pet_volume_m3": 2.474784196374453e-7,
+        "pla_volume_m3": 0.0000011544462213554368,
+        "compression_m": 0.000006207229968984826,
+        "peak_strain": 0.0061188508869123755
+      },
+      {
+        "refinement": 4,
+        "nodes": 36672,
+        "elements": 18432,
+        "pet_volume_m3": 2.4791286205590725e-7,
+        "pla_volume_m3": 0.0000011544462213554362,
+        "compression_m": 0.000007180592959208825,
+        "peak_strain": 0.007555691063478113
+      }
+    ],
+    "load": {
+      "mode": "Compression",
+      "tension_per_active_cable_n": 0.1
+    },
+    "source_sha256": "d578618a0f90342bd0093b4febe130dc0b07c18f1b223c4d6bf02c9f3d93ce35",
+    "pet_volume_relative_change_ref1_to_ref4": 0.007658623125924358,
+    "compression_relative_change_ref3_to_ref4": 0.15681116940850015,
+    "five_percent_response_convergence_passed": false,
+    "fixed_reference_geometry_passed": false,
+    "interpretation": "Known defect: refinement changes PET extrusion normals/reference volume. Neither convergence nor survival is established.",
+    "source_files_sha256": {
+      "geometry.py": "9543d13cd963a947d67394f1ac86c777bcf91f9eae96138855fe9e5b4a5f9be2",
+      "mechanics.py": "e5e9f34da66582c177a0af00056ca4c2e221a2740d43807edcb98bc342215486",
+      "audit_drop_mesh_live.py": "808a5684149f6cadc5c38803e591510a4b8d0e1eb361844b00132239ed726c1e"
+    }
+  },
+  "visual_qa": {
+    "visually_inspected": true,
+    "full_app_png": "preview.png",
+    "png_bytes": 397273,
+    "mean_rgb": 109.93055996241173,
+    "width": 2560,
+    "height": 1369,
+    "dome_intensity": 900,
+    "distant_intensity": 2400,
+    "requested_render_mode": "RayTracedLighting",
+    "actual_render_mode": "RealTimePathTracing",
+    "render_note": "RTX Real-Time 2.0 normalized mode, not offline PathTracing",
+    "tonemap_op": 4,
+    "gpu_memory_total_mib": 12227,
+    "gpu_memory_used_mib": 3301,
+    "one_physical_origami_knee": true,
+    "diagnostics_deactivated_during_drop": true
+  },
+  "tooling": {
+    "python_files_syntax_passed": 23,
+    "syntax_mode": "PyCF_ALLOW_TOP_LEVEL_AWAIT for Kit remote scripts",
+    "diff_whitespace_check": "passed",
+    "formatter": "Not available in configured local runtime; no formatting execution claimed"
+  },
+  "validation_scope": "Operational UI and analytic-ballistic checks pass; fixed-reference geometry and structural convergence fail. No dynamic impact integration, survival evaluation or ML training.",
+  "duration_note": "Physical free-fall time is 0.11946 s by the specified 70 mm height; the generic 3 s settled-physics gate is not applicable to this pre-contact-only analytic preview. This is not a PhysX dynamics validation."
+}
