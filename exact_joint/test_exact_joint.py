@@ -7,7 +7,7 @@ import unittest
 import numpy as np
 
 from exact_joint.elements import elevate,b_matrices,GAUSS
-from exact_joint.geometry import JointConfig,load_source,laminate_mesh
+from exact_joint.geometry import JointConfig,load_source,laminate_mesh,parse_refinement
 from exact_joint.mechanics import CableFem,tension_pattern
 
 
@@ -77,6 +77,18 @@ class ExactJointTests(unittest.TestCase):
     def test_negative_tension_rejected(self):
         with self.assertRaises(ValueError):
             self.model.solve(-np.ones(12))
+
+    def test_refinement_input_is_not_truncated(self):
+        for value in (1,2.0,3,4):
+            self.assertEqual(parse_refinement(value),int(value))
+        for value in (0,5,2.9,-1,np.nan,np.inf,-np.inf):
+            with self.subTest(value=value),self.assertRaises(ValueError):
+                parse_refinement(value)
+
+    def test_invalid_initial_state_rejected(self):
+        for state in (np.zeros(5),np.zeros((6,1)),np.full(6,np.nan),np.full(6,np.inf)):
+            with self.subTest(shape=state.shape),self.assertRaises(ValueError):
+                self.model.solve(np.zeros(12),initial=state)
 
 
 if __name__=="__main__":

@@ -279,7 +279,7 @@ has been trained, and the canonical v8/author v9 assets remain unchanged.
 
 ## Validation: passed implementation checks, failed convergence
 
-Seven tests pass: exact source identity; quadratic patch and rigid-motion invariance;
+The original seven tests pass: exact source identity; quadratic patch and rigid-motion invariance;
 zero load; cable/FEM force equilibrium and rigid roofs; twist reversal; material/load
 scaling; rejection of negative tension. The single-knee live validation asserts that
 no hip or ankle origami module exists and exercises all seven cable patterns. Exact
@@ -330,6 +330,70 @@ and hysteresis, measure cable force versus cap displacement/rotation, and verify
 clearance and bond behavior. Then add nonlinear folding/contact and loaded leg validation.
 Repeating the origami module at other joints is deferred, not part of the active scene.
 Only after those non-ML checks pass should this become a calibrated ML environment.
+
+## 70 mm drop: pre-impact preview, survival indeterminate (2026-09-07)
+
+Click **70 mm drop preview (no impact FEM)** in the cable workshop. It uses the
+original knee and whole rigid-link leg, upright and foot first. **Replay 70 mm**
+starts an analytic gravity release at 0.05x playback (20 times slower than real
+time). **Pause / resume fall** freezes/resumes it. The preview stops exactly at
+first foot contact; **Return to cable FEM** removes the preview translation,
+restores the stress diagnostic and returns to unloaded, paused cable FEM. Click
+Cable demo or Apply to run the structural experiment again.
+
+The user specified 70 mm and authorized example masses. We assume **50 g total**:
+30 g upper-side and 20 g lower-side, including knee/plates, no payload. This is not
+a measured or optimized mass distribution, and it is not used to fabricate a
+dynamic mass matrix. The floor is an assumed rigid horizontal surface. Height is
+measured from the lowest foot point to the floor top. Cables are unloaded.
+
+The preview evaluates `distance = g*t^2/2`, `speed = g*t`, `energy = m*g*h`,
+with `g = 9.81 m/s^2`. At contact: **119.46 ms**, **1.17192 m/s**, **0.034335 J**.
+For 25/50/100 g, incident energies are 0.0171675/0.034335/0.06867 J; fall time and
+speed are unchanged. These are incident whole-leg quantities, not peak force,
+absorbed knee energy, a strength limit or a survival verdict.
+
+**No impact FEM is running in this preview.** The assembly stays undeformed
+during ideal uniform-gravity free fall, and no continuation after contact is
+computed. A visually intact joint does not show that it survived. The existing
+cable FEM has no inertia, contact, plasticity, rate-dependent failure or adhesive
+separation model. A credible survival assessment needs those models and measured
+material/crease/bond data, as well as mesh convergence and mass distribution.
+Native timeline Play does not turn this preview into an impact calculation;
+use the labelled preview controls.
+
+**Save drop assumptions** exports a JSON report with assumptions, ballistics,
+current preview time and explicit null impact-force/stress/survival fields. It
+does not export a fracture prediction. `drop_test.py` holds the SI assumptions
+and analytic calculation; `drop_preview.py` owns the visible replay. To explore
+different assumed masses programmatically, create a `DropCase`; the GUI button
+uses the documented default 70 mm / 50 g case.
+
+### Defects and remaining validation gates
+
+- Fixed: a fractional UI refinement such as 2.9 was silently truncated to 2.
+  It is now rejected before Rebuild, preserving the scene and assembled FEM.
+- Fixed: malformed or nonfinite initial six-DOF solver states are explicitly
+  rejected. These add two numerical regression tests (nine FEM tests total).
+- **Still open:** PET outer-layer normals are regenerated when mesh refinement
+  inserts vertices. PET reference volume increases **0.766%** from refinement
+  1 to 4, while PLA volume stays constant. Thus the refinement sweep does not
+  hold the entire laminate reference geometry fixed. Original JSON source
+  vertices remain exact, but this generated-volume defect needs a new mesh
+  revision and a fresh FEA case, not a silent edit of earlier results.
+- **Still unconverged:** compression at 0.1 N per active cable rises from
+  6.207 um (refinement 3) to 7.181 um (refinement 4): **15.68%**, failing 5%.
+  Neither stresses nor gap optimization nor impact survival are validated.
+
+Run `validate_drop_live.py` through the Python server for real-button checks:
+fractional-refinement rejection, world-space 70 mm/zero contact clearance,
+pause/resume, hard stop, hidden diagnostics, no FEM updates during the fall,
+Save, restoration and working cable demo. It also runs nine FEM and four
+ballistic tests. `audit_drop_mesh_live.py` reproduces the four-level mesh audit
+without replacing the displayed model (the large assemblies can briefly stall
+the viewport). The immutable case/run package is
+`fea/exact_joint_drop_70mm_v1/manifest.json` and
+`ml/runs/20260907-exact-knee-drop-readiness-v1/`.
 
 ## Technical references
 

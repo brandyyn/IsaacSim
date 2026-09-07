@@ -1,0 +1,279 @@
+{
+  "case_id": "exact_joint_drop_70mm_v1",
+  "status": "NOT_READY_FOR_IMPACT_SURVIVAL_INDETERMINATE",
+  "starting_commit": "825c018a42d90f02688d69a556827f55c386f46d",
+  "parent_case_id": "exact_joint_cable_v1",
+  "parent_case_sha256": "657ed88af8362f4f22af5221088139045a53ad9203baaf1af29f018d06d80c95",
+  "geometry": {
+    "source_asset": "generated in memory by exact_joint/scene.py",
+    "source_topology": "exact_joint/source_joint.json",
+    "geometry_revision": "user supplied input.json; original 28 vertices, 48 triangular panels, 2 quadrilateral roofs, 76 edges",
+    "sha256": "d578618a0f90342bd0093b4febe130dc0b07c18f1b223c4d6bf02c9f3d93ce35",
+    "normalized_repository_topology": "input_improved.json",
+    "normalized_repository_sha256": "1b13569928af71320f3ebbf466c2a10a65bcf4eccf2bb7b7d281c947f18a4469",
+    "origami_joint_instances": [
+      "Knee"
+    ],
+    "neutral_reference_bounds_m": [
+      0.03,
+      0.03,
+      0.0264
+    ],
+    "finite_thickness_added_outward": true
+  },
+  "units": {
+    "length": "m",
+    "mass": "kg",
+    "time": "s",
+    "force": "N",
+    "torque": "N*m",
+    "stress": "Pa",
+    "angle": "rad",
+    "human_facing_angle_tables": "deg (explicitly labelled)"
+  },
+  "frames": {
+    "fea_frame": "Right-handed; bottom roof center at (0,0,0), upper roof center at (0,0,0.0264); +Z points toward upper roof",
+    "isaac_frame": "Right-handed Z-up; floor top Z=-0.005 m; neutral knee local-to-world mapping plus analytic whole-leg root translation",
+    "source_to_fea": {
+      "rotation_matrix": [
+        [
+          1,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          -1
+        ],
+        [
+          0,
+          1,
+          0
+        ]
+      ],
+      "scale_m_per_source_unit": 0.00012,
+      "translation_m": [
+        0,
+        0,
+        0.0132
+      ],
+      "equation": "p_fea = scale * R * p_source + translation; no reflection"
+    },
+    "transform_fea_to_isaac": {
+      "rotation_matrix": [
+        [
+          1,
+          0,
+          0
+        ],
+        [
+          0,
+          1,
+          0
+        ],
+        [
+          0,
+          0,
+          1
+        ]
+      ],
+      "translation_m": [
+        0,
+        0,
+        0.1186
+      ],
+      "scale": 1,
+      "preview_root_translation_m": "[0,0,0.0339 - 0.5*9.81*t^2] for the current neutral leg; recomputed from world-space foot/floor bounds at preview entry"
+    },
+    "joint_axes_in_isaac": {
+      "bend_x": [
+        1,
+        0,
+        0
+      ],
+      "bend_y": [
+        0,
+        1,
+        0
+      ],
+      "twist": [
+        0,
+        0,
+        1
+      ],
+      "compression": [
+        0,
+        0,
+        1
+      ]
+    },
+    "neutral_angle_rad": 0,
+    "zero_definition": "Original folded JSON neutral shape, zero cable tensions; release from rest",
+    "positive_angle_direction": "Right-hand rotation-vector components of the bottom cap relative to fixed upper cap. Pattern names identify cable families, not Euler-angle signs.",
+    "compression_sign": "Positive bottom cap Z translation shortens cap separation."
+  },
+  "material": {
+    "model": "Provisional isotropic linear elasticity; perfect PLA/PET bond; no measured stock-grade identification",
+    "parameters": {
+      "width_m": 0.03,
+      "pet_thickness_m": 0.00008,
+      "pla_thickness_m": 0.0004,
+      "pet_modulus_pa": 3500000000,
+      "pla_modulus_pa": 2200000000,
+      "pet_poisson": 0.35,
+      "pla_poisson": 0.35,
+      "hinge_gap_m": 0.0002,
+      "refinement": 1
+    },
+    "confirmed_by_owner": [
+      "PLA thickness 0.0004 m",
+      "PET film thickness 0.00008 m"
+    ],
+    "provisional": [
+      "PET E 3.5e9 Pa",
+      "PLA E 2.2e9 Pa",
+      "Poisson ratio 0.35 each",
+      "PET exposed gap 0.0002 m"
+    ],
+    "gap_selection": "Owner requested least practical exposure. 0.1/0.2/0.4 mm numerical candidates only; manufacturing minimum and optimum NOT established.",
+    "application_to_drop": "Retained cable FEM constants for reference only; not used to evaluate impact stress or failure"
+  },
+  "mesh": {
+    "element_type": "Quadratic TET10, four-point Gauss integration, physical PET and PLA thickness",
+    "element_count": 1152,
+    "node_count": 2616,
+    "material_element_counts": {
+      "PET": 1008,
+      "PLA": 144
+    },
+    "characteristic_length_m": null,
+    "characteristic_length_note": "Highly nonuniform layered mesh; physical film thickness 80e-6 m, exposed gap 200e-6 m. No single representative element length.",
+    "mesh_revision": "exact_joint geometry/elements implementation",
+    "refinement_levels": [
+      {
+        "refinement": 1,
+        "nodes": 2616,
+        "elements": 1152,
+        "pet_volume_m3": 2.4602862156514913e-7,
+        "pla_volume_m3": 0.0000011544462213554362,
+        "compression_m": 0.0000025214703375074746,
+        "peak_strain": 0.0017199923775901194
+      },
+      {
+        "refinement": 2,
+        "nodes": 9552,
+        "elements": 4608,
+        "pet_volume_m3": 2.471380514081064e-7,
+        "pla_volume_m3": 0.000001154446221355436,
+        "compression_m": 0.000004983536838192261,
+        "peak_strain": 0.004389240978609266
+      },
+      {
+        "refinement": 3,
+        "nodes": 20904,
+        "elements": 10368,
+        "pet_volume_m3": 2.474784196374453e-7,
+        "pla_volume_m3": 0.0000011544462213554368,
+        "compression_m": 0.000006207229968984826,
+        "peak_strain": 0.0061188508869123755
+      },
+      {
+        "refinement": 4,
+        "nodes": 36672,
+        "elements": 18432,
+        "pet_volume_m3": 2.4791286205590725e-7,
+        "pla_volume_m3": 0.0000011544462213554362,
+        "compression_m": 0.000007180592959208825,
+        "peak_strain": 0.007555691063478113
+      }
+    ],
+    "convergence_tolerance_fraction": 0.05,
+    "convergence_pass": false,
+    "convergence_summary": "FAIL: refinement 3->4 compression +15.6811%; PET reference volume +0.765862% across 1->4. Entire reference laminate geometry is not held fixed.",
+    "reference_geometry_fixed": false
+  },
+  "boundary_conditions": [
+    "Whole leg initially upright, foot first, released from rest; no external fixed upper-cap support in the analytic translation preview",
+    "70 mm initial clearance from lowest foot point to rigid horizontal floor top",
+    "All parts translated as one undeformed assembly during ideal uniform-gravity free fall",
+    "Quasistatic cable controller suspended and diagnostics deactivated for preview; unloaded FEM restored on Return",
+    "STOP at first contact; no post-impact integration, rebound or stress/failure result"
+  ],
+  "loads": [
+    {
+      "type": "gravity_release",
+      "gravity_m_s2": 9.81,
+      "height_m": 0.07,
+      "total_mass_kg": 0.05,
+      "upper_mass_kg": 0.03,
+      "lower_mass_kg": 0.02,
+      "payload_mass_kg": 0,
+      "mass_provenance": "User authorized provisional small-robot example, not measured or optimized; 30/20 g partition includes knee and plates; no inertia tensor or element density inferred",
+      "cable_tensions_n": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    }
+  ],
+  "solver": {
+    "software": "Analytic free-fall preview in Isaac Sim Kit; no dynamic impact FEM",
+    "version": "exact_joint-drop-preimpact-v1",
+    "isaac_sim_version": "6.0.1-rc.7",
+    "kit_version": "110.1.2",
+    "runtime_build_commit": "5131a9740b3ce82e42331e923e1a45ffa396f71c",
+    "analysis_type": "Analytic pre-impact kinematics only",
+    "time_step_s": null,
+    "playback_time_scale": 0.05,
+    "contact_time_s": 0.1194619265114655,
+    "equations": [
+      "fallen_m = 0.5 * g * t^2",
+      "speed_m_s = g * t",
+      "incident_energy_j = mass * g * height"
+    ],
+    "stopping_rule": "Clamp t to sqrt(2h/g); hold rendered pose at first contact without extrapolating impact forces"
+  },
+  "outputs": {
+    "raw_files": [
+      "ml/runs/20260907-exact-knee-drop-readiness-v1/metrics.json"
+    ],
+    "processed_files": [
+      "exact_joint/README.md"
+    ],
+    "response_model": null,
+    "incident_downward_speed_m_s": 1.1719214990774767,
+    "incident_energy_j": 0.034335000000000004,
+    "impact_force_n": null,
+    "impact_stress_pa": null,
+    "survives": null
+  },
+  "limitations": [
+    "Quasistatic FEM has no mass/inertia or transient impact integration",
+    "No foot contact, self-contact, impact damping or restitution model",
+    "No calibrated rate-dependent PLA/PET failure or adhesive separation law",
+    "Mesh response is unconverged; PET reference volume changes with refinement",
+    "Measured mass distribution, material coupons and impact data are unavailable"
+  ],
+  "review": {
+    "prepared_by": "Codex",
+    "reviewed_by": [],
+    "date_utc": "2026-09-07",
+    "notes": "Operational and analytic checks passed; mesh validation failed; structural survival unassessed. Canonical v8/v9 and old FEA manifests unchanged."
+  },
+  "reproduction": {
+    "launch": "exact_joint/launch.ps1 -RuntimeRoot <built-release>",
+    "controls": "70 mm drop preview (no impact FEM) > Replay 70 mm; Return to cable FEM restores unloaded workshop",
+    "validate": "python skills/isaac-sim-remote/scripts/isaacsim_send.py --context drop_validation --file exact_joint/validate_drop_live.py --timeout 45",
+    "audit": "python skills/isaac-sim-remote/scripts/isaacsim_send.py --context drop_mesh_audit --file exact_joint/audit_drop_mesh_live.py --timeout 180"
+  }
+}

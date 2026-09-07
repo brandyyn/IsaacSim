@@ -138,6 +138,8 @@ class CableFem:
         if tensions.shape!=(12,) or not np.isfinite(tensions).all() or np.any(tensions<0):
             raise ValueError("Supply twelve finite nonnegative tensions in N")
         q = self.last_q.copy() if initial is None else np.asarray(initial,dtype=float).copy()
+        if q.shape!=(6,) or not np.isfinite(q).all():
+            raise ValueError("Initial cap state must contain six finite SI coordinates")
         steps = 0
         for steps in range(15):
             gradient = self.gradient(q,tensions)

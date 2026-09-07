@@ -62,6 +62,25 @@ and ML training are not complete. See `exact_joint/README.md` and the linked
 `fea/exact_joint_cable_v1/manifest.json`. The earlier new-sleeve redesign was rejected
 by the owner; it must not be mistaken for their joint or promoted as the baseline.
 
+### Drop-readiness audit (2026-09-07)
+
+The user specified a 70 mm whole-leg drop, with only the original knee compliant,
+and authorized example masses. `exact_joint` now provides an explicitly labelled
+pre-impact-only analytic release: assumed 50 g (30 g upper / 20 g lower including
+knee/plates), upright foot first, unloaded cables, rigid horizontal floor. It
+stops at first contact (119.46 ms, 1.17192 m/s, 0.034335 J incident energy). There
+is no impact force/stress calculation or survival verdict. Return restores cable
+FEM; native timeline Play does not add missing impact mechanics.
+
+The audit found and guarded fractional refinement truncation and invalid initial
+solver vectors. A remaining mesh-generation defect changes PET reference volume
+by 0.766% across refinement 1..4 because refined extrusion normals differ. The
+refinement 3->4 compression change is still 15.68%, failing 5%. Fixing reference
+geometry and converging/calibrating the mesh precede transient contact, inertia,
+failure and bond modelling. No result is certified for drop survival or ML.
+Case/run links: `fea/exact_joint_drop_70mm_v1/manifest.json` and
+`ml/runs/20260907-exact-knee-drop-readiness-v1/`. Original v8/v9 remain untouched.
+
 ### Canonical baseline objective
 
 Build a physically usable single-leg robot simulation in Isaac Sim using the original panel joint supplied by the project owner. The joint should form the knee section of a leg, bend around the intended knee axis, preserve the original triangular panel topology and fold-line appearance, and fit the paper-guided hip/knee/ankle layout.

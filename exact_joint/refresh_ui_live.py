@@ -24,6 +24,8 @@ async def refresh() -> None:
     lab = app.ACTIVE
     if lab is None:
         raise RuntimeError("No active workshop; use open_live.py to create one.")
+    if getattr(lab, "drop_preview", None) is not None:
+        await lab.drop_preview.restore()
     stage = omni.usd.get_context().get_stage()
     if stage is None:
         raise RuntimeError("No opened scene to reconnect.")

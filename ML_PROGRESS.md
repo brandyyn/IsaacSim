@@ -25,6 +25,14 @@ This is the shared progress log. Update it whenever the FEA model, simulator env
 
 ## Roadmap
 
+Drop-readiness follow-up (2026-09-07): the requested 70 mm whole-leg test has a
+pre-impact-only preview, not a survival calculation. Assumed total mass 50 g,
+upright foot first, unloaded cables; incident energy 0.034335 J. Fractional mesh
+input and invalid initial-state guards are fixed. PET reference volume changes
+0.766% across refinement 1..4, and refinement 3->4 compression changes 15.68%:
+both remain failed validation gates. The case is `exact_joint_drop_70mm_v1`;
+the linked evaluation is `20260907-exact-knee-drop-readiness-v1`. No training.
+
 1. Package and review the FEA geometry/results handoff.
 2. Map FEA coordinates and units to the Isaac Sim joint frame.
 3. Fit or tabulate an FEA-derived mechanical response model.

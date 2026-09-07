@@ -12,6 +12,13 @@ import numpy as np
 from exact_joint.mesh_utils import volume_mesh
 
 
+def parse_refinement(value: float) -> int:
+    """Validate the UI value before conversion; never silently truncate a mesh level."""
+    if not np.isfinite(value) or value != int(value) or not 1 <= value <= 4:
+        raise ValueError("Mesh refinement must be a finite whole number from 1 to 4")
+    return int(value)
+
+
 @dataclass
 class JointConfig:
     """SI geometry/material assumptions; original shape and proportions are fixed."""

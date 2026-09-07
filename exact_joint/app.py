@@ -17,7 +17,7 @@ from isaacsim.core.experimental.utils import app as app_utils
 from isaacsim.core.experimental.utils import stage as stage_utils
 from isaacsim.core.rendering_manager import ViewportManager
 
-from exact_joint.geometry import JointConfig,load_source
+from exact_joint.geometry import JointConfig,load_source,parse_refinement
 from exact_joint.mechanics import CableFem,tension_pattern
 from exact_joint.scene import ExactLegScene
 from exact_joint.live_display import LiveFemDisplay
@@ -56,6 +56,7 @@ class Workshop:
         self.glyph_phase=0.0
         self.live_display=None
         self.timeline_was_playing=app_utils.is_playing()
+        self.drop_preview=None
 
     async def initialize(self):
         app_utils.stop(commit=False)
@@ -212,7 +213,7 @@ class Workshop:
                 f"Twist: {stats['twist_deg']:.4f} deg | compression: {stats['compression_m']*1e6:.2f} um\n"
                 f"PET / PLA peak: {stats['pet_peak_pa']/1e6:.2f} / {stats['pla_peak_pa']/1e6:.2f} MPa\n"
                 f"Max principal strain: {stats['max_principal_strain']*100:.3f}%")
-        self.message.text=f"Live equilibrium update: {self.solve_ms:.1f} ms | {len(self.model.tets)} elements/module\nUnconverged mesh; no strength, fatigue or cable-motor rating."
+        self.message.text=f"Live equilibrium update: {self.solve_ms:.1f} ms | {len(self.model.tets)} elements/module\nUnconverged mesh; refinement also changes PET reference volume. No strength rating."
 
     async def loop(self):
         previous=time.perf_counter()
@@ -295,6 +296,23 @@ class Workshop:
         self.compare_view()
         self.feedback.text="Cable demo: 0-0.25 N/cable. Gold glyphs show force direction, NOT cable speed."
 
+    async def open_drop_preview(self):
+        from exact_joint.drop_preview import DropPreview
+
+        if self.drop_preview is not None:
+            if self.drop_preview.window is not None:
+                self.drop_preview.window.focus()
+            return
+        preview=DropPreview(self)
+        self.drop_preview=preview
+        try:
+            await preview.start()
+        except (ValueError,RuntimeError) as exc:
+            if preview.suspended:
+                await preview.restore()
+            self.drop_preview=None
+            self.reject_command("Drop preview rejected: "+str(exc))
+
     def toggle_stress(self):
         self.show_stress=not self.show_stress
         self.scene.update(self.results,show_stress=self.show_stress,stress_scale_pa=self.stress_scale_pa)
@@ -334,6 +352,8 @@ class Workshop:
                         ui.Button("Stress / material",clicked_fn=self.toggle_stress)
                         ui.Button("Compare FEM",clicked_fn=self.compare_view)
                     ui.Button("Reconnect opened knee",height=26,clicked_fn=self.reconnect)
+                    ui.Button("70 mm drop preview (no impact FEM)",height=28,
+                              clicked_fn=lambda:asyncio.ensure_future(self.open_drop_preview()))
                     ui.Label("Timeline Play replays/resumes the load; Pause/Stop freezes FEM.\nGold chevrons = force direction, not cable speed.",height=40,word_wrap=True)
                     self.cable_inputs={}
                     for name in self.commands:
@@ -379,10 +399,10 @@ class Workshop:
                             field.model.set_value(value)
                             fields[label]=field.model
                     def rebuild():
-                        config=dataclasses.replace(self.config,hinge_gap_m=fields["PET exposed gap (mm)"].as_float/1000,
-                            pet_modulus_pa=fields["PET E (GPa)"].as_float*1e9,pla_modulus_pa=fields["PLA E (GPa)"].as_float*1e9,
-                            refinement=int(fields["Refinement 1-4"].as_float))
                         try:
+                            config=dataclasses.replace(self.config,hinge_gap_m=fields["PET exposed gap (mm)"].as_float/1000,
+                                pet_modulus_pa=fields["PET E (GPa)"].as_float*1e9,pla_modulus_pa=fields["PLA E (GPa)"].as_float*1e9,
+                                refinement=parse_refinement(fields["Refinement 1-4"].as_float))
                             config.validate()
                             self.save()
                             asyncio.ensure_future(open_workshop(self.project,config))
@@ -396,6 +416,8 @@ class Workshop:
                              "Large folds require nonlinear crease calibration.",height=65,word_wrap=True)
 
     async def close(self):
+        if self.drop_preview is not None:
+            await self.drop_preview.restore()
         if self.task:
             self.task.cancel()
             await self.task
