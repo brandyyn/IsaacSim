@@ -242,3 +242,24 @@ SHA256. Do not use this workaround to execute untrusted attachment contents.
 For multi-case async tests, use a fresh named context and keep test variables inside
 an async function. Assert the expected case count in the saved report: a successful
 server return containing only one case is not evidence that an entire sweep ran.
+
+## Reactivating USD Subtrees Invalidates Cached Child Handles
+
+After `SetActive(False)` followed by reactivation, descendant schema wrappers may
+be invalid even though their paths exist again. Before restarting a controller,
+reacquire its child prim/schema handles from the current stage. Do not rebuild
+the whole stage merely to repair cached handles. Validate that stage identity,
+original model identity, transforms and original controller behavior survive a
+complete open/return cycle. The scoped example is `exact_joint/shell_view.py`.
+
+## Pausing an Asynchronous Numerical Solve
+
+Freezing rendering alone does not freeze the accepted calculation if a worker
+mutates the live state. Solve against a separate candidate state and separate
+trace storage. Check pause/cancellation again after the worker completes, before
+publishing the candidate. Test geometry, physical time and trace length while
+paused. Cancelling an asyncio wrapper does not stop its underlying worker thread;
+ensure discarded workers cannot mutate the newly accepted model or USD.
+
+Iteration note (2026-09-09, Kit 110.1.2): added subtree-handle rebinding and
+accepted-state publication checks after nonlinear knee UI return/pause tests.

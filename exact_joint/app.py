@@ -57,6 +57,7 @@ class Workshop:
         self.live_display=None
         self.timeline_was_playing=app_utils.is_playing()
         self.drop_preview=None
+        self.shell_opening=False
 
     async def initialize(self):
         app_utils.stop(commit=False)
@@ -333,6 +334,38 @@ class Workshop:
         self.message.text="Saved "+folder.name
         return folder
 
+    async def open_nonlinear_shell(self):
+        if self.shell_opening:
+            return
+        if self.drop_preview is not None and type(self.drop_preview).__name__ == "ShellWorkshop":
+            self.drop_preview.window.focus()
+            return
+        self.shell_opening = True
+        preview = None
+        try:
+            if self.drop_preview is not None:
+                await self.drop_preview.restore()
+            self.neutral()
+            self.calculate()
+            self.save()
+            # Settle native startup before importing the optional Torch solver.
+            app_utils.play(commit=True)
+            for _ in range(12):
+                await omni.kit.app.get_app().next_update_async()
+            app_utils.pause(commit=True)
+            from exact_joint.shell_view import ShellWorkshop
+            preview = ShellWorkshop(self)
+            self.drop_preview = preview
+            await preview.start()
+        except Exception as exc:
+            if preview is not None:
+                await preview.restore()
+            self.drop_preview = None
+            self.message.text = "Nonlinear workshop not opened: "+str(exc)
+            raise
+        finally:
+            self.shell_opening = False
+
     def build_ui(self):
         self.window=ui.Window("Exact knee - cable FEM",width=440,height=720)
         with self.window.frame:
@@ -357,6 +390,8 @@ class Workshop:
                               clicked_fn=lambda:asyncio.ensure_future(self.open_drop_preview()))
                     ui.Button("Drop impact + FEM bending (exploratory)",height=28,
                               clicked_fn=lambda:asyncio.ensure_future(self.open_drop_preview(impact=True)))
+                    ui.Button("Nonlinear frames + flexible panels",height=30,
+                              clicked_fn=lambda:asyncio.ensure_future(self.open_nonlinear_shell()))
                     ui.Label("Timeline Play replays/resumes the load; Pause/Stop freezes FEM.\nGold chevrons = force direction, not cable speed.",height=40,word_wrap=True)
                     self.cable_inputs={}
                     for name in self.commands:

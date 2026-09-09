@@ -1,0 +1,69 @@
+{
+  "case_id": "exact_joint_frame_shell_v1",
+  "status": "exploratory_uncalibrated_not_full_range_or_survival",
+  "geometry": {
+    "source_asset": "exact_joint/source_joint.json",
+    "source_topology": "28 original vertices, 48 triangular side panels, 2 quadrilateral roofs, 76 crease paths",
+    "geometry_revision": "original neutral midsurface with explicit PET-only side borders and rigid perimeter frames",
+    "sha256": "d578618a0f90342bd0093b4febe130dc0b07c18f1b223c4d6bf02c9f3d93ce35"
+  },
+  "units": {"length": "m", "mass": "kg", "time": "s", "force": "N", "torque": "N*m", "stress": "Pa", "angle": "rad"},
+  "frames": {
+    "fea_frame": "lower square center at origin; upper square at z=0.0264 m; right-handed Z up",
+    "isaac_frame": "same axes; translated vertically for static mounting/freefall/first contact",
+    "transform_fea_to_isaac": "source +90 degrees X, uniform scale 0.03/250, recenter lower plane; deformation never rescaled",
+    "joint_axis_in_isaac": [0, 1, 0],
+    "neutral_angle_rad": 0,
+    "positive_angle_direction": "right-hand relative bottom-frame rotation vector in upper-frame coordinates"
+  },
+  "material": {
+    "model": "isotropic Green-strain membrane plus effective discrete bending hinges; no failure law",
+    "parameters": {
+      "PLA_thickness_m": 0.0004, "PET_thickness_m": 0.00008,
+      "PLA_E_Pa_assumed": 2200000000, "PET_E_Pa_assumed": 3500000000,
+      "PLA_nu_assumed": 0.35, "PET_nu_assumed": 0.35,
+      "PET_exposed_gap_m_assumed": 0.0002,
+      "panel_to_strip_bending_ratio_assumed": 100,
+      "crease_twist_coupling_assumed": 0.1,
+      "panel_bending_scale": 1, "membrane_scale": 1,
+      "computed_laminate_D_Nm": 0.027484559714444773,
+      "computed_elastic_PET_D_Nm": 0.00017018043684710352,
+      "effective_strip_D_Nm_used": 0.00027484559714444773,
+      "note": "Effective ratio 100 makes strip bending rigidity about 1.615 times the uncreased elastic PET plate estimate; not measured pre-crease calibration. PET-only strip membrane stiffness excludes PLA."
+    }
+  },
+  "mesh": {
+    "element_type": "3-node triangular membrane and signed-dihedral discrete hinges",
+    "element_count": 912, "node_count": 458, "generalized_coordinates": 1338,
+    "characteristic_length_m": null,
+    "mesh_revision": "subdivision1 explicit 0.2 mm PET strips; free panel centroids/roof interior nodes",
+    "convergence_summary": "Reference surface area invariant. At 0.25 N/strand, subdivision1 to 2 changes compression by about 28%, Y bend by 40%, and twist by 12%; fails the 5% response gate. Boundary-fan enrichment is not a complete uniform h-refinement sequence. Physical spatial/crease/contact convergence not established."
+  },
+  "boundary_conditions": [
+    "Statics: upper perimeter fixed; lower perimeter free; roof interiors and side panels deformable.",
+    "Dynamics: both frames and free shell nodes carry inertia; rigid upper/lower link mass representations.",
+    "Four unilateral compliant normal foot contacts; no tangential friction. No finite-thickness self-contact solver."
+  ],
+  "loads": [
+    "Statics: twelve nonnegative frame-to-frame cable tensions; optional lower-perimeter distributed resultant force; forces use current geometry.",
+    "Drop: upright whole leg released 0.07 m, unloaded cables, total assumed mass 0.05 kg, gravity 9.81 m/s^2.",
+    "Assumed upper/lower assembly masses 0.03/0.02 kg include shell allocation. Contact total stiffness 20000 N/m, damping 0.1 N*s/m."
+  ],
+  "solver": {
+    "software": "custom exact_joint nonlinear_shell / shell_impact in Isaac Kit, CPU Torch autograd and SciPy",
+    "version": "frame_shell_v1",
+    "analysis_type": "nonlinear quasistatic force continuation; backward-Euler implicit impact",
+    "time_step_s": 0.000025,
+    "notes": "Static residual <1e-5 J/scaled coordinate; dynamic <3e-5. Membrane guard 3%, separation >=8% neutral. Guards are model-use limits, NOT failure. Study window 8 ms after contact, GUI default 15 ms."
+  },
+  "outputs": {"raw_files": [], "processed_files": ["ml/runs/20260909-exact-knee-frame-shell-v1/metrics.json"], "response_model": null},
+  "limitations": [
+    "Full compression/bend/twist not established; does not reproduce observed large folding.",
+    "Physical prototype dimensions and load-motion calibration missing; video is qualitative reference only.",
+    "No through-thickness stress, plasticity, bond slip/delamination, damage or survival criterion.",
+    "Partial midsurface intersection guard excludes topological neighbours; misses coplanar/finite-thickness contact and CCD.",
+    "Backward Euler numerical damping; timestep tests must be repeated for other configurations.",
+    "No ML training or promotion to v8 baseline."
+  ],
+  "review": {"prepared_by": "Codex", "reviewed_by": [], "date_utc": "2026-09-09", "notes": "Implementation checks only; engineering/physical review outstanding."}
+}

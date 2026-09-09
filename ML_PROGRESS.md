@@ -25,6 +25,16 @@ This is the shared progress log. Update it whenever the FEA model, simulator env
 
 ## Roadmap
 
+Perimeter-frame follow-up (2026-09-09): `exact_joint_frame_shell_v1` replaces
+rigid roofs with rigid perimeter frames and free interiors in an opt-in nonlinear
+shell. Explicit PET-only borders, force-driven cable/external loading and nodal
+impact inertia are implemented. Thirty-six numeric checks and actual workshop
+controls pass; full folding motion is **not** established. A 70 mm/50 g drop
+predicts only about 0.2 degrees peak bend. A two-level mesh check changes Y bend
+about 40% and fails the 5% gate; mesh and physical calibration both block ML
+promotion. Evaluation `20260909-exact-knee-frame-shell-v1`
+records the assumptions/results; no training. Publication is pending approval.
+
 Impact-response follow-up (2026-09-08): `exact_joint_impact_v1` adds exploratory
 FEM-derived two-assembly dynamics with four compliant foot contacts. The same
 calculated deformation drives the physical knee and a labelled 500x diagnostic.

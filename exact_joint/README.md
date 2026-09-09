@@ -1,5 +1,12 @@
 # Exact JSON joint: cable-driven live FEM workshop
 
+**Perimeter-frame nonlinear experiment (2026-09-09):** use
+`launch.ps1 -RuntimeRoot <built-release> -Nonlinear` for the new force-driven
+Apply/cable/drop workshop. It has PET-only folding strips, deformable panel/roof
+interiors and rigid perimeter frames. See [controls and limitations](NONLINEAR_GUIDE.md).
+It has **not** matched the physical joint's full travel or established survival.
+The remainder of this page describes the separately preserved rigid-roof reference.
+
 The user's **original joint is now used at the knee only**, between rigid upper and
 lower leg sections. Hip and ankle copies were removed at the user's request. The rejected
 cylindrical/Kresling-inspired sleeve is not used. This is a working **small-deformation,

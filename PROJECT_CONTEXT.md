@@ -514,6 +514,34 @@ See `exact_joint/README.md` for controls, equations, assumptions and limits.
 
 No trained machine-learning model, weights, policy checkpoint, dataset, or RL training run has been created in this conversation. The current progress is a deterministic physics/visual-controller simulation with a first Ansys compression load replay. The shared rules and handoff templates are in `PROJECT_RULES.md`, `ML_PROGRESS.md`, `fea/`, and `ml/`. The next calibration input is the missing displacement/angle and reaction-torque data, followed by non-ML response validation and then stabilization learning.
 
+## Perimeter-frame force-driven shell follow-up (2026-09-09)
+
+`exact_joint/open_nonlinear_gui.py` opens an opt-in nonlinear shell experiment;
+`launch.ps1 -Nonlinear` selects it. Original source geometry and the v8 baseline
+remain unchanged. Only roof perimeters are rigid. Finite-width PET-only borders
+surround the original PLA side panels, with 458 surface nodes / 912 triangles;
+creases are subdivided and roof interiors free. Cable energy and external frame
+forces drive static deformation; lumped nodal/rigid inertia and four compliant
+normal foot contacts drive the whole-leg drop. This is custom CPU mechanics in
+Kit, not native PhysX deformable or a validated solid-stress/failure calculation.
+
+Thirty-six numerical tests pass. Actual Apply, seven cable families, external
+force, pause/resume, gap rebuild, force-matched peak inspection and stage-preserving
+return checks pass. A 70 mm / assumed 50 g / 25 us case computes 8 ms of contact
+and rebound. Peak Y bend is about 0.198 degrees, peak compression about 0.603%;
+this does **not** match the user's expected full folding range. Timestep refinement
+to 12.5 us changes peak force/bend/compression by less than 3%. Spatial enrichment
+at 0.25 N/strand changes Y bend about 40%, failing the 5% response gate;
+constitutive, crease/contact and physical calibration also remain open. No survival
+verdict, calibrated ML environment or training policy is produced.
+
+Case `exact_joint_frame_shell_v1` and evaluation
+`20260909-exact-knee-frame-shell-v1` keep assumptions and evidence separate from
+the previous rigid-roof impact run. See `exact_joint/NONLINEAR_GUIDE.md` for every
+control and the outstanding geometry/force-motion measurements. Local commits
+have not been published: automatic review blocked the earlier push; explicit
+approval to publish the scoped artifacts to origin was requested and is pending.
+
 ## Conversation intent in one sentence
 
 Use the original triangulated panel joint as the visible, continuous compressing shell of a paper-guided robot knee, while keeping the actual PhysX mechanism stable enough to run, share, and later serve as the environment for machine-learning experiments.
