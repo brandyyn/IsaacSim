@@ -296,14 +296,15 @@ class Workshop:
         self.compare_view()
         self.feedback.text="Cable demo: 0-0.25 N/cable. Gold glyphs show force direction, NOT cable speed."
 
-    async def open_drop_preview(self):
+    async def open_drop_preview(self, impact=False):
         from exact_joint.drop_preview import DropPreview
+        from exact_joint.impact_preview import ImpactPreview
 
         if self.drop_preview is not None:
             if self.drop_preview.window is not None:
                 self.drop_preview.window.focus()
             return
-        preview=DropPreview(self)
+        preview=ImpactPreview(self) if impact else DropPreview(self)
         self.drop_preview=preview
         try:
             await preview.start()
@@ -354,6 +355,8 @@ class Workshop:
                     ui.Button("Reconnect opened knee",height=26,clicked_fn=self.reconnect)
                     ui.Button("70 mm drop preview (no impact FEM)",height=28,
                               clicked_fn=lambda:asyncio.ensure_future(self.open_drop_preview()))
+                    ui.Button("Drop impact + FEM bending (exploratory)",height=28,
+                              clicked_fn=lambda:asyncio.ensure_future(self.open_drop_preview(impact=True)))
                     ui.Label("Timeline Play replays/resumes the load; Pause/Stop freezes FEM.\nGold chevrons = force direction, not cable speed.",height=40,word_wrap=True)
                     self.cable_inputs={}
                     for name in self.commands:

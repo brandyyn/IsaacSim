@@ -487,6 +487,31 @@ Do not commit `_build/`, generated caches, `.idea/`, `tmp/`, simulator logs, or 
 
 ## Machine-learning status
 
+### 2026-09-08: exploratory contact-driven knee impact
+
+`exact_joint/impact.py` and `impact_preview.py` now integrate the first part of
+landing instead of stopping the animation at contact. The original JSON knee,
+rigid roofs and single-knee leg are unchanged. A 12-coordinate two-assembly mass
+model and four unilateral compliant sole contacts drive the relative six-DOF
+FEM-derived stiffness; the same deformation recovers strain/stress and renders
+the 1x leg plus a labelled 500x diagnostic. No bend trajectory is prescribed.
+
+Case `exact_joint_impact_v1`, evaluation `20260908-exact-knee-impact-v1`, starting
+commit `ad6f15d4e2b785db1b1ccaa5093dc998997d63ef`. Twenty-two numerical tests and
+actual replay/pause/gain/input/save/return/maintenance controls pass. Native
+timeline events also control the custom solver. At 70 mm / assumed 50 g, the 1%
+strain guard is reached 0.4068 ms after contact: 9.400 N ground force, -0.004738
+degrees Y bend and 11.583 micrometres compression. That force is not the full
+impact peak. No later rebound, large fold, fracture or survival is predicted.
+The unconverged PET reference-normal mesh defect remains; mass/inertia/contact
+are provisional and interior dynamic modes are omitted. Not the ML baseline.
+
+Startup observation: the RC runtime initially crashed before impact code loaded
+on a NULL-stage PLAY callback. A temporary `playSimulations=false` launch deferred
+native simulation until the stage existed; the setting was then restored true
+and native timeline checks passed. No runtime binaries or user caches were edited.
+See `exact_joint/README.md` for controls, equations, assumptions and limits.
+
 No trained machine-learning model, weights, policy checkpoint, dataset, or RL training run has been created in this conversation. The current progress is a deterministic physics/visual-controller simulation with a first Ansys compression load replay. The shared rules and handoff templates are in `PROJECT_RULES.md`, `ML_PROGRESS.md`, `fea/`, and `ml/`. The next calibration input is the missing displacement/angle and reaction-torque data, followed by non-ML response validation and then stabilization learning.
 
 ## Conversation intent in one sentence

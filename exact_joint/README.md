@@ -398,7 +398,112 @@ the viewport). The immutable case/run package is
 `fea/exact_joint_drop_70mm_v1/manifest.json` and
 `ml/runs/20260907-exact-knee-drop-readiness-v1/`.
 
+## Contact-driven knee bending (2026-09-08, exploratory)
+
+Use **Drop impact + FEM bending (exploratory)** for the new post-contact response.
+The older **70 mm drop preview (no impact FEM)** remains available and still stops
+at first contact. Neither mode is a certified drop-survival test.
+
+### Demonstration
+
+1. In the impact window, click **Run / replay impact**. The whole leg falls from
+   rest at 0.05x playback. At contact, the camera zooms toward the knee and the
+   force-driven response plays at 0.0001x (10,000 times slower). Turn off
+   **Auto close-up at contact**, or click **Whole leg**, to keep the foot visible.
+2. Watch ground force, true bend X/Y, compression, twist, PET/PLA stress and strain
+   update together. The physical leg is **1x**. The separate right-hand knee is
+   **500x displacement only** by default; it is a diagnostic, not a second joint.
+   Colours use 0–40+ MPa, not a material-failure scale. Orange foot-contact lines
+   point upward and use 2 mm/N; their length is a force glyph, not deformation.
+3. **Pause / resume** holds or advances the same computed state. Native timeline
+   Play/Pause also controls this custom solver; it does not activate PhysX solid FEM.
+   At the model limit, use **Run / replay impact** to restart from your inputs.
+4. **Save force/bend/FEM trace** writes a time-stamped `results/*_impact/impact.json`:
+   physical SI positions, velocities, loads, moments, stresses, strains, energy
+   balance, stiffness/mass matrices, source checksum and assumptions. `survives`
+   is explicitly null. **Return to cable FEM** restores the original unloaded
+   workshop, scene transforms and cable controls.
+
+The buttons, true-result readout and limit warning remain visible; scroll the
+inputs below them. Controls and their effects:
+
+| Control | Meaning and effect |
+|---|---|
+| Drop height (mm) | Initial foot clearance; changes incident speed `sqrt(2gh)` and energy `mgh`. Run to apply. Allowed >0 to 200 mm, not a validated design range. |
+| Upper/lower-side mass (g) | Includes the knee/plates split between two assemblies, with no extra payload. Changes inertia and incident energy; each 1–500 g. Run to apply. |
+| Contact stiffness (N/m) | Total penalty stiffness of four frictionless foot corners; 20,000 N/m assumed. Larger values produce a sharper force rise. Contact permits penetration to represent compliance; not a calibrated rigid floor. Run to apply. |
+| Contact damping (N s/m) | Total closing-only contact dashpot, 0.1 N s/m assumed. Dissipates energy while compressing; never pulls the foot downward. Run to apply. |
+| Diagnostic gain (1–1000) | Magnifies only the separate diagnostic mesh. **Update gain only** applies without restarting or changing physical forces, stress, strain or the 1x leg. |
+| Material/width/gap/refinement | Return to cable FEM, edit, **Rebuild exact joint FEM**, then reopen impact. This assembles a new stiffness; changing a label alone does not rebuild it. Refinement/gap results remain unvalidated. |
+
+Invalid physical inputs are rejected without replacing the last accepted trace.
+Impact cables are unloaded in this case; cable preload during landing is not yet
+modelled. The exact source joint remains at the knee only, with rigid roofs and links.
+
+### What is being solved, and what is not
+
+`impact.py` derives six relative roof stiffness coordinates from the existing
+TET10 static constraint modes, then integrates two freely moving rigid assemblies
+(12 translation/rotation coordinates). Ground contact applies force to the lower
+assembly, not a scripted joint angle. The forward-offset sole creates a bending
+moment naturally. In SI notation:
+
+```text
+q = D x                       relative roof translation/rotation
+K6 = Jᵀ Kcap J                FEM-derived roof stiffness
+K12 = Dᵀ K6 D                 coupled upper/lower stiffness
+M ẍ + C ẋ + K12 x = gravity + Jcontactᵀ Fn
+Fn,i = (kc max(-gap_i,0) + cc max(-speed_i,0) I[gap_i<=0]) / 4
+u_FEM = modes q               same q drives the mesh, strain and stress
+```
+
+Average-acceleration Newmark uses beta=0.25, gamma=0.5, a 5 microsecond physical
+step and iterated contact active sets. Structural damping is `C=1e-5 s * K12`.
+The default requested post-contact window is 30 ms, but integration stops earlier
+at 1% maximum absolute principal strain or 2 degrees of relative/assembly rotation.
+These are **small-motion model-use guards, not fracture thresholds**. Timestep,
+structural damping and duration are explicit `ImpactConfig` parameters for code
+experiments, not GUI fields.
+
+Mass/inertia are provisional: 30 g upper and 20 g lower, not optimized or measured.
+Upper COM is (0,0,45) mm relative to its roof; lower COM is (6,0,-50) mm relative
+to its roof. Uniform-box inertia dimensions are 28×25×90 mm and 50×26×90 mm.
+No extra continuum mass is added. Four sole points are x=-13/+37 mm, y=±13 mm,
+z=-87.5 mm relative to the lower roof. See the case manifest for frame/sign details.
+
+For the default **70 mm / assumed 50 g** case, the last admissible state is about
+**0.4068 ms after contact**: ground force **9.400 N**, true Y bend **-0.004738°**,
+compression **11.583 µm**, and maximum principal strain **1%**. Exploratory peak
+von Mises values there are PET **27.057 MPa**, PLA **0.356 MPa**. The compliant
+contact penetration is about **0.466 mm**. The assemblies are still moving down:
+**9.400 N is not the peak of the full impact**, and no later rebound or large fold
+is calculated. A 500x diagnostic makes the tiny physical response visible; it
+does not increase the calculated physical bend.
+
+This is **reduced FEM-derived dynamics**, not full transient solid FEM. Interior
+elastic modes/stress waves are omitted. The earlier PET reference-normal defect
+and failed mesh convergence remain. Contact, mass distribution and damping are
+uncalibrated; plasticity, rate effects, self-contact, adhesive failure and fracture
+are absent. Energy balance and timestep checks test this implementation, not
+physical truth. Do not use these results for strength ratings or ML calibration.
+
+Reproduce numerical and real-button checks using the Python server:
+
+```text
+python skills/isaac-sim-remote/scripts/isaacsim_send.py --context impact_validation --file exact_joint/validate_impact_live.py --timeout 55
+```
+
+Enable `isaacsim.test.utils` for UI testing. The linked package is
+`fea/exact_joint_impact_v1/manifest.json` and
+`ml/runs/20260908-exact-knee-impact-v1/` (evaluation only, no training).
+Next structural work: fix reference-geometry refinement, converge the stiffness,
+validate reduced modes against full transient FEM, and measure material/crease,
+contact and mass properties before assessing the rest of the drop.
+
 ## Technical references
+
+- [INL/MOOSE Newmark integration](https://mooseframework.inl.gov/releases/moose/2024-03-08/source/timeintegrators/NewmarkBeta.html): integration formulation; linear stability is not a guarantee of contact accuracy.
+- [NASA reduced-model verification](https://llis.nasa.gov/lesson/815): reduced dynamic models require comparison with full-model modes and mass properties.
 
 - [FEBio Theory Manual: quadratic tetrahedral elements](https://help.febio.org/docs/FEBioTheory-4-7/TM47-Subsection-4.1.4.html): TET10 and four-point integration.
 - [Autodesk: tetrahedral elements](https://help.autodesk.com/cloudhelp/2015/ENU/SimMech/files/GUID-EB10FAC1-1CCC-4EB4-A3AD-C7DE7F3B8CEC.htm): quadratic interpolation for bending with thin solid meshes.

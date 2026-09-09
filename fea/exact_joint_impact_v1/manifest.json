@@ -1,0 +1,340 @@
+{
+  "case_id": "exact_joint_impact_v1",
+  "status": "EXPLORATORY_EARLY_IMPACT_ONLY_UNCONVERGED_SURVIVAL_INDETERMINATE",
+  "starting_commit": "ad6f15d4e2b785db1b1ccaa5093dc998997d63ef",
+  "parent_case_id": "exact_joint_drop_70mm_v1",
+  "parent_case_sha256": "5221e27bece9eeacb0beb9b4bc90ddf0f1416dfdb8f74fe42c6894cc9c4a730e",
+  "geometry": {
+    "source_asset": "generated in memory by exact_joint/scene.py",
+    "source_topology": "exact_joint/source_joint.json",
+    "geometry_revision": "user supplied input.json; original 28 vertices, 48 triangular panels, 2 quadrilateral roofs, 76 edges",
+    "sha256": "d578618a0f90342bd0093b4febe130dc0b07c18f1b223c4d6bf02c9f3d93ce35",
+    "normalized_repository_topology": "input_improved.json",
+    "normalized_repository_sha256": "1b13569928af71320f3ebbf466c2a10a65bcf4eccf2bb7b7d281c947f18a4469",
+    "origami_joint_instances": [
+      "Knee"
+    ],
+    "neutral_reference_bounds_m": [
+      0.03,
+      0.03,
+      0.0264
+    ],
+    "finite_thickness_added_outward": true
+  },
+  "units": {
+    "length": "m",
+    "mass": "kg",
+    "time": "s",
+    "force": "N",
+    "torque": "N*m",
+    "stress": "Pa",
+    "angle": "rad",
+    "human_facing_angle_tables": "deg (explicitly labelled)"
+  },
+  "frames": {
+    "fea_frame": "Right-handed; bottom roof center at (0,0,0), upper roof center at (0,0,0.0264); +Z points toward upper roof",
+    "isaac_frame": "Right-handed Z-up; floor top Z=-0.005 m. Before contact analytic whole-leg translation; after contact an additional exact display upper-cap transform and linearized relative roof deformation.",
+    "source_to_fea": {
+      "rotation_matrix": [
+        [
+          1,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          -1
+        ],
+        [
+          0,
+          1,
+          0
+        ]
+      ],
+      "scale_m_per_source_unit": 0.00012,
+      "translation_m": [
+        0,
+        0,
+        0.0132
+      ],
+      "equation": "p_fea = scale * R * p_source + translation; no reflection"
+    },
+    "transform_fea_to_isaac": {
+      "rotation_matrix": [
+        [
+          1,
+          0,
+          0
+        ],
+        [
+          0,
+          1,
+          0
+        ],
+        [
+          0,
+          0,
+          1
+        ]
+      ],
+      "translation_m": [
+        0,
+        0,
+        0.1186
+      ],
+      "scale": 1,
+      "preview_root_translation_m": "[0,0,0.0339 - 0.5*9.81*t^2] for the current neutral leg; recomputed from world-space foot/floor bounds at preview entry",
+      "impact_mapping": "After first contact keep root drop translation fixed. Rotate about original top cap (0,0,0.145), then add upper-cap translation. Relative FEM deformations measured in initial aligned cap axes; linearized dynamics, no reflection or physical gain."
+    },
+    "joint_axes_in_isaac": {
+      "bend_x": [
+        1,
+        0,
+        0
+      ],
+      "bend_y": [
+        0,
+        1,
+        0
+      ],
+      "twist": [
+        0,
+        0,
+        1
+      ],
+      "compression": [
+        0,
+        0,
+        1
+      ]
+    },
+    "neutral_angle_rad": 0,
+    "zero_definition": "Original folded JSON neutral shape, zero cable tensions; release from rest",
+    "positive_angle_direction": "Right-hand small rotation-vector components of the lower cap relative to the moving upper cap; q=D*x. Both assemblies can translate and rotate. Roof rotations in the physical render are exact transforms; FEM constraint modes remain linear.",
+    "compression_sign": "Positive bottom cap Z translation shortens cap separation."
+  },
+  "material": {
+    "model": "Provisional isotropic linear elasticity; perfect PLA/PET bond; no measured stock-grade identification",
+    "parameters": {
+      "width_m": 0.03,
+      "pet_thickness_m": 0.00008,
+      "pla_thickness_m": 0.0004,
+      "pet_modulus_pa": 3500000000,
+      "pla_modulus_pa": 2200000000,
+      "pet_poisson": 0.35,
+      "pla_poisson": 0.35,
+      "hinge_gap_m": 0.0002,
+      "refinement": 1
+    },
+    "confirmed_by_owner": [
+      "PLA thickness 0.0004 m",
+      "PET film thickness 0.00008 m"
+    ],
+    "provisional": [
+      "PET E 3.5e9 Pa",
+      "PLA E 2.2e9 Pa",
+      "Poisson ratio 0.35 each",
+      "PET exposed gap 0.0002 m"
+    ],
+    "gap_selection": "Owner requested least practical exposure. 0.1/0.2/0.4 mm numerical candidates only; manufacturing minimum and optimum NOT established.",
+    "application_to_drop": "These provisional elastic constants determine six-DOF relative cap stiffness and stress recovery from TET10 static constraint modes."
+  },
+  "mesh": {
+    "element_type": "Quadratic TET10, four-point Gauss integration, physical PET and PLA thickness",
+    "element_count": 1152,
+    "node_count": 2616,
+    "material_element_counts": {
+      "PET": 1008,
+      "PLA": 144
+    },
+    "characteristic_length_m": null,
+    "characteristic_length_note": "Highly nonuniform layered mesh; physical film thickness 80e-6 m, exposed gap 200e-6 m. No single representative element length.",
+    "mesh_revision": "exact_joint geometry/elements implementation",
+    "refinement_levels": [
+      {
+        "refinement": 1,
+        "nodes": 2616,
+        "elements": 1152,
+        "pet_volume_m3": 2.4602862156514913e-7,
+        "pla_volume_m3": 0.0000011544462213554362,
+        "compression_m": 0.0000025214703375074746,
+        "peak_strain": 0.0017199923775901194
+      },
+      {
+        "refinement": 2,
+        "nodes": 9552,
+        "elements": 4608,
+        "pet_volume_m3": 2.471380514081064e-7,
+        "pla_volume_m3": 0.000001154446221355436,
+        "compression_m": 0.000004983536838192261,
+        "peak_strain": 0.004389240978609266
+      },
+      {
+        "refinement": 3,
+        "nodes": 20904,
+        "elements": 10368,
+        "pet_volume_m3": 2.474784196374453e-7,
+        "pla_volume_m3": 0.0000011544462213554368,
+        "compression_m": 0.000006207229968984826,
+        "peak_strain": 0.0061188508869123755
+      },
+      {
+        "refinement": 4,
+        "nodes": 36672,
+        "elements": 18432,
+        "pet_volume_m3": 2.4791286205590725e-7,
+        "pla_volume_m3": 0.0000011544462213554362,
+        "compression_m": 0.000007180592959208825,
+        "peak_strain": 0.007555691063478113
+      }
+    ],
+    "convergence_tolerance_fraction": 0.05,
+    "convergence_pass": false,
+    "convergence_summary": "FAIL: refinement 3->4 compression +15.6811%; PET reference volume +0.765862% across 1->4. Entire reference laminate geometry is not held fixed.",
+    "reference_geometry_fixed": false
+  },
+  "boundary_conditions": [
+    "Original knee only, initially unloaded/upright; whole leg foot-first released from rest 70 mm above the floor.",
+    "Both roof assemblies free after contact. Two assumed spatial mass matrices include all knee/plate mass; no duplicate continuum mass.",
+    "Four lower-assembly sole corners use unilateral compliant frictionless normal contact, not rigid zero-penetration contact.",
+    "Relative cap stiffness is statically condensed from the existing TET10 FEM with the upper cap fixed only for constraint-mode construction.",
+    "Quasistatic cable controller suspended; all 12 cable tensions zero. Return restores same scene/model and unloaded cable workshop.",
+    "Terminate at 1% maximum absolute principal strain, 2 degrees relative/assembly rotation, or requested duration. No unsupported continuation."
+  ],
+  "loads": [
+    {
+      "type": "gravity_release",
+      "gravity_m_s2": 9.81,
+      "height_m": 0.07,
+      "total_mass_kg": 0.05,
+      "upper_mass_kg": 0.03,
+      "lower_mass_kg": 0.02,
+      "payload_mass_kg": 0,
+      "mass_provenance": "Owner authorized example values; provisional 30/20 g partition including joint and roofs. Uniform-box COM/inertia approximation explicit in config, not measured or optimized.",
+      "cable_tensions_n": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "type": "normal_compliant_contact",
+      "height_m": 0.07,
+      "upper_mass_kg": 0.03,
+      "lower_mass_kg": 0.02,
+      "gravity_m_s2": 9.81,
+      "contact_stiffness_n_m": 20000,
+      "contact_damping_ns_m": 0.1,
+      "stiffness_damping_s": 0.00001,
+      "step_s": 0.000005,
+      "duration_s": 0.03,
+      "contact_points_relative_lower_roof_m": [
+        [
+          -0.013,
+          -0.013,
+          -0.0875
+        ],
+        [
+          -0.013,
+          0.013,
+          -0.0875
+        ],
+        [
+          0.037,
+          -0.013,
+          -0.0875
+        ],
+        [
+          0.037,
+          0.013,
+          -0.0875
+        ]
+      ]
+    }
+  ],
+  "solver": {
+    "software": "Custom reduced FEM-derived impact integrator running in Isaac Sim Kit; not PhysX solid FEM or Ansys",
+    "version": "exact_joint-impact-v1",
+    "isaac_sim_version": "6.0.1-rc.7",
+    "kit_version": "110.1.2",
+    "runtime_build_commit": "5131a9740b3ce82e42331e923e1a45ffa396f71c",
+    "analysis_type": "Small-motion two-body dynamics with static TET10 constraint-mode stress recovery",
+    "time_step_s": 0.000005,
+    "requested_duration_after_contact_s": 0.03,
+    "integrator": {
+      "method": "Average-acceleration Newmark",
+      "beta": 0.25,
+      "gamma": 0.5,
+      "contact_active_set_max_iterations": 30,
+      "guard_bisections": 20
+    },
+    "stiffness_damping_s": 0.00001,
+    "equations": [
+      "q = D*x",
+      "K6 = J^T*Kcap*J; K12 = D^T*K6*D",
+      "M*xddot + C*xdot + K12*x = gravity + Jcontact^T*Fn",
+      "Fn_i = (kc*max(-gap_i,0)+cc*max(-speed_i,0)*I[gap_i<=0])/4",
+      "u_FEM = basis*J*q; strain = strain_basis*J*q; stress = elastic_D*strain"
+    ],
+    "precontact_playback_speed": 0.05,
+    "postcontact_playback_speed": 0.0001,
+    "physical_display_gain": 1,
+    "diagnostic_displacement_gain": 500,
+    "stopping_rule": "Stop at 1% maximum absolute principal strain or 2 degrees norm of relative, upper or lower rotation vector; guards are not fracture thresholds",
+    "timestep_check": "10, 5, 2.5 microseconds; successive guard-time/force/bend differences under 0.2%. Does not establish mesh/physical validity.",
+    "references": [
+      "https://mooseframework.inl.gov/releases/moose/2024-03-08/source/timeintegrators/NewmarkBeta.html",
+      "https://llis.nasa.gov/lesson/815"
+    ]
+  },
+  "outputs": {
+    "raw_files": [
+      "ml/runs/20260908-exact-knee-impact-v1/metrics.json"
+    ],
+    "processed_files": [
+      "ml/runs/20260908-exact-knee-impact-v1/response.png",
+      "exact_joint/README.md"
+    ],
+    "response_model": "exact_joint/impact.py",
+    "matrices_and_assumptions": "ml/runs/20260908-exact-knee-impact-v1/config.json",
+    "initial_incident_energy_j": 0.034335000000000004,
+    "last_admissible_time_after_contact_s": 0.0004067646694183357,
+    "ground_force_at_model_limit_n": 9.40027567167225,
+    "relative_bend_y_rad": -0.00008268995542468246,
+    "compression_m": 0.000011582825968931013,
+    "full_impact_peak_force_n": null,
+    "full_impact_peak_bending_rad": null,
+    "survives": null
+  },
+  "limitations": [
+    "Unconverged legacy PET mesh and reference-normal refinement defect",
+    "Omitted interior elastic modes and stress-wave propagation",
+    "Linearized rotations and strain; stop at 1% strain or 2 degrees",
+    "Assumed mass/inertia, contact compliance and damping; not calibrated",
+    "No friction, cable preload, plasticity, self-contact, delamination or fracture",
+    "Guard reached while both assemblies still move downward; no complete impact, rebound or strength conclusion",
+    "The numerical invariants/timestep tests validate implementation consistency only; modal/full-FEM/experimental correlation absent"
+  ],
+  "review": {
+    "prepared_by": "Codex",
+    "reviewed_by": [],
+    "date_utc": "2026-09-08",
+    "notes": "22 numeric tests plus actual GUI replay/pause/gain/input/save/restore/refresh checks passed. Rendered roofs remain rigid. Mesh and physical validation gates remain failed; not ML ready."
+  },
+  "reproduction": {
+    "launch": "exact_joint/launch.ps1 -RuntimeRoot <built-release>",
+    "controls": "Drop impact + FEM bending (exploratory) > Run / replay impact. Whole leg for contact view; Impact close-up for 1x/500x comparison.",
+    "validate": "Enable isaacsim.test.utils; python skills/isaac-sim-remote/scripts/isaacsim_send.py --context impact_validation --file exact_joint/validate_impact_live.py --timeout 55",
+    "runtime_note": "Initial clean-start RC runtime crashed before impact code loaded (NULL UsdStage in simulation-manager PLAY callback). Session launched with playSimulations=false until the stage was valid, then restored true; native Play/Pause/Stop bridge passed afterward. No runtime binaries or user caches modified."
+  }
+}

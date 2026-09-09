@@ -25,6 +25,16 @@ This is the shared progress log. Update it whenever the FEA model, simulator env
 
 ## Roadmap
 
+Impact-response follow-up (2026-09-08): `exact_joint_impact_v1` adds exploratory
+FEM-derived two-assembly dynamics with four compliant foot contacts. The same
+calculated deformation drives the physical knee and a labelled 500x diagnostic.
+22 numeric tests and real control checks pass. The 70 mm / assumed 50 g case
+stops at the 1% strain guard, 0.4068 ms after contact, with 9.400 N ground force
+and -0.004738 degrees Y bend. This is not the full impact peak or a survival
+result. Mesh, modal, material/contact and mass calibration gates remain open.
+Evaluation `20260908-exact-knee-impact-v1` links implementation, case and traces;
+no training or promotion to the v8 ML baseline.
+
 Drop-readiness follow-up (2026-09-07): the requested 70 mm whole-leg test has a
 pre-impact-only preview, not a survival calculation. Assumed total mass 50 g,
 upright foot first, unloaded cables; incident energy 0.034335 J. Fractional mesh
@@ -71,6 +81,7 @@ Add one row for every completed training or evaluation run. The detailed record 
 
 | Run ID | Baseline commit | FEA case | Seed | Algorithm | Evaluation result | Checkpoint |
 |---|---|---|---:|---|---|---|
+| `20260908-exact-knee-impact-v1` | `ad6f15d4`; implementation in run manifest | `exact_joint_impact_v1` | 0 (unused) | Reduced-impact numerical/UI evaluation | 22 tests and live controls pass; early impact truncated at 1% strain; mesh/physical validation incomplete, no survival verdict or ML | None |
 | `20260906-exact-knee-cable-v1` | `65e98b1c`; implementation `0c766aa9` | `exact_joint_cable_v1` | 0 (unused) | FEM evaluation only | 7/7 tests, 7 live patterns, 45 updates in 10.004 s; mesh convergence FAIL; no ML | None |
 | `20260906-exact-knee-apply-ui-v1` | `0cbbe36b`; implementation `c9ebbab8` | `exact_joint_cable_v1` unchanged | 0 (unused) | Apply UI regression | 5/5 real-click cases; 7/7 numeric tests; rejected-load recovery and accepted-result export verified; no ML | None |
 | `20260906-exact-knee-visible-fem-v1` | `95414aa3`; implementation linked in run manifest | `exact_joint_cable_v1` unchanged | 0 (unused) | Visible FEM/control regression | Live load ramps, cable glyphs/bars, labelled diagnostic magnification, native Play/Pause and saved-USD reconnect; no ML or new structural validation | None |
