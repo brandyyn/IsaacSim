@@ -6,15 +6,62 @@ import json
 import shutil
 from pathlib import Path
 
-import matplotlib
-matplotlib.use("Agg")
-import matplotlib.pyplot as plt
 import numpy as np
-from PIL import Image
+from PIL import Image, ImageDraw, ImageFont
 
 
 def digest(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def plot_timesteps(cases, destination):
+    """Dependency-light scientific line figure; all coordinates come from traces."""
+    canvas = Image.new("RGB", (1800, 1200), "#ffffff")
+    draw = ImageDraw.Draw(canvas)
+    def font(size):
+        for name in ("arial.ttf", "DejaVuSans.ttf"):
+            try:
+                return ImageFont.truetype(name, size)
+            except OSError:
+                pass
+        return ImageFont.load_default(size=size)
+    draw.text((65, 35), "70 mm whole-leg drop | one nonlinear knee | assumed 50 g", font=font(34), fill="#172b3a")
+    draw.text((65, 83), "Uncalibrated shell. Spatial response gate FAILED. No survival verdict.", font=font(27), fill="#a23f2f")
+    colors = ("#79838d", "#e69932", "#257bc1", "#ad3977")
+    for i, case in enumerate(cases):
+        x = 100+420*i
+        draw.line((x, 144, x+45, 144), fill=colors[i], width=4)
+        draw.text((x+60, 127), f"{case['step_s']*1e6:g} us timestep", font=font(24), fill="#263849")
+    panels = (("Ground force (N)", "ground_force_n", 1, 0, 40),
+              ("Y bending (degrees)", "relative_rotation_rad", 180/np.pi, -.22, .12),
+              ("Compression (%)", "compression_fraction", 100, -.15, .7),
+              ("Mechanical energy / incident (%)", "energy_fraction_of_initial", 100, 75, 100))
+    for index, (title, key, scale, ymin, ymax) in enumerate(panels):
+        left, top = 125+870*(index % 2), 235+465*(index//2)
+        width, height = 675, 325
+        draw.text((left, top-45), title, font=font(27), fill="#172b3a")
+        for tick in range(5):
+            x = left+width*tick/4
+            y = top+height-height*tick/4
+            draw.line((x, top, x, top+height), fill="#e0e5e8", width=1)
+            draw.line((left, y, left+width, y), fill="#e0e5e8", width=1)
+            draw.text((x, top+height+12), f"{2*tick:g}", font=font(22), fill="#425565", anchor="mt")
+            draw.text((left-12, y), f"{ymin+(ymax-ymin)*tick/4:.3g}", font=font(22), fill="#425565", anchor="rm")
+        for case, color in zip(cases, colors):
+            points = []
+            for row in case["trace"]:
+                value = row[key][1] if key == "relative_rotation_rad" else row[key]
+                x = left+width*row["time_after_contact_s"]/.008
+                y = top+height*(1-(value*scale-ymin)/(ymax-ymin))
+                if not left-1 <= x <= left+width+1 or not top-1 <= y <= top+height+1:
+                    raise ValueError("Plot range does not contain the supplied trace")
+                points.append((x, y))
+            draw.line(points, fill=color, width=3)
+        draw.rectangle((left, top, left+width, top+height), outline="#637382", width=2)
+        draw.text((left+width/2, top+height+53), "Time after first contact (ms)", font=font(22), fill="#425565", anchor="mt")
+    draw.text((65, 1160), "Backward Euler introduces numerical damping; timestep agreement does not establish physical accuracy.",
+              font=font(22), fill="#425565")
+    canvas.save(destination)
 
 
 def main():
@@ -97,29 +144,14 @@ def main():
     write("impact_trace.json", trace)
     write("provenance.json", evidence)
     shutil.copyfile(args.screenshot, output/"workshop_peak.png")
-    fig, axes = plt.subplots(2, 2, figsize=(11, 7), constrained_layout=True)
-    for row in data["timesteps"]["cases"]:
-        times = np.array([sample["time_after_contact_s"] for sample in row["trace"]])*1000
-        for ax, key, scale, ylabel in ((axes[0, 0], "ground_force_n", 1, "Ground force (N)"),
-                                      (axes[1, 0], "compression_fraction", 100, "Compression (%)"),
-                                      (axes[1, 1], "energy_fraction_of_initial", 100, "Mechanical energy / incident (%)")):
-            ax.plot(times, [sample[key]*scale for sample in row["trace"]], label=f"{row['step_s']*1e6:g} us")
-            ax.set_ylabel(ylabel)
-        axes[0, 1].plot(times, np.rad2deg([sample["relative_rotation_rad"][1] for sample in row["trace"]]))
-    axes[0, 1].set_ylabel("Y bending (degrees)")
-    for ax in axes.flat:
-        ax.grid(alpha=.22)
-        ax.set_xlabel("Time after first contact (ms)")
-    axes[0, 0].legend(frameon=False)
-    fig.suptitle("70 mm whole-leg drop | one nonlinear knee | assumed 50 g\nUncalibrated; spatial gate FAILED; no survival verdict", fontsize=14)
-    fig.savefig(output/"impact_timestep_comparison.png", dpi=150)
-    plt.close(fig)
+    plot_timesteps(data["timesteps"]["cases"], output/"impact_timestep_comparison.png")
     hashes = {path.name: digest(path) for path in output.iterdir() if path.is_file()}
     manifest = json.loads((project/"ml/run_manifest.template.json").read_text())
     manifest.update({"run_id": run_id, "status": "evaluation_complete_physical_and_spatial_gates_failed",
                      "baseline_commit": "ad6f15d4e2b785db1b1ccaa5093dc998997d63ef",
                      "parent_local_commit": "cafe147a64b40114529a19c1e5c8b67131f67843",
                      "implementation_commit": args.code_commit, "isaac_sim_version": "6.0.1-rc.7 / Kit 110.1.2",
+                     "artifact_generator_sha256": digest(Path(__file__)),
                      "simulator_build_commit": "5131a9740b3ce82e42331e923e1a45ffa396f71c",
                      "stage": "exact_joint/open_nonlinear_gui.py generated opt-in stage",
                      "environment_version": "exact_joint_frame_shell_v1; not ML baseline",

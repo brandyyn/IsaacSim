@@ -1,0 +1,30 @@
+{
+  "coarse": {
+    "local_path": "exact_joint/results/20260909T100832_141990Z_shell_study.json",
+    "sha256": "9653fccfa644da8083848ee2101105e781bd925d1ea200e78b043c45ed62abd4"
+  },
+  "fine": {
+    "local_path": "exact_joint/results/20260909T100532_991313Z_shell_study.json",
+    "sha256": "302882a3365ba65383ef5abd723f9521b490b48fe3c579e296e28163ed461e2e"
+  },
+  "sensitivity": {
+    "local_path": "exact_joint/results/20260909T094722_093846Z_shell_study.json",
+    "sha256": "cf07419e2e6d54c5e15bfd7f849541253f496a36cb772aa0e8c4e8da66a4ceae"
+  },
+  "timesteps": {
+    "local_path": "exact_joint/results/20260909T095043_626253Z_shell_study.json",
+    "sha256": "29861a525766f56dab1571b26805b1962df69b0d88eef233bbddc2c4718e44da"
+  },
+  "ui": {
+    "local_path": "exact_joint/results/20260909T095917_167416Z_shell_ui.json",
+    "sha256": "60b636e8cba385207f95ee2032bc9aded7deb14087d8c8c4afd2fabb911cb3ea"
+  },
+  "replay_ui": {
+    "local_path": "exact_joint/results/20260909T100338_896772Z_shell_replay_ui.json",
+    "sha256": "b09f41063e6c156135555e7af6de84125515b8687279257840de8ae39b9c8cda"
+  },
+  "full_live_calculation_local_only": {
+    "local_path": "exact_joint/results/20260909T100338_152319Z_nonlinear_shell/calculation.json",
+    "sha256": "674b6c444c423dab6bd0b43e78755ddaa367a912c74956bf0b05c4723e6de0ba"
+  }
+}

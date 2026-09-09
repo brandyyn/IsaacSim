@@ -1,0 +1,83 @@
+{
+  "numeric_regression_tests": {
+    "passed": 36,
+    "failed": 0,
+    "scope": "Implementation, not physical validation"
+  },
+  "actual_ui_checks": {
+    "apply_recomputes_and_renders_1x": true,
+    "invalid_load_retains_accepted_state": true,
+    "seven_cable_families_pause_resume": true,
+    "external_frame_force_drives_deformation": true,
+    "pet_gap_rebuild_changes_model": true,
+    "impact_pause_and_force_matched_peak": true,
+    "return_preserves_original_stage_and_model": true
+  },
+  "timeline_replay_ui": {
+    "native_timeline_apply_pause_resume": true,
+    "replay_recorded_force_matched": true,
+    "peak_inspection": true,
+    "calculation": "exact_joint\\results\\20260909T100338_152319Z_nonlinear_shell\\calculation.json"
+  },
+  "spatial_comparison": [
+    {
+      "pattern": "Compression",
+      "relative_change": 0.2784584149672628,
+      "passes_5_percent": false
+    },
+    {
+      "pattern": "Bend Y+",
+      "relative_change": 0.4040084018217474,
+      "passes_5_percent": false
+    },
+    {
+      "pattern": "Twist CW",
+      "relative_change": 0.11793492485803891,
+      "passes_5_percent": false
+    }
+  ],
+  "spatial_gate_passed": false,
+  "timestep_25_to_12_5_us_relative_changes": {
+    "peak_force_n": 0.00650593698828636,
+    "peak_bend_y_rad": 0.02487906890613704,
+    "peak_compression_fraction": 0.02826652960433471,
+    "max_membrane_strain": 0.0038154889070705763
+  },
+  "timestep_response_gate_passed_for_this_case": true,
+  "live_drop": {
+    "config": {
+      "height_m": 0.07,
+      "upper_mass_kg": 0.03,
+      "lower_mass_kg": 0.02,
+      "contact_stiffness_n_m": 20000.0,
+      "contact_damping_ns_m": 0.1,
+      "step_s": 2.4999999999999998e-05,
+      "duration_s": 0.008,
+      "pet_density_kg_m3": 1390.0,
+      "pla_density_kg_m3": 1240.0,
+      "max_iterations": 180
+    },
+    "shell_mass_kg": 0.0028682341737862396,
+    "steps_recorded": 320,
+    "time_after_contact_s": 0.007999999999999972,
+    "peak_force_n": 35.56566916222125,
+    "peak_bend_y_rad": 0.0034475388749785176,
+    "peak_compression_fraction": 0.006025155597672804,
+    "final_energy_fraction": 0.9459958226403329
+  },
+  "full_motion_demonstrated": false,
+  "physically_calibrated": false,
+  "survives": null,
+  "screenshot": {
+    "width": 2560,
+    "height": 1369,
+    "mean_rgb": 106.75192906166302,
+    "std_rgb": 73.99353199687617
+  },
+  "limitations": [
+    "spatial response gate failed",
+    "unmeasured pre-crease/material/contact law",
+    "no full stress/failure/self-contact model",
+    "frictionless normal drop; no ground Z torque"
+  ]
+}
