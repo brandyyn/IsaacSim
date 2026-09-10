@@ -27,6 +27,7 @@ class ShellConfig:
     crease_twist_ratio: float = 0.1
     panel_bending_scale: float = 1.0
     membrane_scale: float = 1.0
+    vertex_relief_fraction: float = 0.0
     panel_strain_limit: float = 0.03
     minimum_height_fraction: float = 0.08
     max_iterations: int = 900
@@ -42,6 +43,8 @@ class ShellConfig:
             raise ValueError("Crease twist coupling must be 0-10")
         if not .01 <= self.panel_bending_scale <= 10 or not .01 <= self.membrane_scale <= 10:
             raise ValueError("Panel bending and membrane scales must be 0.01-10")
+        if not 0 <= self.vertex_relief_fraction <= .2:
+            raise ValueError("Experimental PET vertex relief must be 0-20% of each edge")
         if not .001 <= self.panel_strain_limit <= .1:
             raise ValueError("Exploratory membrane strain guard must be 0.1-10%")
         if not .02 <= self.minimum_height_fraction <= .5:
@@ -50,7 +53,7 @@ class ShellConfig:
             raise ValueError("Iteration limit must be an integer 10-5000")
 
 
-def surface_mesh(source, subdivision=1, gap_m=0.0):
+def surface_mesh(source, subdivision=1, gap_m=0.0, vertex_relief_fraction=0.0):
     """Subdivide original planar faces; keep every source vertex and crease chain.
 
 No averaged extrusion normals are used, so refinement preserves the reference
@@ -62,10 +65,16 @@ the eight original square perimeter edges are attached to rigid frames.
     for line in source["lines"]:
         a, b = line["vertices"]
         chain = [a]
-        for step in range(1, 2**subdivision):
+        stations = np.linspace(0, 1, 2**subdivision+1)[1:-1].tolist()
+        if vertex_relief_fraction:
+            # A separately labelled manufacturing experiment: remove the PET
+            # connection near crease junctions, not soften the intact laminate.
+            stations = sorted(set([vertex_relief_fraction, 1-vertex_relief_fraction]
+                                  + (stations if subdivision > 1 else [])))
+        for fraction in stations:
             chain.append(len(points))
-            points.append(((1-step/2**subdivision)*source["points"][a]
-                           + step/2**subdivision*source["points"][b]).tolist())
+            points.append(((1-fraction)*source["points"][a]
+                           + fraction*source["points"][b]).tolist())
         chain.append(b)
         chains.append(chain)
         edge_chains[a, b] = chain
@@ -112,6 +121,8 @@ the eight original square perimeter edges are attached to rigid frames.
                 for i in range(len(boundary)):
                     j = (i+1) % len(boundary)
                     a, b, c, d = boundary[i], boundary[j], inner[j], inner[i]
+                    if vertex_relief_fraction and (a < 28 or b < 28):
+                        continue
                     faces.extend([[a, b, c], [a, c, d]])
                     face_laminate.extend([False, False])
             else:
@@ -146,6 +157,8 @@ the eight original square perimeter edges are attached to rigid frames.
                      for a, b in zip(chain[:-1], chain[1:])}
     hinges, crease_ids, hinge_faces = [], [], []
     for edge, adjacent in edge_faces.items():
+        if vertex_relief_fraction and len(adjacent) == 1:
+            continue  # A physical free boundary of a PET relief cut.
         if len(adjacent) != 2:
             raise ValueError("Original shell must remain a closed two-manifold surface")
         first, second = adjacent
@@ -158,7 +171,8 @@ the eight original square perimeter edges are attached to rigid frames.
             "top": np.unique(top), "bottom": np.unique(bottom), "chains": chains,
             "frame_line_ids": frame_line_ids, "hinges": np.asarray(hinges),
             "crease_ids": np.asarray(crease_ids), "laminate": np.asarray(laminate),
-            "hinge_faces": np.asarray(hinge_faces)}
+            "hinge_faces": np.asarray(hinge_faces),
+            "free_boundary_edges": np.asarray([edge for edge, faces in edge_faces.items() if len(faces) == 1])}
 
 
 def rotation_matrix(vector):
@@ -180,11 +194,12 @@ class NonlinearShell:
         self.config = config or ShellConfig()
         self.material.validate()
         self.config.validate()
-        self.mesh = surface_mesh(source, self.config.subdivision, self.material.hinge_gap_m)
+        self.mesh = surface_mesh(source, self.config.subdivision, self.material.hinge_gap_m,
+                                 self.config.vertex_relief_fraction)
         self.points = self.mesh["points"]
         self.width = self.material.width_m
         self.height = source["height_m"]
-        self.free_nodes = np.setdiff1d(np.arange(len(self.points)), np.r_[self.mesh["top"], self.mesh["bottom"]])
+        self.free_nodes = np.setdiff1d(np.unique(self.mesh["triangles"]), np.r_[self.mesh["top"], self.mesh["bottom"]])
         self.frame_start = len(self.free_nodes) * 3
         self.ndof = self.frame_start + 12  # upper then lower: scaled translations, rotation vectors
         self.state = np.zeros(self.ndof)
@@ -243,7 +258,7 @@ class NonlinearShell:
         for i in range(len(self.mesh["chains"])):
             rows = np.flatnonzero(self.mesh["crease_ids"] == i)
             twist_pairs.extend(zip(rows[:-1], rows[1:]))
-        self.twist_pairs = torch.as_tensor(np.asarray(twist_pairs), dtype=torch.long)
+        self.twist_pairs = torch.as_tensor(np.asarray(twist_pairs).reshape(-1, 2), dtype=torch.long)
         self.twist_stiffness = self._tensor([min(stiffness[a], stiffness[b]) * self.config.crease_twist_ratio
                                            for a, b in twist_pairs])
         top, bottom = cable_anchors(self.width, self.height)
@@ -274,6 +289,22 @@ class NonlinearShell:
         """Current-geometry positive tangent approximation used ONLY as a preconditioner."""
         jacobian = torch.autograd.functional.jacobian(self.residual_vector, self._tensor(state), vectorize=True).numpy()
         return jacobian.T@jacobian
+
+    def winch_stiffness(self, state, winch):
+        """Positive cable tangent for solver scaling ONLY; energy remains exact."""
+        if winch is None:
+            return 0
+
+        def lengths(value):
+            return torch.linalg.vector_norm(self.frame_point(value, 0, self.cable_top)
+                                            - self.frame_point(value, 1, self.cable_bottom), dim=1)
+
+        value = self._tensor(state)
+        extension = lengths(value).numpy()-np.asarray(winch.rest_lengths_m)
+        stiffness = (np.asarray(winch.active)*(extension >= -1e-12)
+                     * (extension < winch.force_cap_n/winch.stiffness_n_per_m))*winch.stiffness_n_per_m
+        jacobian = torch.autograd.functional.jacobian(lengths, value, vectorize=True).numpy()
+        return jacobian.T@(stiffness[:, None]*jacobian)
 
     @staticmethod
     def stiffness_scaling(hessian):
@@ -342,7 +373,7 @@ class NonlinearShell:
         twist = .5 * torch.sum(self.twist_stiffness * pair_delta**2)
         return membrane, bending[~self.folding_mask].sum(), bending[self.folding_mask].sum(), twist
 
-    def energy(self, state, tensions=None, nodal_loads=None):
+    def energy(self, state, tensions=None, nodal_loads=None, winch=None):
         points = self.positions(state)
         energy = sum(self.elastic_terms(points))
         if tensions is not None:
@@ -352,13 +383,17 @@ class NonlinearShell:
             energy = energy + torch.sum(tensions * torch.linalg.vector_norm(top-bottom, dim=1))
         if nodal_loads is not None:
             energy = energy - torch.sum(nodal_loads * (points-self.rest))
+        if winch is not None:
+            lengths = torch.linalg.vector_norm(self.frame_point(state, 0, self.cable_top)
+                                              - self.frame_point(state, 1, self.cable_bottom), dim=1)
+            energy = energy + winch.response(lengths)[0]
         return energy
 
-    def value_gradient(self, state, tensions=None, nodal_loads=None):
+    def value_gradient(self, state, tensions=None, nodal_loads=None, winch=None):
         value = self._tensor(state).clone().requires_grad_(True)
         tension_tensor = self._tensor(tensions) if tensions is not None else None
         load_tensor = self._tensor(nodal_loads) if nodal_loads is not None else None
-        energy = self.energy(value, tension_tensor, load_tensor)
+        energy = self.energy(value, tension_tensor, load_tensor, winch)
         gradient = torch.autograd.grad(energy, value)[0]
         return float(energy.detach()), gradient.detach().numpy()
 
@@ -385,7 +420,7 @@ class NonlinearShell:
                 "hinge_angle_changes_rad": angle_change.numpy(),
                 "scope": "Uncalibrated nonlinear membrane/discrete-hinge model; no solid stress or failure verdict"}
 
-    def solve(self, tensions=None, lower_pose=None, nodal_loads=None, initial=None, lower_constraints=None):
+    def solve(self, tensions=None, lower_pose=None, nodal_loads=None, initial=None, lower_constraints=None, winch=None):
         """Static continuation step; a requested pose is not a force prediction.
 
 The upper frame is fixed. With lower_pose, both frames are prescribed and only
@@ -397,6 +432,10 @@ the candidate plus explicit convergence/strain checks without silently applying.
         tensions = np.asarray(tensions, dtype=float)
         if tensions.shape != (12,) or not np.isfinite(tensions).all() or np.min(tensions) < 0:
             raise ValueError("Use twelve finite nonnegative cable tensions")
+        if winch is not None:
+            winch.validate()
+            if np.any(tensions) or lower_pose is not None or lower_constraints is not None:
+                raise ValueError("Winch experiments cannot also impose tension or frame coordinates")
         if nodal_loads is not None:
             nodal_loads = np.asarray(nodal_loads, dtype=float)
             if nodal_loads.shape != self.points.shape or not np.isfinite(nodal_loads).all():
@@ -420,15 +459,15 @@ the candidate plus explicit convergence/strain checks without silently applying.
                     raise ValueError("Partial frame constraints need coordinate 0-5 and finite SI value")
                 state[self.ndof-6+coordinate] = value / (self.width if coordinate < 3 else 1)
                 active = active[active != self.ndof-6+coordinate]
-        initial_energy, _ = self.value_gradient(state, tensions, nodal_loads)
+        initial_energy, _ = self.value_gradient(state, tensions, nodal_loads, winch)
 
         def objective(value):
             candidate = state.copy()
             candidate[active] = value
-            energy, gradient = self.value_gradient(candidate, tensions, nodal_loads)
+            energy, gradient = self.value_gradient(candidate, tensions, nodal_loads, winch)
             return energy, gradient[active]
 
-        reference = self.reference_hessian()[np.ix_(active, active)]
+        reference = (self.reference_hessian()+self.winch_stiffness(state, winch))[np.ix_(active, active)]
         solution = self.minimize_scaled(objective, state[active], reference, min(250, self.config.max_iterations))
         total_iterations = int(solution.nit)
         # At large rotations the neutral-coordinate scaling becomes poor.
@@ -436,7 +475,7 @@ the candidate plus explicit convergence/strain checks without silently applying.
         # exact nonlinear potential and force-residual acceptance criterion.
         while np.abs(solution.jac).max() >= 1e-5 and total_iterations < self.config.max_iterations:
             state[active] = solution.x
-            reference = self.gauss_newton_stiffness(state)[np.ix_(active, active)]
+            reference = (self.gauss_newton_stiffness(state)+self.winch_stiffness(state, winch))[np.ix_(active, active)]
             solution = self.minimize_scaled(objective, solution.x, reference,
                                            min(200, self.config.max_iterations-total_iterations))
             total_iterations += max(1, int(solution.nit))
@@ -450,13 +489,21 @@ the candidate plus explicit convergence/strain checks without silently applying.
                        "initial_potential_j": initial_energy, "final_potential_j": float(solution.fun),
                        "load_type": "prescribed_frame_pose" if lower_pose is not None or lower_constraints is not None else "cable_and_nodal_forces",
                        "tensions_n": tensions.tolist()})
+        if winch is not None:
+            value = self._tensor(state)
+            lengths = torch.linalg.vector_norm(self.frame_point(value, 0, self.cable_top)
+                                              - self.frame_point(value, 1, self.cable_bottom), dim=1)
+            report["tensions_n"] = winch.response(lengths)[1].numpy().tolist()
+            report["load_type"] = "elastic_winch_pull"
+            report["winch"] = asdict(winch)
+            report["cable_lengths_m"] = lengths.numpy().tolist()
         report["within_strain_guard"] = report["max_membrane_strain"] <= self.config.panel_strain_limit
         report["within_height_guard"] = report["frame_separation_m"] >= self.height*self.config.minimum_height_fraction
         report["surface_intersection_pairs"] = intersection_pairs(report["points"], self.mesh["triangles"]).tolist()
         report["accepted"] = (report["converged"] and report["within_strain_guard"] and report["within_height_guard"]
                               and not report["surface_intersection_pairs"])
         # Rotation-vector gradients are not Cartesian moments at finite angle.
-        _, full_gradient = self.value_gradient(state, tensions, nodal_loads)
+        _, full_gradient = self.value_gradient(state, tensions, nodal_loads, winch)
         reactions = []
         for frame in range(2):
             offset = self.frame_start+6*frame

@@ -4,6 +4,14 @@ This is an **uncalibrated nonlinear shell experiment**, not a validated predicti
 of the physical joint's full range or drop survival. The original small-strain
 solid FEM remains available separately. Neither is promoted to the ML baseline.
 
+## September 10 cable-pull experiment
+
+See [WINCH_EXPERIMENT.md](WINCH_EXPERIMENT.md) for the new winch controls,
+stiffness/cut comparison, measured travel and remaining contact limitation.
+**Material reference** restores the intact pattern; **Relief experiment** is an
+explicitly modified PET-cut design with reduced bending rigidity, not measured
+PLA/PET. Neither preset silently changes the original source JSON.
+
 ## What changed
 
 - Original JSON: 28 source vertices, 50 panels, 76 crease paths, unchanged at

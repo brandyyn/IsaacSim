@@ -25,6 +25,16 @@ This is the shared progress log. Update it whenever the FEA model, simulator env
 
 ## Roadmap
 
+Winch/relief follow-up (2026-09-10): case `exact_joint_winch_relief_v1`, evaluation
+`20260910-exact-knee-winch-relief-v1`. Separate elastic winch take-up and modified
+PET-junction cut experiments now have live controls. 41 numerical checks and six
+UI checks pass. Best recorded separate cut sweeps reach 15.137% compression,
+3.730 degrees Y bend and 1.663 degrees twist before subsequent panel intersections;
+these use 100x reduced bending rigidity, NOT calibrated material data. The modified
+70 mm/50 g drop stops on a residual limit at 0.85 ms, before peak impact. Contact,
+mesh and physical-validation gates remain open. No baseline promotion or training.
+Starting local commit `4d1af8f`; publication still requires authorization.
+
 Perimeter-frame follow-up (2026-09-09): `exact_joint_frame_shell_v1` replaces
 rigid roofs with rigid perimeter frames and free interiors in an opt-in nonlinear
 shell. Explicit PET-only borders, force-driven cable/external loading and nodal

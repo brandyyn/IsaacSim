@@ -4,6 +4,39 @@ This file is the portable technical context reconstructed from the Codex convers
 
 ## Current checkpoint
 
+### 2026-09-10: winch and PET-junction experiment
+
+Starting commit `4d1af8fee892438989c322e97a5c3f4073a6f3a9`; fast-forward pull
+reported already up to date. Original JSON and the v8 ML baseline remain unchanged.
+`exact_joint/shell_actuation.py` adds a distinct elastic, pull-only, force-capped
+winch law; tension is calculated from extension, never from a joint-angle target.
+`shell_view.py` adds winch Apply/demo, an active-settings readout and separately
+labelled intact-material / modified-PET-relief presets. Real cut boundaries are
+shown cyan, and topology rebuilds replace USD mesh/curve schemas. At the coarse
+cut resolution, adjacent-section crease coupling is inactive and documented.
+
+The best recorded cut study uses 0.8 mm PET exposure, 20% edge-end relief,
+panel/crease ratio 1000, bending scale 0.01, unchanged membrane modulus, and
+1000 N/m winches capped at 10 N. Separate accepted sweeps reached 15.137% axial
+compression, 3.730 degrees Y bend, and 1.663 degrees twist (strongly coupled
+with compression). Subsequent steps crossed PLA panels and were rejected.
+These are uncalibrated modified-design results, NOT the physical joint's travel
+limits. The modified 70 mm/50 g drop stopped at 0.85 ms on the solver residual
+guard before peak impact. Full video-like motion and correct full-drop FEM are
+still unresolved. No survival verdict and no ML training.
+
+41 numerical checks and six live control checks passed. The test-report writer's
+initial `app.ROOT` path error was corrected after all UI assertions passed; saved
+demo data and restored reference were rechecked before recovering the report.
+Case: `fea/exact_joint_winch_relief_v1`; immutable evaluation:
+`ml/runs/20260910-exact-knee-winch-relief-v1`. See
+`exact_joint/WINCH_EXPERIMENT.md`. Publication remains pending authorization.
+
+Next mechanics work: contact-aware large-fold continuation and spatial
+refinement; calibrate actual routing, module dimensions, winch take-up/tension,
+pre-crease law and physical response. Do not bypass intersections or lower the
+membrane modulus merely to force the video's motion.
+
 The current canonical asset is:
 
 - `panel_crease_leg_v8.usd`

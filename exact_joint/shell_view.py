@@ -22,6 +22,7 @@ from exact_joint.mechanics import tension_pattern
 from exact_joint.nonlinear_shell import NonlinearShell, ShellConfig
 from exact_joint.scene import ExactLegScene, curves, material, mesh, set_points
 from exact_joint.shell_impact import ShellImpact, ShellImpactConfig
+from exact_joint.shell_actuation import winch_pull
 
 
 class ShellWorkshop(DropPreview):
@@ -77,6 +78,11 @@ class ShellWorkshop(DropPreview):
                 ui.Button("Whole leg", clicked_fn=self.whole_view)
                 ui.Button("Knee close-up", clicked_fn=self.close_view)
             with ui.HStack(height=29):
+                ui.Button("Apply winch pull", clicked_fn=lambda: self.start_range("winch"))
+                ui.Button("Winch demo", clicked_fn=lambda: self.start_range("winch_demo"))
+                ui.Button("Material reference", clicked_fn=lambda: self.launch(self.preset(False)))
+                ui.Button("Relief experiment", clicked_fn=lambda: self.launch(self.preset(True)))
+            with ui.HStack(height=29):
                 ui.Button("Rebuild stiffness", clicked_fn=lambda: self.launch(self.rebuild()))
                 ui.Button("Save calculation", clicked_fn=self.save)
                 ui.Button("Return to reference FEM", clicked_fn=lambda: asyncio.ensure_future(self.restore()))
@@ -84,12 +90,16 @@ class ShellWorkshop(DropPreview):
                 ui.Button("Replay recorded impact", clicked_fn=lambda: self.launch(self.replay_recorded()))
                 ui.Button("Show peak bending", clicked_fn=self.show_peak)
             self.telemetry = ui.Label("", height=112, word_wrap=True)
+            self.settings_label = ui.Label("", height=47, word_wrap=True)
             self.feedback = ui.Label("Apply and Cable demo solve forces; Drop solves impact. Full travel is not guaranteed by a force input.", height=64, word_wrap=True)
             with ui.ScrollingFrame(), ui.VStack(spacing=6, height=0):
                 ui.Label("INPUTS: stiffness changes require Rebuild", height=25)
                 self.inputs = {}
                 for label, value in (("Panel / crease bending ratio", 100), ("Crease twist coupling", .1),
                                      ("Panel bending scale", 1), ("Membrane stiffness scale", 1),
+                                     ("PET junction relief (%)", 0), ("Winch pull (mm)", .5),
+                                     ("Winch stiffness (N/m)", 1000), ("Winch force cap (N)", 10),
+                                     ("Static solver iterations", 900),
                                      ("Membrane strain guard (%)", 3), ("Bend target (deg)", 30),
                                      ("Twist target (deg)", 60), ("Compression target (%)", 70),
                                      ("Cable tension (N)", .25), ("Roof test force (N)", 1),
@@ -125,9 +135,14 @@ class ShellWorkshop(DropPreview):
         black = material(s, "NonlinearCableBlack", (.012, .012, .015))
         link = material(s, "NonlinearLink", (.06, .18, .22))
         steel = material(s, "NonlinearYoke", (.65, .73, .8))
-        self.line_edges = np.asarray([(a, b) for chain in model.mesh["chains"] for a, b in zip(chain[:-1], chain[1:])])
+        self.line_edges = model.mesh["hinges"][model.mesh["crease_ids"] >= 0, :2]
         self.frame_edges = np.asarray([(a, b) for i in model.mesh["frame_line_ids"] for a, b in zip(model.mesh["chains"][i][:-1], model.mesh["chains"][i][1:])])
         self.lines = curves(s, root+"/Original76SubdividedCreases", len(self.line_edges), .00012, white)
+        self.relief_edges = model.mesh["free_boundary_edges"].reshape(-1, 2)
+        self.relief_lines = None
+        if len(self.relief_edges):
+            cyan = material(s, "ExperimentalPETRelief", (.1, .95, .8))
+            self.relief_lines = curves(s, root+"/ExperimentalCutBoundaries", len(self.relief_edges), .00010, cyan)
         self.frames_curve = curves(s, root+"/OnlyRigidPerimeters", len(self.frame_edges), .0007, gold)
         self.red = curves(s, root+"/CrossedActuatingCables", 8, .00022, red)
         self.axial = curves(s, root+"/AxialCables", 4, .00014, black)
@@ -183,6 +198,13 @@ class ShellWorkshop(DropPreview):
         colors = np.stack([.12+.88*values, .45+.25*(1-np.abs(2*values-1)), .95*(1-values)], axis=1)
         self.surface.GetDisplayColorAttr().Set(Vt.Vec3fArray.FromNumpy(colors.astype(np.float32)))
         set_points(self.lines, points[self.line_edges].reshape(-1, 3))
+        if self.relief_lines is not None:
+            set_points(self.relief_lines, points[self.relief_edges].reshape(-1, 3))
+        cfg = self.shell.config
+        self.settings_label.text = (f"ACTIVE: panel bend x{cfg.panel_bending_scale:g}, membrane x{cfg.membrane_scale:g}, "
+            f"ratio {cfg.panel_to_crease_ratio:g}, PET gap {self.shell.material.hinge_gap_m*1000:g} mm\n"
+            f"PET junction relief {cfg.vertex_relief_fraction*100:g}% "
+            + ("- MODIFIED CUT DESIGN (cyan edges)" if cfg.vertex_relief_fraction else "- intact source pattern"))
         set_points(self.frames_curve, points[self.frame_edges].reshape(-1, 3))
         state_tensor = self.shell._tensor(self.state)
         top = self.shell.frame_point(state_tensor, 0, self.shell.cable_top).numpy()+[0, 0, self.offset]
@@ -282,8 +304,11 @@ class ShellWorkshop(DropPreview):
         get = lambda name: self.inputs[name].as_float
         config = ShellConfig(panel_to_crease_ratio=get("Panel / crease bending ratio"),
                              crease_twist_ratio=get("Crease twist coupling"), panel_bending_scale=get("Panel bending scale"),
-                             membrane_scale=get("Membrane stiffness scale"), panel_strain_limit=get("Membrane strain guard (%)")/100)
+                             membrane_scale=get("Membrane stiffness scale"), panel_strain_limit=get("Membrane strain guard (%)")/100,
+                             vertex_relief_fraction=get("PET junction relief (%)")/100,
+                             max_iterations=get("Static solver iterations"))
         config.validate()
+        config = dataclasses.replace(config, max_iterations=int(config.max_iterations))
         self.feedback.text = "Assembling the new nonlinear shell; displayed result held until ready."
         material = dataclasses.replace(self.shell.material, hinge_gap_m=get("PET exposed gap (mm)")/1000)
         material.validate()
@@ -298,8 +323,28 @@ class ShellWorkshop(DropPreview):
         self.mode = "NEUTRAL - NEW STIFFNESS"
         self.static_trace = []
         self.offset = self.lab.scene.top_height-candidate.height
+        # Topology changes need new USD faces, curves and cached schema handles.
+        self.stage.RemovePrim(self.owned_path)
+        self.owned = UsdGeom.Xform.Define(self.stage, self.owned_path)
+        self.owned.GetPrim().SetCustomDataByKey("source_sha256", candidate.source["sha256"])
+        self.owned.GetPrim().SetCustomDataByKey("scope", "Experimental shell; junction relief changes the manufacturing pattern")
+        self.make_scene()
         self.render()
         self.feedback.text = "Stiffness rebuilt. New controls apply to subsequent range/cable/drop calculations."
+
+    async def preset(self, relief):
+        values = {"Panel / crease bending ratio": 1000 if relief else 100,
+                  "Crease twist coupling": .1, "Panel bending scale": .01 if relief else 1,
+                  "Membrane stiffness scale": 1, "PET junction relief (%)": 20 if relief else 0,
+                  "PET exposed gap (mm)": .8 if relief else .2, "Membrane strain guard (%)": 3,
+                  "Static solver iterations": 3000 if relief else 900,
+                  "Winch pull (mm)": .5, "Winch stiffness (N/m)": 1000, "Winch force cap (N)": 10}
+        for name, value in values.items():
+            self.inputs[name].set_value(value)
+        await self.rebuild()
+        self.feedback.text = ("Experimental PET cuts + 100x softer bending; NOT measured PLA/PET. "
+                              "Use Apply winch pull. Adjacent-section twist coupling is inactive in this coarse cut mesh." if relief
+                              else "Material reference restored: intact pattern, nominal moduli, assumed crease law.")
 
     def start_drop(self):
         self.timeline_action = "drop"
@@ -363,13 +408,13 @@ class ShellWorkshop(DropPreview):
                 coordinate = {"bend": 4, "twist": 5, "compression": 2}[mode]
                 si_value = self.shell.height*value/100 if mode == "compression" else np.deg2rad(value)
                 jobs.append(({"lower_constraints": {coordinate: si_value}}, f"PRESCRIBED {mode.upper()} {value:.1f}; other coordinates free"))
-        elif mode in ("cables", "manual"):
+        elif mode in ("cables", "manual", "winch", "winch_demo"):
             amplitude = self.inputs["Cable tension (N)"].as_float
-            if not np.isfinite(amplitude) or not 0 <= amplitude <= 10:
+            if mode in ("cables", "manual") and (not np.isfinite(amplitude) or not 0 <= amplitude <= 10):
                 raise ValueError("Experimental cable tension must be 0-10 N")
             families = ("Compression", "Bend X+", "Bend X-", "Bend Y+", "Bend Y-", "Twist CW", "Twist CCW")
             force = np.zeros(3)
-            if mode == "manual":
+            if mode in ("manual", "winch"):
                 index = self.cable_pattern.model.get_item_value_model().as_int
                 families = (families[index],)
                 force = np.array([self.inputs[f"Lower frame force {axis} (N)"].as_float for axis in "XYZ"])
@@ -377,12 +422,28 @@ class ShellWorkshop(DropPreview):
                     raise ValueError("Use finite experimental frame-force components within +/-100 N")
             nodes = self.shell.mesh["bottom"]
             for family in families:
-                fractions = np.linspace(0, 1, 9)[1:].tolist() if mode == "manual" else (.25, .5, .75, 1, .5, 0)
+                fractions = np.linspace(0, 1, 9)[1:].tolist() if mode in ("manual", "winch") else (.25, .5, .75, 1, .5, 0)
+                if mode in ("winch", "winch_demo"):
+                    pull = self.inputs["Winch pull (mm)"].as_float
+                    if not np.isfinite(pull) or not 0 <= pull <= 20:
+                        raise ValueError("Winch pull must be 0-20 mm; this is cable take-up, not a joint pose")
+                    fractions = np.linspace(0, 1, max(2, math.ceil(pull/.25))+1)[1:].tolist()
+                    if mode == "winch_demo":
+                        fractions += fractions[-2::-1]+[0]
                 for fraction in fractions:
                     loads = np.zeros_like(self.shell.points)
                     loads[nodes] = fraction*force/len(nodes)
-                    jobs.append(({"tensions": tension_pattern(family, amplitude*fraction), "nodal_loads": loads},
-                                 "FORCE-DRIVEN: "+family))
+                    if mode in ("winch", "winch_demo"):
+                        pull = self.inputs["Winch pull (mm)"].as_float
+                        if not np.isfinite(pull) or not 0 <= pull <= 20:
+                            raise ValueError("Winch pull must be 0-20 mm; this is cable take-up, not a joint pose")
+                        winch = winch_pull(self.shell, family, fraction*pull/1000,
+                                          self.inputs["Winch stiffness (N/m)"].as_float,
+                                          self.inputs["Winch force cap (N)"].as_float)
+                        jobs.append(({"winch": winch, "nodal_loads": loads}, f"ELASTIC WINCH: {family}, pull {fraction*pull:g} mm"))
+                    else:
+                        jobs.append(({"tensions": tension_pattern(family, amplitude*fraction), "nodal_loads": loads},
+                                     "FORCE-DRIVEN: "+family))
         else:
             amplitude = self.inputs["Roof test force (N)"].as_float
             if not np.isfinite(amplitude) or not 0 <= amplitude <= 10:
@@ -416,6 +477,7 @@ class ShellWorkshop(DropPreview):
             self.tensions = np.asarray(report["tensions_n"])
             self.snapshots.append(state.copy())
             self.static_trace.append({"mode": label, "tensions_n": self.tensions.tolist(),
+                                      "winch": report.get("winch"), "cable_lengths_m": report.get("cable_lengths_m"),
                                       "nodal_loads_n": np.asarray(parameters.get("nodal_loads", np.zeros_like(self.shell.points))).tolist(),
                                       "relative_rotation_rad": report["relative_rotation_rad"].tolist(),
                                       "compression_fraction": report["compression_fraction"],
@@ -423,7 +485,7 @@ class ShellWorkshop(DropPreview):
                                       "residual": report["gradient_max_j_per_scaled_coordinate"]})
             self.render()
             reaction = report["required_frame_reactions_world_n_nm"][1]
-            if mode in ("manual", "cables", "roof"):
+            if mode in ("manual", "cables", "roof", "winch", "winch_demo"):
                 self.feedback.text = (f"Converged. Cable peak {max(self.tensions):.3g} N/strand. "
                     f"Residual {report['gradient_max_j_per_scaled_coordinate']:.2g} J/scaled coordinate.\n"
                     "Shape and strain are solved at these loads; no angle is imposed.")

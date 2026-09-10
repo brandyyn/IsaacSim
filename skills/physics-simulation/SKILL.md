@@ -425,3 +425,26 @@ euler = r.as_euler('xyz', degrees=True)
 ## Worked Examples (impact, vibratory feeder, gyro, cradle, escapement)
 
 See [`examples.md`](examples.md) for details.
+
+## Custom nonlinear shell and cable experiments
+
+For a custom structural solver rendered in Kit, identify the actuator's control
+variable before tuning material stiffness. Constant tension, elastic cable
+take-up and prescribed joint pose are different boundary conditions. A
+softening equilibrium branch may be accessible with take-up but not a stable
+constant-force sweep. Check the actuator potential gradient against the actual
+reported tension, including slack and force saturation; include its tangent in
+optimizer scaling without changing the physical energy. See
+`exact_joint/shell_actuation.py` and `test_shell_actuation.py` for the project
+implementation (tested with Isaac 6.0.1-rc.7 / Kit 110.1.2).
+
+Separate membrane stiffness, crease bending, panel bending and real relief
+cuts in parameter studies. A topology-changing cut is not a material calibration.
+Remove orphan free DOFs, expose cut boundaries visually, rebuild USD topology
+and handles, and verify that switching back restores the intact mesh. If a cut
+leaves only one crease section, explicitly report that adjacent-section coupling
+is inactive. A post-solve intersection rejection is not a contact solver; never
+interpret the last accepted frame as the full motion or impact envelope.
+
+Iteration log: 2026-09-10 — distilled from force/take-up and PET-junction
+experiments; full folding and physical calibration remain unvalidated.
