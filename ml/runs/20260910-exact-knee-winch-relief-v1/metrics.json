@@ -1,0 +1,122 @@
+{
+  "numeric_tests": {
+    "passed": 41,
+    "failed": 0
+  },
+  "ui_checks": {
+    "scope": "Implementation/UI checks only; no physical calibration",
+    "checks": {
+      "winch_loads_and_rendered_1x_state": true,
+      "invalid_pull_preserves_accepted_state": true,
+      "relief_topology_rebuild_and_active_settings": true,
+      "seven_winch_families_pause_resume_and_unload": true,
+      "winch_provenance_serializes": true,
+      "reference_restores_intact_pattern": true
+    },
+    "recovery_note": "All assertions in validate_winch_live.py passed; only the report destination used nonexistent app.ROOT. Destination corrected; saved trace and final restored reference verified before writing this report."
+  },
+  "last_accepted_per_family": [
+    {
+      "pattern": "Compression",
+      "last_accepted_pull_m": 0.004,
+      "compression_fraction": 0.15137306578762721,
+      "relative_rotation_rad": [
+        -9.318986550832612e-06,
+        -2.685276200105419e-06,
+        -0.0013441299742096321
+      ],
+      "actual_tensions_n": [
+        0.003660854478806236,
+        0.003580357682778784,
+        0.0038904108353478295,
+        0.0039709075226185275,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "max_membrane_strain": 2.8302803332311274e-05,
+      "residual": 2.0832713530451988e-07,
+      "next_rejected_pull_m": 0.005,
+      "rejected_intersections": 12
+    },
+    {
+      "pattern": "Bend Y+",
+      "last_accepted_pull_m": 0.003,
+      "compression_fraction": 0.07687649925896145,
+      "relative_rotation_rad": [
+        -1.8476771878958103e-05,
+        -0.06510306085194754,
+        -0.0006253285444523517
+      ],
+      "actual_tensions_n": [
+        0.0,
+        0.007016106621671875,
+        0.007577376030302313,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "max_membrane_strain": 3.134949287246174e-05,
+      "residual": 3.4191991668622956e-07,
+      "next_rejected_pull_m": 0.004,
+      "rejected_intersections": 15
+    },
+    {
+      "pattern": "Twist CW",
+      "last_accepted_pull_m": 0.003,
+      "compression_fraction": 0.1592015204219046,
+      "relative_rotation_rad": [
+        -0.001957358039016067,
+        1.619179120437164e-05,
+        -0.029019736120739277
+      ],
+      "actual_tensions_n": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.005193315344306781,
+        0.005400797644307398,
+        0.005897978396202097,
+        0.0056438682987172695,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "max_membrane_strain": 3.495610103198517e-05,
+      "residual": 2.7731238815691594e-06,
+      "next_rejected_pull_m": 0.004,
+      "rejected_intersections": 12
+    }
+  ],
+  "modified_drop": [
+    {
+      "step_s": 2.4999999999999998e-05,
+      "duration_s": 0.0008499999999999995,
+      "stop_reason": "SOLVER_RESIDUAL_LIMIT; candidate not applied",
+      "peak_force_n": 17.373771647754594,
+      "peak_bend_y_rad": 0.0007981522524277459,
+      "peak_compression_fraction": 0.004737530419911207,
+      "max_membrane_strain": 8.503030224518108e-05,
+      "final_energy_fraction": 0.9889875677912071,
+      "wall_s": 61.65986030001659
+    }
+  ],
+  "full_motion_demonstrated": false,
+  "physically_calibrated": false,
+  "survives": null,
+  "spatial_convergence": "Not established; parent intact-shell gate failed",
+  "important": "Last accepted points are not validated physical travel limits. Modified cut pattern and reduced bending stiffness."
+}

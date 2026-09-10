@@ -1,0 +1,70 @@
+{
+  "material": {
+    "width_m": 0.03,
+    "pet_thickness_m": 8e-05,
+    "pla_thickness_m": 0.0004,
+    "pet_modulus_pa": 3500000000.0,
+    "pla_modulus_pa": 2200000000.0,
+    "pet_poisson": 0.35,
+    "pla_poisson": 0.35,
+    "hinge_gap_m": 0.0008,
+    "refinement": 1
+  },
+  "shell": {
+    "subdivision": 1,
+    "panel_to_crease_ratio": 1000.0,
+    "crease_twist_ratio": 0.1,
+    "panel_bending_scale": 0.01,
+    "membrane_scale": 1.0,
+    "vertex_relief_fraction": 0.2,
+    "panel_strain_limit": 0.03,
+    "minimum_height_fraction": 0.08,
+    "max_iterations": 3000
+  },
+  "arguments": {
+    "mode": "winch",
+    "ratio": 1000.0,
+    "gap_mm": 0.8,
+    "subdivision": 1,
+    "panel_bending_scale": 0.01,
+    "membrane_scale": 1.0,
+    "vertex_relief_fraction": 0.2,
+    "max_iterations": 3000,
+    "pulls_mm": [
+      0.5,
+      1.0,
+      1.5,
+      2.0,
+      2.5,
+      3.0,
+      4.0,
+      5.0,
+      6.0,
+      8.0,
+      10.0,
+      12.0,
+      16.0,
+      20.0
+    ],
+    "winch_stiffness": 1000,
+    "force_cap": 10,
+    "forces": [
+      0.25,
+      1,
+      2,
+      5,
+      10
+    ],
+    "steps_us": [
+      100,
+      50,
+      25
+    ],
+    "duration_ms": 8,
+    "patterns": [
+      "Compression",
+      "Bend Y+",
+      "Twist CW"
+    ]
+  }
+}

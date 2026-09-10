@@ -1,0 +1,1133 @@
+{
+  "source_sha256": "d578618a0f90342bd0093b4febe130dc0b07c18f1b223c4d6bf02c9f3d93ce35",
+  "material": {
+    "width_m": 0.03,
+    "pet_thickness_m": 8e-05,
+    "pla_thickness_m": 0.0004,
+    "pet_modulus_pa": 3500000000.0,
+    "pla_modulus_pa": 2200000000.0,
+    "pet_poisson": 0.35,
+    "pla_poisson": 0.35,
+    "hinge_gap_m": 0.0008,
+    "refinement": 1
+  },
+  "shell_config": {
+    "subdivision": 1,
+    "panel_to_crease_ratio": 1000.0,
+    "crease_twist_ratio": 0.1,
+    "panel_bending_scale": 0.01,
+    "membrane_scale": 1,
+    "vertex_relief_fraction": 0.2,
+    "panel_strain_limit": 0.03,
+    "minimum_height_fraction": 0.08,
+    "max_iterations": 900
+  },
+  "arguments": {
+    "mode": "drop",
+    "ratio": 1000.0,
+    "gap_mm": 0.8,
+    "subdivision": 1,
+    "panel_bending_scale": 0.01,
+    "membrane_scale": 1,
+    "vertex_relief_fraction": 0.2,
+    "max_iterations": 900,
+    "pulls_mm": [
+      0.1,
+      0.5,
+      1,
+      2,
+      4,
+      6,
+      8,
+      12,
+      16,
+      20
+    ],
+    "winch_stiffness": 1000,
+    "force_cap": 10,
+    "forces": [
+      0.25,
+      1,
+      2,
+      5,
+      10
+    ],
+    "steps_us": [
+      25.0
+    ],
+    "duration_ms": 3.0,
+    "patterns": [
+      "Compression",
+      "Bend Y+",
+      "Twist CW"
+    ]
+  },
+  "code_sha256": {
+    "nonlinear_shell.py": "b902a63ee844517389fcc37b63b3198f2c9641e7b91f54c234f500990ae6ba96",
+    "shell_impact.py": "c53bc5b02ab608529a628777a6cc0d738b814781c3c69e1b8c18157e03f43c30",
+    "shell_contact.py": "365ee0073a0a0551d8bd3b2a43ee68f144d8039a7f11d94e17271c5d541ff3f1",
+    "shell_actuation.py": "20f4a141c3c7b75b1d21526bd923121a10884bb47066fb33488f950fb3d88d56"
+  },
+  "nodes": 686,
+  "triangles": 792,
+  "scope": "Uncalibrated exploratory shell; no survival verdict",
+  "cases": [
+    {
+      "step_s": 2.4999999999999998e-05,
+      "duration_s": 0.0008499999999999995,
+      "stop_reason": "SOLVER_RESIDUAL_LIMIT; candidate not applied",
+      "peak_force_n": 17.373771647754594,
+      "peak_bend_y_rad": 0.0007981522524277459,
+      "peak_compression_fraction": 0.004737530419911207,
+      "max_membrane_strain": 8.503030224518108e-05,
+      "final_energy_fraction": 0.9889875677912071,
+      "wall_s": 61.65986030001659,
+      "trace": [
+        {
+          "time_after_contact_s": 0.0,
+          "ground_force_n": 0.0,
+          "corner_forces_n": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "relative_rotation_rad": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "compression_fraction": 0.0,
+          "max_membrane_strain": 5.193114430639004e-15,
+          "strain_energy_components_j": {
+            "membrane": 3.9797044368548113e-28,
+            "panel_bending": 0.0,
+            "folding": 0.0,
+            "crease_twist": 0.0
+          },
+          "mechanical_energy_j": 0.034335000000000004,
+          "energy_fraction_of_initial": 1.0,
+          "minimum_foot_gap_m": 0.0,
+          "nonlinear_iterations": 0,
+          "residual_j_per_scaled_coordinate": 0.0,
+          "stop_reason": null
+        },
+        {
+          "time_after_contact_s": 2.4999999999999998e-05,
+          "ground_force_n": 0.7027354741024061,
+          "corner_forces_n": [
+            0.17570551449122562,
+            0.17570551654275124,
+            0.17566222050849345,
+            0.1756622225599358
+          ],
+          "relative_rotation_rad": [
+            -1.2574652690672767e-11,
+            -1.442974442452561e-07,
+            4.8700164147811875e-12
+          ],
+          "compression_fraction": 8.254195178469814e-07,
+          "max_membrane_strain": 1.2765605367303946e-06,
+          "strain_energy_components_j": {
+            "membrane": 1.0997653347217665e-11,
+            "panel_bending": 4.294013975177195e-14,
+            "folding": 1.3632840637317533e-12,
+            "crease_twist": 0.0
+          },
+          "mechanical_energy_j": 0.03432299155315388,
+          "energy_fraction_of_initial": 0.999650256390094,
+          "minimum_foot_gap_m": -2.9284252757125206e-05,
+          "nonlinear_iterations": 3,
+          "residual_j_per_scaled_coordinate": 2.404055484076114e-10,
+          "stop_reason": null
+        },
+        {
+          "time_after_contact_s": 4.9999999999999996e-05,
+          "ground_force_n": 1.2874628877417442,
+          "corner_forces_n": [
+            0.3219447293686811,
+            0.3219447380631152,
+            0.32178670580775004,
+            0.321786714502198
+          ],
+          "relative_rotation_rad": [
+            -5.477138605320638e-11,
+            -5.507170506953451e-07,
+            2.4520073625084497e-13
+          ],
+          "compression_fraction": 3.161324126477183e-06,
+          "max_membrane_strain": 2.592904142001702e-06,
+          "strain_energy_components_j": {
+            "membrane": 4.446142054349142e-11,
+            "panel_bending": 6.480663869292053e-13,
+            "folding": 2.0837516327655582e-11,
+            "crease_twist": 0.0
+          },
+          "mechanical_energy_j": 0.03431099747651543,
+          "energy_fraction_of_initial": 0.999300931309609,
+          "minimum_foot_gap_m": -5.853816513670673e-05,
+          "nonlinear_iterations": 3,
+          "residual_j_per_scaled_coordinate": 7.706668214223094e-09,
+          "stop_reason": null
+        },
+        {
+          "time_after_contact_s": 7.5e-05,
+          "ground_force_n": 1.8709848634869686,
+          "corner_forces_n": [
+            0.4679330779929075,
+            0.4679331000351783,
+            0.467559331708306,
+            0.4675593537505768
+          ],
+          "relative_rotation_rad": [
+            -1.4080952257512255e-10,
+            -1.3373781313041338e-06,
+            -4.370606572353997e-11
+          ],
+          "compression_fraction": 7.691765755213353e-06,
+          "max_membrane_strain": 3.8385911997616824e-06,
+          "strain_energy_components_j": {
+            "membrane": 9.750348136114888e-11,
+            "panel_bending": 3.925214852349168e-12,
+            "folding": 1.2224261370522145e-10,
+            "crease_twist": 0.0
+          },
+          "mechanical_energy_j": 0.03429902230880342,
+          "energy_fraction_of_initial": 0.9989521569478205,
+          "minimum_foot_gap_m": -8.774521086198084e-05,
+          "nonlinear_iterations": 4,
+          "residual_j_per_scaled_coordinate": 3.501175469987003e-09,
+          "stop_reason": null
+        },
+        {
+          "time_after_contact_s": 9.999999999999999e-05,
+          "ground_force_n": 2.4529133386371473,
+          "corner_forces_n": [
+            0.6135882590380531,
+            0.613588303059312,
+            0.6128683662592616,
+            0.6128684102805204
+          ],
+          "relative_rotation_rad": [
+            -2.82114471134125e-10,
+            -2.62201251602516e-06,
+            -1.7223140951417623e-10
+          ],
+          "compression_fraction": 1.5098447669115167e-05,
+          "max_membrane_strain": 5.079190388027263e-06,
+          "strain_energy_components_j": {
+            "membrane": 1.7267991953077469e-10,
+            "panel_bending": 1.5375115857194803e-11,
+            "folding": 4.564039802145288e-10,
+            "crease_twist": 0.0
+          },
+          "mechanical_energy_j": 0.03428707055087502,
+          "energy_fraction_of_initial": 0.9986040643912922,
+          "minimum_foot_gap_m": -0.00011688891898688214,
+          "nonlinear_iterations": 4,
+          "residual_j_per_scaled_coordinate": 1.273216471725405e-08,
+          "stop_reason": null
+        },
+        {
+          "time_after_contact_s": 0.000125,
+          "ground_force_n": 3.032862032456424,
+          "corner_forces_n": [
+            0.7588283061969875,
+            0.7588283827255488,
+            0.7576026335026631,
+            0.7576027100312244
+          ],
+          "relative_rotation_rad": [
+            -4.880600608724076e-10,
+            -4.521539906204916e-06,
+            -4.477534725763568e-10
+          ],
+          "compression_fraction": 2.606013124173412e-05,
+          "max_membrane_strain": 6.3514395435222795e-06,
+          "strain_energy_components_j": {
+            "membrane": 2.737677867924135e-10,
+            "panel_bending": 4.629932186967776e-11,
+            "folding": 1.3016090095106198e-09,
+            "crease_twist": 0.0
+          },
+          "mechanical_energy_j": 0.03427514665128723,
+          "energy_fraction_of_initial": 0.998256783203356,
+          "minimum_foot_gap_m": -0.00014595288361873848,
+          "nonlinear_iterations": 4,
+          "residual_j_per_scaled_coordinate": 5.5195572448359125e-08,
+          "stop_reason": null
+        },
+        {
+          "time_after_contact_s": 0.00015000000000000001,
+          "ground_force_n": 3.6104466921403064,
+          "corner_forces_n": [
+            0.9035716337596478,
+            0.9035717551253708,
+            0.9016515909447825,
+            0.9016517123105056
+          ],
+          "relative_rotation_rad": [
+            -7.654447838461348e-10,
+            -7.151897937556197e-06,
+            -9.493502261344965e-10
+          ],
+          "compression_fraction": 4.125218756945159e-05,
+          "max_membrane_strain": 7.660597244801052e-06,
+          "strain_energy_components_j": {
+            "membrane": 4.0407290373286233e-10,
+            "panel_bending": 1.1676356063069438e-10,
+            "folding": 3.0979815989224423e-09,
+            "crease_twist": 0.0
+          },
+          "mechanical_energy_j": 0.03426325499463314,
+          "energy_fraction_of_initial": 0.9979104410844076,
+          "minimum_foot_gap_m": -0.00017492077312401821,
+          "nonlinear_iterations": 5,
+          "residual_j_per_scaled_coordinate": 2.758643156702893e-08,
+          "stop_reason": null
+        },
+        {
+          "time_after_contact_s": 0.00017500000000000003,
+          "ground_force_n": 4.185285347937745,
+          "corner_forces_n": [
+            1.047737089948389,
+            1.0477372701211547,
+            1.044905403847718,
+            1.0449055840204835
+          ],
+          "relative_rotation_rad": [
+            -1.1180096390687834e-09,
+            -1.0627951720028544e-05,
+            -1.7697052126971841e-09
+          ],
+          "compression_fraction": 6.134614301811503e-05,
+          "max_membrane_strain": 9.002570832946995e-06,
+          "strain_energy_components_j": {
+            "membrane": 5.668109646513642e-10,
+            "panel_bending": 2.59160786643403e-10,
+            "folding": 6.471549680440014e-09,
+            "crease_twist": 0.0
+          },
+          "mechanical_energy_j": 0.034251399890193844,
+          "energy_fraction_of_initial": 0.9975651635413962,
+          "minimum_foot_gap_m": -0.00020377634054086213,
+          "nonlinear_iterations": 6,
+          "residual_j_per_scaled_coordinate": 1.755004759920742e-08,
+          "stop_reason": null
+        },
+        {
+          "time_after_contact_s": 0.00020000000000000004,
+          "ground_force_n": 4.756998565218718,
+          "corner_forces_n": [
+            1.191244006836706,
+            1.191244261129737,
+            1.1872550214796218,
+            1.1872552757726529
+          ],
+          "relative_rotation_rad": [
+            -1.545444015478001e-09,
+            -1.5063401017378888e-05,
+            -3.011075266344075e-09
+          ],
+          "compression_fraction": 8.700923884574774e-05,
+          "max_membrane_strain": 1.037322111754683e-05,
+          "strain_energy_components_j": {
+            "membrane": 7.653892936595685e-10,
+            "panel_bending": 5.225456264403936e-10,
+            "folding": 1.2247041878691841e-08,
+            "crease_twist": 0.0
+          },
+          "mechanical_energy_j": 0.0342395855607994,
+          "energy_fraction_of_initial": 0.9972210735634017,
+          "minimum_foot_gap_m": -0.0002325034336117665,
+          "nonlinear_iterations": 7,
+          "residual_j_per_scaled_coordinate": 1.0444423957588244e-07,
+          "stop_reason": null
+        },
+        {
+          "time_after_contact_s": 0.00022500000000000005,
+          "ground_force_n": 5.325209688916116,
+          "corner_forces_n": [
+            1.334012246554092,
+            1.3340125913786223,
+            1.328592253079436,
+            1.3285925979039659
+          ],
+          "relative_rotation_rad": [
+            -2.0442143514324312e-09,
+            -2.057067409457127e-05,
+            -4.779655581793925e-09
+          ],
+          "compression_fraction": 0.00011890400542613477,
+          "max_membrane_strain": 1.1769653331095523e-05,
+          "strain_energy_components_j": {
+            "membrane": 1.00359192432989e-09,
+            "panel_bending": 9.779339544828772e-10,
+            "folding": 2.1451268585639838e-08,
+            "crease_twist": 0.0
+          },
+          "mechanical_energy_j": 0.03422781613286823,
+          "energy_fraction_of_initial": 0.9968782913315342,
+          "minimum_foot_gap_m": -0.0002610860041650648,
+          "nonlinear_iterations": 8,
+          "residual_j_per_scaled_coordinate": 1.2998780274770617e-07,
+          "stop_reason": null
+        },
+        {
+          "time_after_contact_s": 0.00025000000000000006,
+          "ground_force_n": 5.8895450733060795,
+          "corner_forces_n": [
+            1.4759622455564476,
+            1.4759626978429337,
+            1.4688098388101063,
+            1.4688102910965921
+          ],
+          "relative_rotation_rad": [
+            -2.6054864164122357e-09,
+            -2.726083264160603e-05,
+            -7.180769866168201e-09
+          ],
+          "compression_fraction": 0.00015768786620584674,
+          "max_membrane_strain": 1.3187296396909921e-05,
+          "strain_energy_components_j": {
+            "membrane": 1.2860198729656265e-09,
+            "panel_bending": 1.7247949502483427e-09,
+            "folding": 3.53102422178872e-08,
+            "crease_twist": 0.0
+          },
+          "mechanical_energy_j": 0.03421609562507838,
+          "energy_fraction_of_initial": 0.9965369338889872,
+          "minimum_foot_gap_m": -0.00028950811700133305,
+          "nonlinear_iterations": 10,
+          "residual_j_per_scaled_coordinate": 1.4399796482846942e-07,
+          "stop_reason": null
+        },
+        {
+          "time_after_contact_s": 0.00027500000000000007,
+          "ground_force_n": 6.449634310307372,
+          "corner_forces_n": [
+            1.617015057526039,
+            1.6170156340951232,
+            1.6078015210585217,
+            1.607802097627689
+          ],
+          "relative_rotation_rad": [
+            -3.2152079335265044e-09,
+            -3.5243469612333295e-05,
+            -1.0312921358828851e-08
+          ],
+          "compression_fraction": 0.00020401273705816791,
+          "max_membrane_strain": 1.4621516915436263e-05,
+          "strain_energy_components_j": {
+            "membrane": 1.619275202430685e-09,
+            "panel_bending": 2.898513611306231e-09,
+            "folding": 5.524510515337725e-08,
+            "crease_twist": 0.0
+          },
+          "mechanical_energy_j": 0.034204427939534196,
+          "energy_fraction_of_initial": 0.9961971148837685,
+          "minimum_foot_gap_m": -0.000317753958516076,
+          "nonlinear_iterations": 11,
+          "residual_j_per_scaled_coordinate": 3.5729005669186444e-07,
+          "stop_reason": null
+        },
+        {
+          "time_after_contact_s": 0.0003000000000000001,
+          "ground_force_n": 7.005110396524114,
+          "corner_forces_n": [
+            1.757092385959988,
+            1.7570931032049042,
+            1.7454620950571182,
+            1.7454628123021037
+          ],
+          "relative_rotation_rad": [
+            -3.8583776449246854e-09,
+            -4.4626635964853055e-05,
+            -1.4261121492170754e-08
+          ],
+          "compression_fraction": 0.0002585247596853524,
+          "max_membrane_strain": 1.606819471442409e-05,
+          "strain_energy_components_j": {
+            "membrane": 2.014999803833945e-09,
+            "panel_bending": 4.679189374994563e-09,
+            "folding": 8.286872780454822e-08,
+            "crease_twist": 0.0
+          },
+          "mechanical_energy_j": 0.034192816840952225,
+          "energy_fraction_of_initial": 0.9958589439624937,
+          "minimum_foot_gap_m": -0.00034580784362016337,
+          "nonlinear_iterations": 12,
+          "residual_j_per_scaled_coordinate": 6.689458549071479e-07,
+          "stop_reason": null
+        },
+        {
+          "time_after_contact_s": 0.0003250000000000001,
+          "ground_force_n": 7.555610049470127,
+          "corner_forces_n": [
+            1.8961166428309029,
+            1.8961175155138983,
+            1.881687509221172,
+            1.8816883819041537
+          ],
+          "relative_rotation_rad": [
+            -4.513050617500146e-09,
+            -5.55166952107242e-05,
+            -1.9094220973876683e-08
+          ],
+          "compression_fraction": 0.00032186372248643735,
+          "max_membrane_strain": 1.7521019151052967e-05,
+          "strain_energy_components_j": {
+            "membrane": 2.4944438009600803e-09,
+            "panel_bending": 7.3009263673664196e-09,
+            "folding": 1.19986458173381e-07,
+            "crease_twist": 0.0
+          },
+          "mechanical_energy_j": 0.034181265979007135,
+          "energy_fraction_of_initial": 0.9955225274212066,
+          "minimum_foot_gap_m": -0.0003736542265223436,
+          "nonlinear_iterations": 14,
+          "residual_j_per_scaled_coordinate": 2.876938505914353e-07,
+          "stop_reason": null
+        },
+        {
+          "time_after_contact_s": 0.0003500000000000001,
+          "ground_force_n": 8.10077381291155,
+          "corner_forces_n": [
+            2.0340109716376067,
+            2.0340120119805714,
+            2.0163748944752453,
+            2.0163759348181265
+          ],
+          "relative_rotation_rad": [
+            -5.153382875565823e-09,
+            -6.801828268960501e-05,
+            -2.486150206261632e-08
+          ],
+          "compression_fraction": 0.00039466289379985753,
+          "max_membrane_strain": 1.902025074191677e-05,
+          "strain_energy_components_j": {
+            "membrane": 3.097695640992399e-09,
+            "panel_bending": 1.1062169423569439e-08,
+            "folding": 1.6860057142021296e-07,
+            "crease_twist": 0.0
+          },
+          "mechanical_energy_j": 0.03416977883369875,
+          "energy_fraction_of_initial": 0.9951879666142054,
+          "minimum_foot_gap_m": -0.00040127770641715244,
+          "nonlinear_iterations": 17,
+          "residual_j_per_scaled_coordinate": 2.882115430184788e-07,
+          "stop_reason": null
+        },
+        {
+          "time_after_contact_s": 0.0003750000000000001,
+          "ground_force_n": 8.64024634425277,
+          "corner_forces_n": [
+            2.1706993005946864,
+            2.170700516978957,
+            2.1494226551474207,
+            2.1494238715317056
+          ],
+          "relative_rotation_rad": [
+            -5.748829332019926e-09,
+            -8.22341701378976e-05,
+            -3.158760412606779e-08
+          ],
+          "compression_fraction": 0.0004775485172002769,
+          "max_membrane_strain": 2.0527076760977896e-05,
+          "strain_energy_components_j": {
+            "membrane": 3.898122753292783e-09,
+            "panel_bending": 1.6335787402181414e-08,
+            "folding": 2.3091906379452638e-07,
+            "crease_twist": 0.0
+          },
+          "mechanical_energy_j": 0.03415835874644261,
+          "energy_fraction_of_initial": 0.9948553588595487,
+          "minimum_foot_gap_m": -0.00042866303723268495,
+          "nonlinear_iterations": 19,
+          "residual_j_per_scaled_coordinate": 4.97724895206597e-07,
+          "stop_reason": null
+        },
+        {
+          "time_after_contact_s": 0.00040000000000000013,
+          "ground_force_n": 9.17367652334486,
+          "corner_forces_n": [
+            2.3061063672753233,
+            2.306107762409554,
+            2.280730499262876,
+            2.280731894397106
+          ],
+          "relative_rotation_rad": [
+            -6.261168313655831e-09,
+            -9.826522006521472e-05,
+            -3.927582363339225e-08
+          ],
+          "compression_fraction": 0.0005711396488946585,
+          "max_membrane_strain": 2.2033694610459592e-05,
+          "strain_energy_components_j": {
+            "membrane": 5.0254170949636655e-09,
+            "panel_bending": 2.3578611962023616e-08,
+            "folding": 3.0936694031571654e-07,
+            "crease_twist": 0.0
+          },
+          "mechanical_energy_j": 0.03414700885057605,
+          "energy_fraction_of_initial": 0.9945247954150588,
+          "minimum_foot_gap_m": -0.00045579513327370647,
+          "nonlinear_iterations": 22,
+          "residual_j_per_scaled_coordinate": 1.0846867092792218e-06,
+          "stop_reason": null
+        },
+        {
+          "time_after_contact_s": 0.00042500000000000014,
+          "ground_force_n": 9.700717835328415,
+          "corner_forces_n": [
+            2.4401577854058636,
+            2.440159354499094,
+            2.410199563165072,
+            2.410201132258386
+          ],
+          "relative_rotation_rad": [
+            -6.645323092226181e-09,
+            -0.00011621018220679634,
+            -4.791085975899269e-08
+          ],
+          "compression_fraction": 0.000676047462175422,
+          "max_membrane_strain": 2.3541977560239717e-05,
+          "strain_energy_components_j": {
+            "membrane": 6.702699085944381e-09,
+            "panel_bending": 3.333993989065675e-08,
+            "folding": 4.065994300740483e-07,
+            "crease_twist": 0.0
+          },
+          "mechanical_energy_j": 0.03413573217308695,
+          "energy_fraction_of_initial": 0.9941963644411518,
+          "minimum_foot_gap_m": -0.00048265908129546675,
+          "nonlinear_iterations": 27,
+          "residual_j_per_scaled_coordinate": 4.448147344601793e-07,
+          "stop_reason": null
+        },
+        {
+          "time_after_contact_s": 0.00045000000000000015,
+          "ground_force_n": 10.221028433969256,
+          "corner_forces_n": [
+            2.5727800671037775,
+            2.5727817962010735,
+            2.5377324207836036,
+            2.537734149880802
+          ],
+          "relative_rotation_rad": [
+            -6.8523895349429264e-09,
+            -0.00013616569625487536,
+            -5.7456234925489715e-08
+          ],
+          "compression_fraction": 0.000792875136302218,
+          "max_membrane_strain": 2.5039400466900095e-05,
+          "strain_energy_components_j": {
+            "membrane": 9.29895161765737e-09,
+            "panel_bending": 4.6269326071644065e-08,
+            "folding": 5.255137788447398e-07,
+            "crease_twist": 0.0
+          },
+          "mechanical_energy_j": 0.03412453148878342,
+          "energy_fraction_of_initial": 0.9938701467535581,
+          "minimum_foot_gap_m": -0.0005092401462494234,
+          "nonlinear_iterations": 29,
+          "residual_j_per_scaled_coordinate": 9.71791431745514e-07,
+          "stop_reason": null
+        },
+        {
+          "time_after_contact_s": 0.00047500000000000016,
+          "ground_force_n": 10.73427136334966,
+          "corner_forces_n": [
+            2.7039006654375615,
+            2.7039025286058895,
+            2.6632331530689335,
+            2.6632350162372753
+          ],
+          "relative_rotation_rad": [
+            -6.820816827266739e-09,
+            -0.00015822619718161714,
+            -6.786959737312172e-08
+          ],
+          "compression_fraction": 0.0009222175162881818,
+          "max_membrane_strain": 2.651827147929038e-05,
+          "strain_energy_components_j": {
+            "membrane": 1.3407803598457078e-08,
+            "panel_bending": 6.312098771539037e-08,
+            "folding": 6.692610796480917e-07,
+            "crease_twist": 0.0
+          },
+          "mechanical_energy_j": 0.034113409357704357,
+          "energy_fraction_of_initial": 0.993546216912898,
+          "minimum_foot_gap_m": -0.0005355237791425521,
+          "nonlinear_iterations": 34,
+          "residual_j_per_scaled_coordinate": 7.096463655075933e-07,
+          "stop_reason": null
+        },
+        {
+          "time_after_contact_s": 0.0005000000000000001,
+          "ground_force_n": 11.240114896713116,
+          "corner_forces_n": [
+            2.833448036470315,
+            2.833449993412687,
+            2.786607454943871,
+            2.786609411886243
+          ],
+          "relative_rotation_rad": [
+            -6.482408702519331e-09,
+            -0.0001824837405460417,
+            -7.910435931864335e-08
+          ],
+          "compression_fraction": 0.001064660507188564,
+          "max_membrane_strain": 2.7982150748389673e-05,
+          "strain_energy_components_j": {
+            "membrane": 1.995672560283316e-08,
+            "panel_bending": 8.475281225856019e-08,
+            "folding": 8.41258378377633e-07,
+            "crease_twist": 0.0
+          },
+          "mechanical_energy_j": 0.03410236817232958,
+          "energy_fraction_of_initial": 0.9932246445996673,
+          "minimum_foot_gap_m": -0.0005614956287592066,
+          "nonlinear_iterations": 39,
+          "residual_j_per_scaled_coordinate": 9.196813647808361e-07,
+          "stop_reason": null
+        },
+        {
+          "time_after_contact_s": 0.0005250000000000001,
+          "ground_force_n": 11.738232730945015,
+          "corner_forces_n": [
+            2.9613516847549346,
+            2.961353677951278,
+            2.907762687521229,
+            2.9077646807175728
+          ],
+          "relative_rotation_rad": [
+            -5.756414949992683e-09,
+            -0.0002090279441993735,
+            -9.111578220261819e-08
+          ],
+          "compression_fraction": 0.001220780710168623,
+          "max_membrane_strain": 2.9422456988403886e-05,
+          "strain_energy_components_j": {
+            "membrane": 3.035740425241376e-08,
+            "panel_bending": 1.1212222730848858e-07,
+            "folding": 1.0451976942605518e-06,
+            "crease_twist": 0.0
+          },
+          "mechanical_energy_j": 0.03409141006337256,
+          "energy_fraction_of_initial": 0.9929054918704691,
+          "minimum_foot_gap_m": -0.0005871415511184142,
+          "nonlinear_iterations": 46,
+          "residual_j_per_scaled_coordinate": 8.021545071866098e-07,
+          "stop_reason": null
+        },
+        {
+          "time_after_contact_s": 0.00055,
+          "ground_force_n": 12.228304158896059,
+          "corner_forces_n": [
+            3.0875422043202954,
+            3.087544155473132,
+            3.0266079239748973,
+            3.026609875127734
+          ],
+          "relative_rotation_rad": [
+            -4.547030141734168e-09,
+            -0.00023794595523310967,
+            -1.0387928188102065e-07
+          ],
+          "compression_fraction": 0.0013911451390546947,
+          "max_membrane_strain": 3.0831253762127485e-05,
+          "strain_energy_components_j": {
+            "membrane": 4.6700806819477834e-08,
+            "panel_bending": 1.4627868387225076e-07,
+            "folding": 1.2850547411559094e-06,
+            "crease_twist": 0.0
+          },
+          "mechanical_energy_j": 0.03408053687324169,
+          "energy_fraction_of_initial": 0.9925888123850789,
+          "minimum_foot_gap_m": -0.0006124476177652577,
+          "nonlinear_iterations": 53,
+          "residual_j_per_scaled_coordinate": 9.468616526831647e-07,
+          "stop_reason": null
+        },
+        {
+          "time_after_contact_s": 0.000575,
+          "ground_force_n": 12.710014410847236,
+          "corner_forces_n": [
+            3.211951343784242,
+            3.2119531509850336,
+            3.1430540544385437,
+            3.1430558616394184
+          ],
+          "relative_rotation_rad": [
+            -2.7481326128294697e-09,
+            -0.0002693222997985223,
+            -1.1739895838599013e-07
+          ],
+          "compression_fraction": 0.0015763106470342292,
+          "max_membrane_strain": 3.220350857347106e-05,
+          "strain_energy_components_j": {
+            "membrane": 7.201789745075565e-08,
+            "panel_bending": 1.883434680406191e-07,
+            "folding": 1.5650958174043672e-06,
+            "crease_twist": 0.0
+          },
+          "mechanical_energy_j": 0.03406975018555029,
+          "energy_fraction_of_initial": 0.9922746522659178,
+          "minimum_foot_gap_m": -0.0006374001281250485,
+          "nonlinear_iterations": 58,
+          "residual_j_per_scaled_coordinate": 2.564358952749507e-06,
+          "stop_reason": null
+        },
+        {
+          "time_after_contact_s": 0.0006,
+          "ground_force_n": 13.183054929067474,
+          "corner_forces_n": [
+            3.3345120696206267,
+            3.334513603948458,
+            3.257013860585245,
+            3.2570153949131457
+          ],
+          "relative_rotation_rad": [
+            -2.3622259339641176e-10,
+            -0.00030323882384953487,
+            -1.317163156886121e-07
+          ],
+          "compression_fraction": 0.0017768234255821636,
+          "max_membrane_strain": 3.3531227428717245e-05,
+          "strain_energy_components_j": {
+            "membrane": 1.1059913732375557e-07,
+            "panel_bending": 2.39485136461987e-07,
+            "folding": 1.889883964050311e-06,
+            "crease_twist": 0.0
+          },
+          "mechanical_energy_j": 0.03405905128050335,
+          "energy_fraction_of_initial": 0.9919630487986995,
+          "minimum_foot_gap_m": -0.0006619856220122511,
+          "nonlinear_iterations": 66,
+          "residual_j_per_scaled_coordinate": 8.895538154661542e-07,
+          "stop_reason": null
+        },
+        {
+          "time_after_contact_s": 0.0006249999999999999,
+          "ground_force_n": 13.647123525205597,
+          "corner_forces_n": [
+            3.4551586139499464,
+            3.455159716006045,
+            3.368402046596761,
+            3.368403148652846
+          ],
+          "relative_rotation_rad": [
+            3.1286595665381844e-09,
+            -0.0003397747289649463,
+            -1.469272551183512e-07
+          ],
+          "compression_fraction": 0.0019932187121424194,
+          "max_membrane_strain": 3.4802590728655916e-05,
+          "strain_energy_components_j": {
+            "membrane": 1.6838618704614662e-07,
+            "panel_bending": 3.0089238496511406e-07,
+            "folding": 2.264279707596217e-06,
+            "crease_twist": 0.0
+          },
+          "mechanical_energy_j": 0.034048441107677754,
+          "energy_fraction_of_initial": 0.9916540296396607,
+          "minimum_foot_gap_m": -0.0006861908896697161,
+          "nonlinear_iterations": 78,
+          "residual_j_per_scaled_coordinate": 3.032629165400369e-06,
+          "stop_reason": null
+        },
+        {
+          "time_after_contact_s": 0.0006499999999999999,
+          "ground_force_n": 14.101924901410435,
+          "corner_forces_n": [
+            3.5738265706076606,
+            3.573827047337261,
+            3.4771354033679565,
+            3.4771358800975567
+          ],
+          "relative_rotation_rad": [
+            7.499859598505008e-09,
+            -0.0003790063454098527,
+            -1.631918346500488e-07
+          ],
+          "compression_fraction": 0.002226019908779131,
+          "max_membrane_strain": 3.600916630605053e-05,
+          "strain_energy_components_j": {
+            "membrane": 2.5344278956091615e-07,
+            "panel_bending": 3.737350615222079e-07,
+            "folding": 2.6934281816012333e-06,
+            "crease_twist": 0.0
+          },
+          "mechanical_energy_j": 0.03403792026903602,
+          "energy_fraction_of_initial": 0.9913476123208393,
+          "minimum_foot_gap_m": -0.0007100029895011628,
+          "nonlinear_iterations": 86,
+          "residual_j_per_scaled_coordinate": 2.2111009175012175e-06,
+          "stop_reason": null
+        },
+        {
+          "time_after_contact_s": 0.0006749999999999998,
+          "ground_force_n": 14.547170726737946,
+          "corner_forces_n": [
+            3.690452949585865,
+            3.6904525712330716,
+            3.5831327921359013,
+            3.5831324137831078
+          ],
+          "relative_rotation_rad": [
+            1.304914476051705e-08,
+            -0.0004210073333135457,
+            -1.8074496206730954e-07
+          ],
+          "compression_fraction": 0.002475738360209756,
+          "max_membrane_strain": 4.0251723476804606e-05,
+          "strain_energy_components_j": {
+            "membrane": 3.764823395259006e-07,
+            "panel_bending": 4.5911445125805477e-07,
+            "folding": 3.182751169131876e-06,
+            "crease_twist": 0.0
+          },
+          "mechanical_energy_j": 0.03402748882917108,
+          "energy_fraction_of_initial": 0.9910437987234914,
+          "minimum_foot_gap_m": -0.0007334093033699446,
+          "nonlinear_iterations": 101,
+          "residual_j_per_scaled_coordinate": 1.3797624135274134e-06,
+          "stop_reason": null
+        },
+        {
+          "time_after_contact_s": 0.0006999999999999998,
+          "ground_force_n": 14.98258019271173,
+          "corner_forces_n": [
+            3.8049762765199753,
+            3.8049747740921265,
+            3.6863153222636975,
+            3.6863138198359318
+          ],
+          "relative_rotation_rad": [
+            1.9960584731541033e-08,
+            -0.0004658484626446345,
+            -1.9990652872217876e-07
+          ],
+          "compression_fraction": 0.0027428724362795753,
+          "max_membrane_strain": 4.4300737524688476e-05,
+          "strain_energy_components_j": {
+            "membrane": 5.514193753864258e-07,
+            "panel_bending": 5.580146429206493e-07,
+            "folding": 3.7379282685173896e-06,
+            "crease_twist": 0.0
+          },
+          "mechanical_energy_j": 0.0340171465343658,
+          "energy_fraction_of_initial": 0.9907425814581563,
+          "minimum_foot_gap_m": -0.00075639759664832,
+          "nonlinear_iterations": 113,
+          "residual_j_per_scaled_coordinate": 8.770488717350401e-07,
+          "stop_reason": null
+        },
+        {
+          "time_after_contact_s": 0.0007249999999999997,
+          "ground_force_n": 15.40788018073476,
+          "corner_forces_n": [
+            3.917336666413487,
+            3.91733373097998,
+            3.7866063593874486,
+            3.786603423953844
+          ],
+          "relative_rotation_rad": [
+            2.8415927072691945e-08,
+            -0.0005135977825884276,
+            -2.2109616578677357e-07
+          ],
+          "compression_fraction": 0.003027907130945806,
+          "max_membrane_strain": 4.7513762142492506e-05,
+          "strain_energy_components_j": {
+            "membrane": 7.959088365920741e-07,
+            "panel_bending": 6.712542788758599e-07,
+            "folding": 4.364862090440173e-06,
+            "crease_twist": 0.0
+          },
+          "mechanical_energy_j": 0.03400689256820329,
+          "energy_fraction_of_initial": 0.9904439367468555,
+          "minimum_foot_gap_m": -0.0007789557105103012,
+          "nonlinear_iterations": 133,
+          "residual_j_per_scaled_coordinate": 1.5311924727173798e-06,
+          "stop_reason": null
+        },
+        {
+          "time_after_contact_s": 0.0007499999999999997,
+          "ground_force_n": 15.822805792147745,
+          "corner_forces_n": [
+            4.027475926183979,
+            4.0274712064604925,
+            3.8839316896133322,
+            3.883926969889942
+          ],
+          "relative_rotation_rad": [
+            3.8606623788487603e-08,
+            -0.0005643204393726657,
+            -2.448376728485944e-07
+          ],
+          "compression_fraction": 0.0033313131756793624,
+          "max_membrane_strain": 4.9788178264211e-05,
+          "strain_energy_components_j": {
+            "membrane": 1.1317619590995144e-06,
+            "panel_bending": 7.994255087631927e-07,
+            "folding": 5.0696689768055995e-06,
+            "crease_twist": 0.0
+          },
+          "mechanical_energy_j": 0.033996725937243136,
+          "energy_fraction_of_initial": 0.9901478356558361,
+          "minimum_foot_gap_m": -0.0008010719394490468,
+          "nonlinear_iterations": 147,
+          "residual_j_per_scaled_coordinate": 8.780555896226953e-07,
+          "stop_reason": null
+        },
+        {
+          "time_after_contact_s": 0.0007749999999999996,
+          "ground_force_n": 16.227100619559245,
+          "corner_forces_n": [
+            4.135337655351526,
+            4.135330758055028,
+            3.97821955172456,
+            3.9782126544281313
+          ],
+          "relative_rotation_rad": [
+            5.0720114404969883e-08,
+            -0.0006180788848962767,
+            -2.7177287771465076e-07
+          ],
+          "compression_fraction": 0.003653546420571807,
+          "max_membrane_strain": 5.329793513409442e-05,
+          "strain_energy_components_j": {
+            "membrane": 1.5851481114171402e-06,
+            "panel_bending": 9.428453493392697e-07,
+            "folding": 5.858659205956349e-06,
+            "crease_twist": 0.0
+          },
+          "mechanical_energy_j": 0.03398664470002734,
+          "energy_fraction_of_initial": 0.9898542216405223,
+          "minimum_foot_gap_m": -0.0008227349324667621,
+          "nonlinear_iterations": 163,
+          "residual_j_per_scaled_coordinate": 8.610888650381621e-07,
+          "stop_reason": null
+        },
+        {
+          "time_after_contact_s": 0.0007999999999999996,
+          "ground_force_n": 16.620517132713886,
+          "corner_forces_n": [
+            4.240867325253029,
+            4.240857814699475,
+            4.069400751657473,
+            4.069391241103907
+          ],
+          "relative_rotation_rad": [
+            6.493302118370424e-08,
+            -0.000674932790603476,
+            -3.0266534082564307e-07
+          ],
+          "compression_fraction": 0.003995047180904487,
+          "max_membrane_strain": 6.26762234677293e-05,
+          "strain_energy_components_j": {
+            "membrane": 2.186448521082928e-06,
+            "panel_bending": 1.1015040437036962e-06,
+            "folding": 6.738330138091379e-06,
+            "crease_twist": 0.0
+          },
+          "mechanical_energy_j": 0.03397664700971735,
+          "energy_fraction_of_initial": 0.9895630409121114,
+          "minimum_foot_gap_m": -0.0008439337096199651,
+          "nonlinear_iterations": 180,
+          "residual_j_per_scaled_coordinate": 8.67833470202077e-07,
+          "stop_reason": null
+        },
+        {
+          "time_after_contact_s": 0.0008249999999999996,
+          "ground_force_n": 17.002817106198997,
+          "corner_forces_n": [
+            4.34401238230453,
+            4.343999786350237,
+            4.157408766749304,
+            4.157396170794928
+          ],
+          "relative_rotation_rad": [
+            8.136325281105338e-08,
+            -0.0007349390398317124,
+            -3.3839017345273905e-07
+          ],
+          "compression_fraction": 0.004356239422588226,
+          "max_membrane_strain": 7.328676617242546e-05,
+          "strain_energy_components_j": {
+            "membrane": 2.9696608752121243e-06,
+            "panel_bending": 1.275003913087455e-06,
+            "folding": 7.715364917465718e-06,
+            "crease_twist": 0.0
+          },
+          "mechanical_energy_j": 0.03396672988021634,
+          "energy_fraction_of_initial": 0.9892742065011311,
+          "minimum_foot_gap_m": -0.0008646576819874158,
+          "nonlinear_iterations": 180,
+          "residual_j_per_scaled_coordinate": 5.334313247481043e-06,
+          "stop_reason": null
+        },
+        {
+          "time_after_contact_s": 0.0008499999999999995,
+          "ground_force_n": 17.373771647754594,
+          "corner_forces_n": [
+            4.4447223354624334,
+            4.444706139833068,
+            4.242179684044222,
+            4.242163488414871
+          ],
+          "relative_rotation_rad": [
+            1.0013139526510926e-07,
+            -0.0007981522524277459,
+            -3.798818263864851e-07
+          ],
+          "compression_fraction": 0.004737530419911207,
+          "max_membrane_strain": 8.503030224518108e-05,
+          "strain_energy_components_j": {
+            "membrane": 3.971222269805398e-06,
+            "panel_bending": 1.4625995752495207e-06,
+            "folding": 8.79652477634235e-06,
+            "crease_twist": 0.0
+          },
+          "mechanical_energy_j": 0.0339568881401111,
+          "energy_fraction_of_initial": 0.9889875677912071,
+          "minimum_foot_gap_m": -0.0008848966695749749,
+          "nonlinear_iterations": 180,
+          "residual_j_per_scaled_coordinate": 1.0297722986214018e-05,
+          "stop_reason": null
+        },
+        {
+          "time_after_contact_s": 0.0008499999999999995,
+          "ground_force_n": 17.373771647754594,
+          "corner_forces_n": [
+            4.4447223354624334,
+            4.444706139833068,
+            4.242179684044222,
+            4.242163488414871
+          ],
+          "relative_rotation_rad": [
+            1.0013139526510926e-07,
+            -0.0007981522524277459,
+            -3.798818263864851e-07
+          ],
+          "compression_fraction": 0.004737530419911207,
+          "max_membrane_strain": 8.503030224518108e-05,
+          "strain_energy_components_j": {
+            "membrane": 3.971222269805398e-06,
+            "panel_bending": 1.4625995752495207e-06,
+            "folding": 8.79652477634235e-06,
+            "crease_twist": 0.0
+          },
+          "mechanical_energy_j": 0.0339568881401111,
+          "energy_fraction_of_initial": 0.9889875677912071,
+          "minimum_foot_gap_m": -0.0008848966695749749,
+          "nonlinear_iterations": 0,
+          "residual_j_per_scaled_coordinate": 0.0,
+          "stop_reason": "SOLVER_RESIDUAL_LIMIT; candidate not applied"
+        }
+      ]
+    }
+  ]
+}

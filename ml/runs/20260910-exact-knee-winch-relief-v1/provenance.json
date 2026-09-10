@@ -1,0 +1,34 @@
+{
+  "20260910T055807_220797Z_shell_study.json": {
+    "local_path": "exact_joint/results/20260910T055807_220797Z_shell_study.json",
+    "sha256": "d00655a3e232b853f24c502a79f1a44654a10c1c2b6f9c1c5ccb741fc444f421"
+  },
+  "20260910T060532_898166Z_shell_study.json": {
+    "local_path": "exact_joint/results/20260910T060532_898166Z_shell_study.json",
+    "sha256": "86d6f2d1a1901d8bd01d73d89ac8d01da2647a3c662334064363f8dbd1b5cc34"
+  },
+  "20260910T061204_251444Z_winch_ui.json": {
+    "local_path": "exact_joint/results/20260910T061204_251444Z_winch_ui.json",
+    "sha256": "f72b5386c9436e64485090f72dd3792e3c4b90edf37d3862094cb3db1d9c0725"
+  },
+  "20260910T054100_296095Z_shell_study.json": {
+    "local_path": "exact_joint/results/20260910T054100_296095Z_shell_study.json",
+    "sha256": "51f919da586a8f3368bfc45b8e152a0744fb676383bf4c3c47de4af15f6f1d1e"
+  },
+  "20260910T054619_026907Z_shell_study.json": {
+    "local_path": "exact_joint/results/20260910T054619_026907Z_shell_study.json",
+    "sha256": "0be2f212fb57e27aae391d8bf4fc863c5f56e31599a022e587946632461d704b"
+  },
+  "20260910T054948_409734Z_shell_study.json": {
+    "local_path": "exact_joint/results/20260910T054948_409734Z_shell_study.json",
+    "sha256": "d265fd2ef1852d552d1cf7a66d54d788e20d10bb1d7ae24cb5aae2d2aaf3a81b"
+  },
+  "20260910T055248_090485Z_shell_study.json": {
+    "local_path": "exact_joint/results/20260910T055248_090485Z_shell_study.json",
+    "sha256": "dc517a440411f9768a5dfcb3748d581999b3ced5192cf75fb35b278347bfab54"
+  },
+  "20260910T055615_986506Z_shell_study.json": {
+    "local_path": "exact_joint/results/20260910T055615_986506Z_shell_study.json",
+    "sha256": "ff4b0eb962523fd85917f69203e204532fb41c0ea8d88c4598f144e91c5ee85a"
+  }
+}

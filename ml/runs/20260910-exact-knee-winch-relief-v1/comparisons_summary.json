@@ -1,0 +1,1564 @@
+[
+  {
+    "source_sha256": "d578618a0f90342bd0093b4febe130dc0b07c18f1b223c4d6bf02c9f3d93ce35",
+    "material": {
+      "width_m": 0.03,
+      "pet_thickness_m": 8e-05,
+      "pla_thickness_m": 0.0004,
+      "pet_modulus_pa": 3500000000.0,
+      "pla_modulus_pa": 2200000000.0,
+      "pet_poisson": 0.35,
+      "pla_poisson": 0.35,
+      "hinge_gap_m": 0.0002,
+      "refinement": 1
+    },
+    "shell_config": {
+      "subdivision": 1,
+      "panel_to_crease_ratio": 1000.0,
+      "crease_twist_ratio": 0.1,
+      "panel_bending_scale": 0.01,
+      "membrane_scale": 1,
+      "panel_strain_limit": 0.03,
+      "minimum_height_fraction": 0.08,
+      "max_iterations": 900
+    },
+    "arguments": {
+      "mode": "cables",
+      "ratio": 1000.0,
+      "gap_mm": 0.2,
+      "subdivision": 1,
+      "panel_bending_scale": 0.01,
+      "membrane_scale": 1,
+      "forces": [
+        0.1,
+        0.3,
+        1.0,
+        3.0,
+        10.0
+      ],
+      "steps_us": [
+        100,
+        50,
+        25
+      ],
+      "duration_ms": 8,
+      "patterns": [
+        "Compression",
+        "Bend Y+",
+        "Twist CW"
+      ]
+    },
+    "code_sha256": {
+      "nonlinear_shell.py": "12e4a9a3df591e4208c3f020affaa08bab6da3babbf0c362d3b4579d8fdeb15d",
+      "shell_impact.py": "c53bc5b02ab608529a628777a6cc0d738b814781c3c69e1b8c18157e03f43c30",
+      "shell_contact.py": "365ee0073a0a0551d8bd3b2a43ee68f144d8039a7f11d94e17271c5d541ff3f1"
+    },
+    "nodes": 458,
+    "triangles": 912,
+    "scope": "Uncalibrated exploratory shell; no survival verdict",
+    "cases": [
+      {
+        "pattern": "Compression",
+        "tension_n_per_strand": 0.1,
+        "wall_s": 5.122451300005196,
+        "accepted": true,
+        "converged": true,
+        "iterations": 5,
+        "residual": 1.4682858961653777e-08,
+        "relative_rotation_rad": [
+          -8.722135476642543e-09,
+          -4.3651003035977495e-09,
+          1.1203638687538823e-09
+        ],
+        "compression_fraction": 0.00015839965169772707,
+        "max_membrane_strain": 0.00012412843024802301,
+        "max_laminate_membrane_strain": 5.0413504977456755e-05,
+        "max_pet_strip_membrane_strain": 0.00012412843024802301,
+        "intersections": 0
+      },
+      {
+        "pattern": "Compression",
+        "tension_n_per_strand": 0.3,
+        "wall_s": 0.41305289999581873,
+        "accepted": true,
+        "converged": true,
+        "iterations": 9,
+        "residual": 1.2461261313795324e-07,
+        "relative_rotation_rad": [
+          -2.6328238152330682e-08,
+          -1.2966862509297633e-08,
+          3.350902223087544e-09
+        ],
+        "compression_fraction": 0.0004763162968450807,
+        "max_membrane_strain": 0.00037304863747485194,
+        "max_laminate_membrane_strain": 0.00015149054109705968,
+        "max_pet_strip_membrane_strain": 0.00037304863747485194,
+        "intersections": 0
+      },
+      {
+        "pattern": "Compression",
+        "tension_n_per_strand": 1.0,
+        "wall_s": 0.7618514999921899,
+        "accepted": true,
+        "converged": true,
+        "iterations": 71,
+        "residual": 1.6105484392142393e-06,
+        "relative_rotation_rad": [
+          -9.632727288518174e-08,
+          -3.436732133077426e-08,
+          1.3184526808939887e-08
+        ],
+        "compression_fraction": 0.0016774967683178543,
+        "max_membrane_strain": 0.0018982325850170083,
+        "max_laminate_membrane_strain": 0.0005011428124064004,
+        "max_pet_strip_membrane_strain": 0.0018982325850170083,
+        "intersections": 0
+      },
+      {
+        "pattern": "Compression",
+        "tension_n_per_strand": 3.0,
+        "wall_s": 1.4052857000206131,
+        "accepted": true,
+        "converged": true,
+        "iterations": 199,
+        "residual": 2.729789075523337e-06,
+        "relative_rotation_rad": [
+          -5.637668298077686e-07,
+          -7.800054528742751e-07,
+          4.61180483433356e-08
+        ],
+        "compression_fraction": 0.005399060184190896,
+        "max_membrane_strain": 0.008239461764418077,
+        "max_laminate_membrane_strain": 0.0015132427976289522,
+        "max_pet_strip_membrane_strain": 0.008239461764418077,
+        "intersections": 0
+      },
+      {
+        "pattern": "Compression",
+        "tension_n_per_strand": 10.0,
+        "wall_s": 6.86619190001511,
+        "accepted": false,
+        "converged": true,
+        "iterations": 450,
+        "residual": 7.225048612341939e-06,
+        "relative_rotation_rad": [
+          -9.937803425164133e-07,
+          -3.437388713046869e-07,
+          1.195929887650813e-07
+        ],
+        "compression_fraction": 0.021008703022001196,
+        "max_membrane_strain": 0.03558005257877877,
+        "max_laminate_membrane_strain": 0.005735423194723886,
+        "max_pet_strip_membrane_strain": 0.03558005257877877,
+        "intersections": 0
+      },
+      {
+        "pattern": "Bend Y+",
+        "tension_n_per_strand": 0.1,
+        "wall_s": 0.38748529998701997,
+        "accepted": true,
+        "converged": true,
+        "iterations": 4,
+        "residual": 1.5716291135779848e-08,
+        "relative_rotation_rad": [
+          -5.743018986721161e-09,
+          -5.164770758626013e-05,
+          5.609175654353527e-10
+        ],
+        "compression_fraction": 7.916046587275183e-05,
+        "max_membrane_strain": 0.00010127628647458087,
+        "max_laminate_membrane_strain": 4.1100719172261744e-05,
+        "max_pet_strip_membrane_strain": 0.00010127628647458087,
+        "intersections": 0
+      },
+      {
+        "pattern": "Bend Y+",
+        "tension_n_per_strand": 0.3,
+        "wall_s": 0.3835910999914631,
+        "accepted": true,
+        "converged": true,
+        "iterations": 7,
+        "residual": 2.7057439817290863e-07,
+        "relative_rotation_rad": [
+          -1.7304736354636658e-08,
+          -0.00015502772517421068,
+          1.6717706955819238e-09
+        ],
+        "compression_fraction": 0.00023777953338710578,
+        "max_membrane_strain": 0.0003041047284582759,
+        "max_laminate_membrane_strain": 0.00012339745331952975,
+        "max_pet_strip_membrane_strain": 0.0003041047284582759,
+        "intersections": 0
+      },
+      {
+        "pattern": "Bend Y+",
+        "tension_n_per_strand": 1.0,
+        "wall_s": 0.631397899996955,
+        "accepted": true,
+        "converged": true,
+        "iterations": 52,
+        "residual": 5.102504161044697e-07,
+        "relative_rotation_rad": [
+          -7.398345994633049e-08,
+          -0.0005404148433993176,
+          4.545710222665136e-09
+        ],
+        "compression_fraction": 0.0008172552744682982,
+        "max_membrane_strain": 0.0014125284023387156,
+        "max_laminate_membrane_strain": 0.00040936131662508093,
+        "max_pet_strip_membrane_strain": 0.0014125284023387156,
+        "intersections": 0
+      },
+      {
+        "pattern": "Bend Y+",
+        "tension_n_per_strand": 3.0,
+        "wall_s": 1.2381655999924988,
+        "accepted": true,
+        "converged": true,
+        "iterations": 161,
+        "residual": 1.4554018516188538e-06,
+        "relative_rotation_rad": [
+          1.6448490502610607e-08,
+          -0.0017414104251544384,
+          -5.975099312794512e-09
+        ],
+        "compression_fraction": 0.002602628281174413,
+        "max_membrane_strain": 0.006201943278965318,
+        "max_laminate_membrane_strain": 0.0012150632994998587,
+        "max_pet_strip_membrane_strain": 0.006201943278965318,
+        "intersections": 0
+      },
+      {
+        "pattern": "Bend Y+",
+        "tension_n_per_strand": 10.0,
+        "wall_s": 5.960899099998642,
+        "accepted": true,
+        "converged": true,
+        "iterations": 274,
+        "residual": 1.5670232286289774e-07,
+        "relative_rotation_rad": [
+          -3.118853290938175e-07,
+          -0.006123588680866101,
+          2.125779707446593e-07
+        ],
+        "compression_fraction": 0.009528106941078418,
+        "max_membrane_strain": 0.02642406630063238,
+        "max_laminate_membrane_strain": 0.004292397886507428,
+        "max_pet_strip_membrane_strain": 0.02642406630063238,
+        "intersections": 0
+      },
+      {
+        "pattern": "Twist CW",
+        "tension_n_per_strand": 0.1,
+        "wall_s": 0.38650009999400936,
+        "accepted": true,
+        "converged": true,
+        "iterations": 5,
+        "residual": 8.049423284464083e-09,
+        "relative_rotation_rad": [
+          -6.315475079556474e-09,
+          -2.8846547559915478e-09,
+          -4.27589053874796e-05
+        ],
+        "compression_fraction": 0.00010460756130670212,
+        "max_membrane_strain": 9.049722160160348e-05,
+        "max_laminate_membrane_strain": 4.229611894860983e-05,
+        "max_pet_strip_membrane_strain": 9.049722160160348e-05,
+        "intersections": 0
+      },
+      {
+        "pattern": "Twist CW",
+        "tension_n_per_strand": 0.3,
+        "wall_s": 0.4186143999977503,
+        "accepted": true,
+        "converged": true,
+        "iterations": 8,
+        "residual": 1.2045174947739046e-08,
+        "relative_rotation_rad": [
+          -1.904622469822124e-08,
+          -8.665293502506013e-09,
+          -0.00012847787526228672
+        ],
+        "compression_fraction": 0.0003143294038386868,
+        "max_membrane_strain": 0.0002718450066284435,
+        "max_laminate_membrane_strain": 0.00012702920708635655,
+        "max_pet_strip_membrane_strain": 0.0002718450066284435,
+        "intersections": 0
+      },
+      {
+        "pattern": "Twist CW",
+        "tension_n_per_strand": 1.0,
+        "wall_s": 0.6452330999891274,
+        "accepted": true,
+        "converged": true,
+        "iterations": 53,
+        "residual": 6.028508342049554e-06,
+        "relative_rotation_rad": [
+          -7.439219271425728e-08,
+          -5.0011159627122413e-08,
+          -0.00043569848708632797
+        ],
+        "compression_fraction": 0.0010849185209566015,
+        "max_membrane_strain": 0.0012800864367257729,
+        "max_laminate_membrane_strain": 0.0004165870080534067,
+        "max_pet_strip_membrane_strain": 0.0012800864367257729,
+        "intersections": 0
+      },
+      {
+        "pattern": "Twist CW",
+        "tension_n_per_strand": 3.0,
+        "wall_s": 1.4485110999958124,
+        "accepted": true,
+        "converged": true,
+        "iterations": 205,
+        "residual": 7.72059379347545e-06,
+        "relative_rotation_rad": [
+          -3.4471862127178493e-07,
+          -2.2778785902105596e-07,
+          -0.0013371040288727262
+        ],
+        "compression_fraction": 0.003490249969235859,
+        "max_membrane_strain": 0.006192779764296542,
+        "max_laminate_membrane_strain": 0.0012442411657443693,
+        "max_pet_strip_membrane_strain": 0.006192779764296542,
+        "intersections": 0
+      },
+      {
+        "pattern": "Twist CW",
+        "tension_n_per_strand": 10.0,
+        "wall_s": 5.957773799978895,
+        "accepted": true,
+        "converged": true,
+        "iterations": 286,
+        "residual": 1.0647354384829555e-06,
+        "relative_rotation_rad": [
+          -9.564403370173972e-07,
+          -5.158285065095865e-08,
+          -0.004835209420088465
+        ],
+        "compression_fraction": 0.012902268307116493,
+        "max_membrane_strain": 0.026358423489512974,
+        "max_laminate_membrane_strain": 0.004439756493610525,
+        "max_pet_strip_membrane_strain": 0.026358423489512974,
+        "intersections": 0
+      }
+    ]
+  },
+  {
+    "source_sha256": "d578618a0f90342bd0093b4febe130dc0b07c18f1b223c4d6bf02c9f3d93ce35",
+    "material": {
+      "width_m": 0.03,
+      "pet_thickness_m": 8e-05,
+      "pla_thickness_m": 0.0004,
+      "pet_modulus_pa": 3500000000.0,
+      "pla_modulus_pa": 2200000000.0,
+      "pet_poisson": 0.35,
+      "pla_poisson": 0.35,
+      "hinge_gap_m": 0.0008,
+      "refinement": 1
+    },
+    "shell_config": {
+      "subdivision": 1,
+      "panel_to_crease_ratio": 1000.0,
+      "crease_twist_ratio": 0.1,
+      "panel_bending_scale": 0.01,
+      "membrane_scale": 0.01,
+      "panel_strain_limit": 0.03,
+      "minimum_height_fraction": 0.08,
+      "max_iterations": 900
+    },
+    "arguments": {
+      "mode": "cables",
+      "ratio": 1000.0,
+      "gap_mm": 0.8,
+      "subdivision": 1,
+      "panel_bending_scale": 0.01,
+      "membrane_scale": 0.01,
+      "forces": [
+        0.1,
+        0.3,
+        1.0,
+        3.0,
+        10.0
+      ],
+      "steps_us": [
+        100,
+        50,
+        25
+      ],
+      "duration_ms": 8,
+      "patterns": [
+        "Compression",
+        "Bend Y+",
+        "Twist CW"
+      ]
+    },
+    "code_sha256": {
+      "nonlinear_shell.py": "12e4a9a3df591e4208c3f020affaa08bab6da3babbf0c362d3b4579d8fdeb15d",
+      "shell_impact.py": "c53bc5b02ab608529a628777a6cc0d738b814781c3c69e1b8c18157e03f43c30",
+      "shell_contact.py": "365ee0073a0a0551d8bd3b2a43ee68f144d8039a7f11d94e17271c5d541ff3f1"
+    },
+    "nodes": 458,
+    "triangles": 912,
+    "scope": "Uncalibrated exploratory shell; no survival verdict",
+    "cases": [
+      {
+        "pattern": "Compression",
+        "tension_n_per_strand": 0.1,
+        "wall_s": 6.308342000003904,
+        "accepted": true,
+        "converged": true,
+        "iterations": 225,
+        "residual": 1.4574522752945342e-07,
+        "relative_rotation_rad": [
+          -2.0415432856416414e-05,
+          -1.0629418120567342e-05,
+          1.7523154915381064e-07
+        ],
+        "compression_fraction": 0.0306768538226182,
+        "max_membrane_strain": 0.023497410529612076,
+        "max_laminate_membrane_strain": 0.006090107743735954,
+        "max_pet_strip_membrane_strain": 0.023497410529612076,
+        "intersections": 0
+      },
+      {
+        "pattern": "Compression",
+        "tension_n_per_strand": 0.3,
+        "wall_s": 22.223241200001212,
+        "accepted": false,
+        "converged": false,
+        "iterations": 900,
+        "residual": 0.02172361634054452,
+        "relative_rotation_rad": [
+          8.01799921716791e-08,
+          3.935784213797655e-06,
+          3.721889733073943e-06
+        ],
+        "compression_fraction": 0.999999234313677,
+        "max_membrane_strain": 0.028139361638226456,
+        "max_laminate_membrane_strain": 0.0017350512456785789,
+        "max_pet_strip_membrane_strain": 0.028139361638226456,
+        "intersections": 1361
+      },
+      {
+        "pattern": "Bend Y+",
+        "tension_n_per_strand": 0.1,
+        "wall_s": 1.1026154999854043,
+        "accepted": true,
+        "converged": true,
+        "iterations": 136,
+        "residual": 9.225362525689664e-08,
+        "relative_rotation_rad": [
+          1.4527359388160145e-05,
+          -0.008934028671565269,
+          -1.1287789638971385e-05
+        ],
+        "compression_fraction": 0.012928360850700704,
+        "max_membrane_strain": 0.017740429742949832,
+        "max_laminate_membrane_strain": 0.004631826860107374,
+        "max_pet_strip_membrane_strain": 0.017740429742949832,
+        "intersections": 0
+      },
+      {
+        "pattern": "Bend Y+",
+        "tension_n_per_strand": 0.3,
+        "wall_s": 22.67884929999127,
+        "accepted": false,
+        "converged": false,
+        "iterations": 900,
+        "residual": 0.016330614585237647,
+        "relative_rotation_rad": [
+          -9.836065695652006e-06,
+          -0.366857974321747,
+          -9.924550059333587e-06
+        ],
+        "compression_fraction": 0.7961908599585623,
+        "max_membrane_strain": 0.06694861377406516,
+        "max_laminate_membrane_strain": 0.007189910013106135,
+        "max_pet_strip_membrane_strain": 0.06694861377406516,
+        "intersections": 511
+      },
+      {
+        "pattern": "Twist CW",
+        "tension_n_per_strand": 0.1,
+        "wall_s": 1.0589795999985654,
+        "accepted": true,
+        "converged": true,
+        "iterations": 124,
+        "residual": 5.035096124002009e-08,
+        "relative_rotation_rad": [
+          -2.3939583130941696e-05,
+          -1.5549225939572454e-05,
+          -0.006211089825545749
+        ],
+        "compression_fraction": 0.01798058665478164,
+        "max_membrane_strain": 0.01629873501033305,
+        "max_laminate_membrane_strain": 0.004788482468070775,
+        "max_pet_strip_membrane_strain": 0.01629873501033305,
+        "intersections": 0
+      },
+      {
+        "pattern": "Twist CW",
+        "tension_n_per_strand": 0.3,
+        "wall_s": 27.201544999988982,
+        "accepted": false,
+        "converged": false,
+        "iterations": 900,
+        "residual": 8.32257688615148e-05,
+        "relative_rotation_rad": [
+          0.002570104400599804,
+          9.952816475410619e-05,
+          -0.8042734385737699
+        ],
+        "compression_fraction": 0.9508023481284824,
+        "max_membrane_strain": 0.4245377914611782,
+        "max_laminate_membrane_strain": 0.03814126213264865,
+        "max_pet_strip_membrane_strain": 0.4245377914611782,
+        "intersections": 689
+      }
+    ]
+  },
+  {
+    "source_sha256": "d578618a0f90342bd0093b4febe130dc0b07c18f1b223c4d6bf02c9f3d93ce35",
+    "material": {
+      "width_m": 0.03,
+      "pet_thickness_m": 8e-05,
+      "pla_thickness_m": 0.0004,
+      "pet_modulus_pa": 3500000000.0,
+      "pla_modulus_pa": 2200000000.0,
+      "pet_poisson": 0.35,
+      "pla_poisson": 0.35,
+      "hinge_gap_m": 0.0008,
+      "refinement": 1
+    },
+    "shell_config": {
+      "subdivision": 1,
+      "panel_to_crease_ratio": 1000.0,
+      "crease_twist_ratio": 0.1,
+      "panel_bending_scale": 0.01,
+      "membrane_scale": 0.01,
+      "panel_strain_limit": 0.03,
+      "minimum_height_fraction": 0.08,
+      "max_iterations": 900
+    },
+    "arguments": {
+      "mode": "winch",
+      "ratio": 1000.0,
+      "gap_mm": 0.8,
+      "subdivision": 1,
+      "panel_bending_scale": 0.01,
+      "membrane_scale": 0.01,
+      "pulls_mm": [
+        0.5,
+        1.0,
+        2.0,
+        3.0,
+        4.0,
+        6.0,
+        8.0,
+        10.0,
+        12.0,
+        16.0,
+        20.0
+      ],
+      "winch_stiffness": 1000,
+      "force_cap": 10,
+      "forces": [
+        0.25,
+        1,
+        2,
+        5,
+        10
+      ],
+      "steps_us": [
+        100,
+        50,
+        25
+      ],
+      "duration_ms": 8,
+      "patterns": [
+        "Compression",
+        "Bend Y+",
+        "Twist CW"
+      ]
+    },
+    "code_sha256": {
+      "nonlinear_shell.py": "4e58af82d23b1a9d5e464f7da0c8546b4bdeba0e4d2e05d85ae2a13c865163ed",
+      "shell_impact.py": "c53bc5b02ab608529a628777a6cc0d738b814781c3c69e1b8c18157e03f43c30",
+      "shell_contact.py": "365ee0073a0a0551d8bd3b2a43ee68f144d8039a7f11d94e17271c5d541ff3f1",
+      "shell_actuation.py": "bdb8171017341dc44b9d37c203da23a85b6e5fc17078bb4e876e38c290a95253"
+    },
+    "nodes": 458,
+    "triangles": 912,
+    "scope": "Uncalibrated exploratory shell; no survival verdict",
+    "cases": [
+      {
+        "pattern": "Compression",
+        "tension_n_per_strand": null,
+        "pull_mm": 0.5,
+        "actual_tensions_n": [
+          0.06530896670799147,
+          0.06525486458939384,
+          0.06534653963480991,
+          0.06540064175340754,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "wall_s": 7.92426600001636,
+        "accepted": true,
+        "converged": true,
+        "iterations": 120,
+        "residual": 8.170602461826739e-08,
+        "relative_rotation_rad": [
+          -3.0558348741525664e-06,
+          -1.8034039543286692e-06,
+          -5.619425201666738e-08
+        ],
+        "compression_fraction": 0.016464857835684632,
+        "max_membrane_strain": 0.011809546347264084,
+        "max_laminate_membrane_strain": 0.0038106825778128706,
+        "max_pet_strip_membrane_strain": 0.011809546347264084,
+        "intersections": 0
+      },
+      {
+        "pattern": "Compression",
+        "tension_n_per_strand": null,
+        "pull_mm": 1.0,
+        "actual_tensions_n": [
+          0.10628302939547779,
+          0.10620467120114191,
+          0.10635505326036729,
+          0.10643341145470317,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "wall_s": 3.1942930999794044,
+        "accepted": true,
+        "converged": true,
+        "iterations": 250,
+        "residual": 1.450724918121055e-07,
+        "relative_rotation_rad": [
+          -5.012734976131798e-06,
+          -2.611939808299101e-06,
+          2.684461973186678e-07
+        ],
+        "compression_fraction": 0.033851551467938834,
+        "max_membrane_strain": 0.02650893463271959,
+        "max_laminate_membrane_strain": 0.006574232448618158,
+        "max_pet_strip_membrane_strain": 0.02650893463271959,
+        "intersections": 0
+      },
+      {
+        "pattern": "Compression",
+        "tension_n_per_strand": null,
+        "pull_mm": 2.0,
+        "actual_tensions_n": [
+          0.14799441368524777,
+          0.1479137825917548,
+          0.1481143694964937,
+          0.1481950005899832,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "wall_s": 9.598571999988053,
+        "accepted": false,
+        "converged": true,
+        "iterations": 269,
+        "residual": 1.7801595250778804e-08,
+        "relative_rotation_rad": [
+          -6.686217916955249e-06,
+          -2.6877033314999807e-06,
+          3.1149005742755646e-06
+        ],
+        "compression_fraction": 0.07014945487544366,
+        "max_membrane_strain": 0.06171210949387352,
+        "max_laminate_membrane_strain": 0.011404249815498594,
+        "max_pet_strip_membrane_strain": 0.06171210949387352,
+        "intersections": 0
+      },
+      {
+        "pattern": "Bend Y+",
+        "tension_n_per_strand": null,
+        "pull_mm": 0.5,
+        "actual_tensions_n": [
+          0.0,
+          0.09079435974629346,
+          0.09096470458958006,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "wall_s": 1.4997639000066556,
+        "accepted": true,
+        "converged": true,
+        "iterations": 90,
+        "residual": 1.0701253801288259e-07,
+        "relative_rotation_rad": [
+          -5.6781749778749176e-06,
+          -0.0076452076263516305,
+          -9.379007928506924e-07
+        ],
+        "compression_fraction": 0.011160355864512583,
+        "max_membrane_strain": 0.013916860261426375,
+        "max_laminate_membrane_strain": 0.004188193924157648,
+        "max_pet_strip_membrane_strain": 0.013916860261426375,
+        "intersections": 0
+      },
+      {
+        "pattern": "Bend Y+",
+        "tension_n_per_strand": null,
+        "pull_mm": 1.0,
+        "actual_tensions_n": [
+          0.0,
+          0.1559989908934932,
+          0.15627914132545356,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "wall_s": 2.3805053000105545,
+        "accepted": false,
+        "converged": true,
+        "iterations": 174,
+        "residual": 1.6408021417946284e-07,
+        "relative_rotation_rad": [
+          -9.338441873616484e-06,
+          -0.015642716116388376,
+          -1.8295278777476972e-06
+        ],
+        "compression_fraction": 0.023106498314302226,
+        "max_membrane_strain": 0.03249475411994481,
+        "max_laminate_membrane_strain": 0.007450091672407813,
+        "max_pet_strip_membrane_strain": 0.03249475411994481,
+        "intersections": 0
+      },
+      {
+        "pattern": "Twist CW",
+        "tension_n_per_strand": null,
+        "pull_mm": 0.5,
+        "actual_tensions_n": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.10272290375665238,
+          0.10274069636932032,
+          0.10297011217928753,
+          0.10295231729859355,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "wall_s": 1.8645482999854721,
+        "accepted": true,
+        "converged": true,
+        "iterations": 128,
+        "residual": 8.647821906096215e-08,
+        "relative_rotation_rad": [
+          -1.7258424732831655e-05,
+          -9.453676599120895e-06,
+          -0.0064269874816172785
+        ],
+        "compression_fraction": 0.018683563879559828,
+        "max_membrane_strain": 0.01707178276798376,
+        "max_laminate_membrane_strain": 0.004931701863290812,
+        "max_pet_strip_membrane_strain": 0.01707178276798376,
+        "intersections": 0
+      },
+      {
+        "pattern": "Twist CW",
+        "tension_n_per_strand": null,
+        "pull_mm": 1.0,
+        "actual_tensions_n": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.16951618355735137,
+          0.1695908163732926,
+          0.17003870969757584,
+          0.1699640675527636,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "wall_s": 3.169047599978512,
+        "accepted": false,
+        "converged": true,
+        "iterations": 250,
+        "residual": 6.747175878268202e-07,
+        "relative_rotation_rad": [
+          -3.4255353544261266e-05,
+          -1.696750940634346e-05,
+          -0.012575341483378355
+        ],
+        "compression_fraction": 0.039780496768543006,
+        "max_membrane_strain": 0.0405949307843999,
+        "max_laminate_membrane_strain": 0.008917240113324202,
+        "max_pet_strip_membrane_strain": 0.0405949307843999,
+        "intersections": 0
+      }
+    ]
+  },
+  {
+    "source_sha256": "d578618a0f90342bd0093b4febe130dc0b07c18f1b223c4d6bf02c9f3d93ce35",
+    "material": {
+      "width_m": 0.03,
+      "pet_thickness_m": 8e-05,
+      "pla_thickness_m": 0.0004,
+      "pet_modulus_pa": 3500000000.0,
+      "pla_modulus_pa": 2200000000.0,
+      "pet_poisson": 0.35,
+      "pla_poisson": 0.35,
+      "hinge_gap_m": 0.0002,
+      "refinement": 1
+    },
+    "shell_config": {
+      "subdivision": 1,
+      "panel_to_crease_ratio": 1000.0,
+      "crease_twist_ratio": 0.1,
+      "panel_bending_scale": 0.01,
+      "membrane_scale": 1.0,
+      "vertex_relief_fraction": 0.1,
+      "panel_strain_limit": 0.03,
+      "minimum_height_fraction": 0.08,
+      "max_iterations": 900
+    },
+    "arguments": {
+      "mode": "winch",
+      "ratio": 1000.0,
+      "gap_mm": 0.2,
+      "subdivision": 1,
+      "panel_bending_scale": 0.01,
+      "membrane_scale": 1.0,
+      "vertex_relief_fraction": 0.1,
+      "pulls_mm": [
+        0.5,
+        1.0,
+        2.0,
+        3.0,
+        4.0,
+        6.0,
+        8.0,
+        10.0,
+        12.0,
+        16.0,
+        20.0
+      ],
+      "winch_stiffness": 1000,
+      "force_cap": 10,
+      "forces": [
+        0.25,
+        1,
+        2,
+        5,
+        10
+      ],
+      "steps_us": [
+        100,
+        50,
+        25
+      ],
+      "duration_ms": 8,
+      "patterns": [
+        "Compression",
+        "Bend Y+",
+        "Twist CW"
+      ]
+    },
+    "code_sha256": {
+      "nonlinear_shell.py": "3e3a48e6c3fcdfee9ec785c6a1262266cee9ad0e42ca48ddc73cd568cd53cdc0",
+      "shell_impact.py": "c53bc5b02ab608529a628777a6cc0d738b814781c3c69e1b8c18157e03f43c30",
+      "shell_contact.py": "365ee0073a0a0551d8bd3b2a43ee68f144d8039a7f11d94e17271c5d541ff3f1",
+      "shell_actuation.py": "bdb8171017341dc44b9d37c203da23a85b6e5fc17078bb4e876e38c290a95253"
+    },
+    "nodes": 686,
+    "triangles": 792,
+    "scope": "Uncalibrated exploratory shell; no survival verdict",
+    "cases": [
+      {
+        "pattern": "Compression",
+        "tension_n_per_strand": null,
+        "pull_mm": 0.5,
+        "actual_tensions_n": [
+          0.11021423100219044,
+          0.10997422720382052,
+          0.1105588280453651,
+          0.1107988318437142,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "wall_s": 7.138944200007245,
+        "accepted": true,
+        "converged": true,
+        "iterations": 267,
+        "residual": 4.865725497773046e-07,
+        "relative_rotation_rad": [
+          -1.9486605297113802e-05,
+          -8.000131846049679e-06,
+          1.120905136251302e-05
+        ],
+        "compression_fraction": 0.014758086094241119,
+        "max_membrane_strain": 0.0003226498197030041,
+        "max_laminate_membrane_strain": 0.0003226498197030041,
+        "max_pet_strip_membrane_strain": 0.0002558297468130237,
+        "intersections": 0
+      },
+      {
+        "pattern": "Compression",
+        "tension_n_per_strand": null,
+        "pull_mm": 1.0,
+        "actual_tensions_n": [
+          0.13106706727759876,
+          0.13114970092026335,
+          0.13235832401586878,
+          0.13227569036302483,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "wall_s": 15.677941999980249,
+        "accepted": false,
+        "converged": true,
+        "iterations": 873,
+        "residual": 7.288531737481562e-07,
+        "relative_rotation_rad": [
+          -4.027952092265707e-05,
+          2.762160905106336e-06,
+          1.7324004886597026e-05
+        ],
+        "compression_fraction": 0.03288987701084478,
+        "max_membrane_strain": 0.0004746791550513865,
+        "max_laminate_membrane_strain": 0.0004746791550513865,
+        "max_pet_strip_membrane_strain": 0.0004302922102239554,
+        "intersections": 12
+      },
+      {
+        "pattern": "Bend Y+",
+        "tension_n_per_strand": null,
+        "pull_mm": 0.5,
+        "actual_tensions_n": [
+          0.0,
+          0.15059653251811578,
+          0.15109879951854394,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "wall_s": 4.596909100015182,
+        "accepted": true,
+        "converged": true,
+        "iterations": 273,
+        "residual": 2.349406419985267e-06,
+        "relative_rotation_rad": [
+          -1.6742102061932663e-05,
+          -0.006536168741442634,
+          1.540729296990931e-05
+        ],
+        "compression_fraction": 0.009516997404898864,
+        "max_membrane_strain": 0.00034531106060747667,
+        "max_laminate_membrane_strain": 0.00034531106060747667,
+        "max_pet_strip_membrane_strain": 0.00027366533944217514,
+        "intersections": 0
+      },
+      {
+        "pattern": "Bend Y+",
+        "tension_n_per_strand": null,
+        "pull_mm": 1.0,
+        "actual_tensions_n": [
+          0.0,
+          0.18720921756128564,
+          0.18944184561812266,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "wall_s": 16.156057300016982,
+        "accepted": false,
+        "converged": false,
+        "iterations": 900,
+        "residual": 0.0021243876411565833,
+        "relative_rotation_rad": [
+          -7.439409931586703e-05,
+          -0.017294357276105295,
+          8.815572495220379e-05
+        ],
+        "compression_fraction": 0.02095308232671289,
+        "max_membrane_strain": 0.0004601492407380746,
+        "max_laminate_membrane_strain": 0.0004601492407380746,
+        "max_pet_strip_membrane_strain": 0.00042159909100067226,
+        "intersections": 12
+      },
+      {
+        "pattern": "Twist CW",
+        "tension_n_per_strand": null,
+        "pull_mm": 0.5,
+        "actual_tensions_n": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.16131022215487567,
+          0.1615630452814279,
+          0.16221238172349495,
+          0.16195953403667918,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "wall_s": 12.478006899997126,
+        "accepted": true,
+        "converged": true,
+        "iterations": 665,
+        "residual": 1.510913176185069e-07,
+        "relative_rotation_rad": [
+          -5.029102914570872e-05,
+          1.325077097772785e-06,
+          -0.00494261078780836
+        ],
+        "compression_fraction": 0.016252539772738883,
+        "max_membrane_strain": 0.0005996875953266776,
+        "max_laminate_membrane_strain": 0.0005367500018534151,
+        "max_pet_strip_membrane_strain": 0.0005996875953266776,
+        "intersections": 0
+      },
+      {
+        "pattern": "Twist CW",
+        "tension_n_per_strand": null,
+        "pull_mm": 1.0,
+        "actual_tensions_n": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.2097579573187916,
+          0.21120210003129636,
+          0.21275474734660377,
+          0.21131030993341154,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "wall_s": 13.446774899988668,
+        "accepted": false,
+        "converged": true,
+        "iterations": 798,
+        "residual": 1.0496631277755186e-06,
+        "relative_rotation_rad": [
+          -0.00017848997844352937,
+          3.4950011349285995e-05,
+          -0.0086305836042113
+        ],
+        "compression_fraction": 0.040006218896836865,
+        "max_membrane_strain": 0.0006081504705542759,
+        "max_laminate_membrane_strain": 0.0005481139867574333,
+        "max_pet_strip_membrane_strain": 0.0006081504705542759,
+        "intersections": 24
+      }
+    ]
+  },
+  {
+    "source_sha256": "d578618a0f90342bd0093b4febe130dc0b07c18f1b223c4d6bf02c9f3d93ce35",
+    "material": {
+      "width_m": 0.03,
+      "pet_thickness_m": 8e-05,
+      "pla_thickness_m": 0.0004,
+      "pet_modulus_pa": 3500000000.0,
+      "pla_modulus_pa": 2200000000.0,
+      "pet_poisson": 0.35,
+      "pla_poisson": 0.35,
+      "hinge_gap_m": 0.0008,
+      "refinement": 1
+    },
+    "shell_config": {
+      "subdivision": 1,
+      "panel_to_crease_ratio": 1000.0,
+      "crease_twist_ratio": 0.1,
+      "panel_bending_scale": 0.01,
+      "membrane_scale": 1.0,
+      "vertex_relief_fraction": 0.2,
+      "panel_strain_limit": 0.03,
+      "minimum_height_fraction": 0.08,
+      "max_iterations": 900
+    },
+    "arguments": {
+      "mode": "winch",
+      "ratio": 1000.0,
+      "gap_mm": 0.8,
+      "subdivision": 1,
+      "panel_bending_scale": 0.01,
+      "membrane_scale": 1.0,
+      "vertex_relief_fraction": 0.2,
+      "pulls_mm": [
+        0.5,
+        1.0,
+        2.0,
+        3.0,
+        4.0,
+        6.0,
+        8.0,
+        10.0,
+        12.0,
+        16.0,
+        20.0
+      ],
+      "winch_stiffness": 1000,
+      "force_cap": 10,
+      "forces": [
+        0.25,
+        1,
+        2,
+        5,
+        10
+      ],
+      "steps_us": [
+        100,
+        50,
+        25
+      ],
+      "duration_ms": 8,
+      "patterns": [
+        "Compression",
+        "Bend Y+",
+        "Twist CW"
+      ]
+    },
+    "code_sha256": {
+      "nonlinear_shell.py": "b902a63ee844517389fcc37b63b3198f2c9641e7b91f54c234f500990ae6ba96",
+      "shell_impact.py": "c53bc5b02ab608529a628777a6cc0d738b814781c3c69e1b8c18157e03f43c30",
+      "shell_contact.py": "365ee0073a0a0551d8bd3b2a43ee68f144d8039a7f11d94e17271c5d541ff3f1",
+      "shell_actuation.py": "20f4a141c3c7b75b1d21526bd923121a10884bb47066fb33488f950fb3d88d56"
+    },
+    "nodes": 686,
+    "triangles": 792,
+    "scope": "Uncalibrated exploratory shell; no survival verdict",
+    "cases": [
+      {
+        "pattern": "Compression",
+        "tension_n_per_strand": null,
+        "pull_mm": 0.5,
+        "actual_tensions_n": [
+          0.0029193074014000064,
+          0.0028075755990238094,
+          0.0028772388065388677,
+          0.0029889706087832257,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "wall_s": 17.157930799992755,
+        "accepted": true,
+        "converged": true,
+        "iterations": 656,
+        "residual": 8.709053776937033e-08,
+        "relative_rotation_rad": [
+          -2.320904271711326e-06,
+          -3.724732769740874e-06,
+          -4.261130572257334e-05
+        ],
+        "compression_fraction": 0.018829611949600533,
+        "max_membrane_strain": 1.3141503220873127e-05,
+        "max_laminate_membrane_strain": 2.6340949981885662e-06,
+        "max_pet_strip_membrane_strain": 1.3141503220873127e-05,
+        "intersections": 0,
+        "intersection_pairs": [],
+        "energy_j": {
+          "membrane": 2.09720205973921e-09,
+          "panel_bending": 2.894049167797244e-07,
+          "folding": 3.1469997385164036e-06,
+          "crease_twist": 0.0
+        }
+      },
+      {
+        "pattern": "Compression",
+        "tension_n_per_strand": null,
+        "pull_mm": 1.0,
+        "actual_tensions_n": [
+          0.003851165077024127,
+          0.003772416488891095,
+          0.0039058343347421476,
+          0.003984582921855162,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "wall_s": 16.5335774999985,
+        "accepted": true,
+        "converged": true,
+        "iterations": 855,
+        "residual": 8.150803586544699e-08,
+        "relative_rotation_rad": [
+          -4.433709558927352e-06,
+          -2.6264878633376505e-06,
+          -0.00014248549806671802
+        ],
+        "compression_fraction": 0.03773188637691116,
+        "max_membrane_strain": 1.8045448421323715e-05,
+        "max_laminate_membrane_strain": 5.336964553824778e-06,
+        "max_pet_strip_membrane_strain": 1.8045448421323715e-05,
+        "intersections": 0,
+        "intersection_pairs": [],
+        "energy_j": {
+          "membrane": 7.548063953749481e-09,
+          "panel_bending": 6.95014381197088e-07,
+          "folding": 9.653687551131369e-06,
+          "crease_twist": 0.0
+        }
+      },
+      {
+        "pattern": "Compression",
+        "tension_n_per_strand": null,
+        "pull_mm": 2.0,
+        "actual_tensions_n": [
+          0.004297071435115096,
+          0.00426226305372257,
+          0.004477220829381817,
+          0.004512029204546686,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "wall_s": 16.844175799982622,
+        "accepted": false,
+        "converged": false,
+        "iterations": 900,
+        "residual": 0.0008122052469273141,
+        "relative_rotation_rad": [
+          -7.042165195143149e-06,
+          -1.1565706535971167e-06,
+          -0.00046772497127329946
+        ],
+        "compression_fraction": 0.07559150454267227,
+        "max_membrane_strain": 3.680623879433389e-05,
+        "max_laminate_membrane_strain": 1.1246988881033048e-05,
+        "max_pet_strip_membrane_strain": 3.680623879433389e-05,
+        "intersections": 0,
+        "intersection_pairs": [],
+        "energy_j": {
+          "membrane": 2.824402167591735e-08,
+          "panel_bending": 1.5022012446496741e-06,
+          "folding": 2.573498374443114e-05,
+          "crease_twist": 0.0
+        }
+      },
+      {
+        "pattern": "Bend Y+",
+        "tension_n_per_strand": null,
+        "pull_mm": 0.5,
+        "actual_tensions_n": [
+          0.0,
+          0.003955872344280076,
+          0.00406848644260438,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "wall_s": 10.09178429999156,
+        "accepted": true,
+        "converged": true,
+        "iterations": 647,
+        "residual": 2.6774040012044157e-06,
+        "relative_rotation_rad": [
+          -3.753787328979724e-06,
+          -0.010921705938976328,
+          4.769742293755306e-06
+        ],
+        "compression_fraction": 0.012596617543472188,
+        "max_membrane_strain": 1.4483927079626765e-05,
+        "max_laminate_membrane_strain": 3.0567249300366692e-06,
+        "max_pet_strip_membrane_strain": 1.4483927079626765e-05,
+        "intersections": 0,
+        "intersection_pairs": [],
+        "energy_j": {
+          "membrane": 2.5809838685728008e-09,
+          "panel_bending": 2.093343958458544e-07,
+          "folding": 2.133341638689603e-06,
+          "crease_twist": 0.0
+        }
+      },
+      {
+        "pattern": "Bend Y+",
+        "tension_n_per_strand": null,
+        "pull_mm": 1.0,
+        "actual_tensions_n": [
+          0.0,
+          0.0054582742505839,
+          0.005665105186073577,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "wall_s": 15.016279500006931,
+        "accepted": true,
+        "converged": true,
+        "iterations": 828,
+        "residual": 1.0223651051660416e-06,
+        "relative_rotation_rad": [
+          -6.8910926006959e-06,
+          -0.022253660526462462,
+          -7.70656806206122e-05
+        ],
+        "compression_fraction": 0.025085084653972967,
+        "max_membrane_strain": 2.0961351313986713e-05,
+        "max_laminate_membrane_strain": 7.23792479079727e-06,
+        "max_pet_strip_membrane_strain": 2.0961351313986713e-05,
+        "intersections": 0,
+        "intersection_pairs": [],
+        "energy_j": {
+          "membrane": 1.5219304387890145e-08,
+          "panel_bending": 5.19181666463827e-07,
+          "folding": 6.681504367961407e-06,
+          "crease_twist": 0.0
+        }
+      },
+      {
+        "pattern": "Bend Y+",
+        "tension_n_per_strand": null,
+        "pull_mm": 2.0,
+        "actual_tensions_n": [
+          0.0,
+          0.006674164239467428,
+          0.007077106766867347,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "wall_s": 19.692016599990893,
+        "accepted": false,
+        "converged": false,
+        "iterations": 900,
+        "residual": 0.0006166677288084097,
+        "relative_rotation_rad": [
+          -1.3372506978064407e-05,
+          -0.04447830441941746,
+          -0.0003162901053460973
+        ],
+        "compression_fraction": 0.05046626669740306,
+        "max_membrane_strain": 2.9334890363950307e-05,
+        "max_laminate_membrane_strain": 1.4827149130767646e-05,
+        "max_pet_strip_membrane_strain": 2.9334890363950307e-05,
+        "intersections": 0,
+        "intersection_pairs": [],
+        "energy_j": {
+          "membrane": 6.05219205818331e-08,
+          "panel_bending": 1.2060130739013975e-06,
+          "folding": 1.8561011050003595e-05,
+          "crease_twist": 0.0
+        }
+      },
+      {
+        "pattern": "Twist CW",
+        "tension_n_per_strand": null,
+        "pull_mm": 0.5,
+        "actual_tensions_n": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.004795482255251504,
+          0.0047321098511493576,
+          0.005001922394241853,
+          0.005064632923559853,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "wall_s": 13.132668100006413,
+        "accepted": true,
+        "converged": true,
+        "iterations": 684,
+        "residual": 1.3939196860917523e-06,
+        "relative_rotation_rad": [
+          -0.00024877505102851124,
+          6.226864237994273e-05,
+          -0.006585367844894727
+        ],
+        "compression_fraction": 0.024254320950061747,
+        "max_membrane_strain": 1.7440248741219627e-05,
+        "max_laminate_membrane_strain": 1.084958487562923e-05,
+        "max_pet_strip_membrane_strain": 1.7440248741219627e-05,
+        "intersections": 0,
+        "intersection_pairs": [],
+        "energy_j": {
+          "membrane": 3.0106439715719225e-08,
+          "panel_bending": 6.446764958234047e-07,
+          "folding": 5.245692530073324e-06,
+          "crease_twist": 0.0
+        }
+      },
+      {
+        "pattern": "Twist CW",
+        "tension_n_per_strand": null,
+        "pull_mm": 1.0,
+        "actual_tensions_n": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0060057355210224594,
+          0.0060851228824085335,
+          0.006420593586603518,
+          0.006337790185738379,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "wall_s": 21.442964899993967,
+        "accepted": true,
+        "converged": true,
+        "iterations": 895,
+        "residual": 5.794166361068023e-07,
+        "relative_rotation_rad": [
+          -0.0005521603606511071,
+          9.488169810939947e-05,
+          -0.011142648528341929
+        ],
+        "compression_fraction": 0.050346047645379755,
+        "max_membrane_strain": 2.5098029483441282e-05,
+        "max_laminate_membrane_strain": 1.5691658415886946e-05,
+        "max_pet_strip_membrane_strain": 2.5098029483441282e-05,
+        "intersections": 0,
+        "intersection_pairs": [],
+        "energy_j": {
+          "membrane": 6.540029993849775e-08,
+          "panel_bending": 1.464098402718001e-06,
+          "folding": 1.5735096749512018e-05,
+          "crease_twist": 0.0
+        }
+      },
+      {
+        "pattern": "Twist CW",
+        "tension_n_per_strand": null,
+        "pull_mm": 2.0,
+        "actual_tensions_n": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.006819371830411869,
+          0.006891033149922232,
+          0.007349998851984008,
+          0.0072519217892835774,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "wall_s": 22.49533869998413,
+        "accepted": false,
+        "converged": false,
+        "iterations": 900,
+        "residual": 0.004816368901347972,
+        "relative_rotation_rad": [
+          -0.0015609572681151913,
+          0.0004555745405801117,
+          -0.02415078052727911
+        ],
+        "compression_fraction": 0.10092134929326568,
+        "max_membrane_strain": 9.544864954077183e-05,
+        "max_laminate_membrane_strain": 2.1930247108252506e-05,
+        "max_pet_strip_membrane_strain": 9.544864954077183e-05,
+        "intersections": 0,
+        "intersection_pairs": [],
+        "energy_j": {
+          "membrane": 1.64869356991356e-07,
+          "panel_bending": 3.38147397483556e-06,
+          "folding": 4.022764867868522e-05,
+          "crease_twist": 0.0
+        }
+      }
+    ]
+  }
+]
