@@ -1,0 +1,33 @@
+{
+  "regression_tests_passed": 60,
+  "async_controller_tests_included": 7,
+  "desktop_patterns_completed": [
+    "Compression",
+    "Twist CW",
+    "Bend Y+"
+  ],
+  "desktop_accepted_steps": 24,
+  "desktop_pause_held_state_trace_and_usd_for_s": 6,
+  "desktop_switch_from_paused_bend_to_twist_passed": true,
+  "desktop_neutral_no_stale_publication_after_s": 6,
+  "controller_fault_injection": {
+    "first_rejection_preserves_accepted_geometry_state_trace": true,
+    "guard_status_not_relabelled_complete": true,
+    "invalid_tension_preserves_accepted_result": true
+  },
+  "additional_completed_demo_inspection": {
+    "all_seven_patterns_and_42_steps": true,
+    "force_patterns_match_3n": true,
+    "render_matches_solved_geometry_1x": true,
+    "no_rejection": true
+  },
+  "full_motion_validated": false,
+  "survives_drop": null,
+  "notes": [
+    "Three completed real desktop-button ramps, plus interrupted Bend X+ and Bend Y+.",
+    "Compression/Twist records precede the final first-candidate publication fix; their exact code hashes are retained.",
+    "Bend Y+, cancellation and fault-injection guards use final publication code.",
+    "No material, topology, contact law, solver tolerance or physical result magnification changed.",
+    "No new drop, mesh convergence or physical calibration performed in this UI-only evaluation."
+  ]
+}

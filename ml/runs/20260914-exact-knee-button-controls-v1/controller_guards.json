@@ -1,0 +1,12 @@
+{
+  "scope": "Controller fault injection only; not a mechanical solve",
+  "checks": {
+    "first_rejection_preserves_accepted_geometry_state_trace": true,
+    "guard_status_not_relabelled_complete": true,
+    "invalid_tension_preserves_accepted_result": true
+  },
+  "code_sha256": {
+    "shell_view": "d03c55e15e9f23023da19bf64f7c908a1c9b48d3ee0fa4680cd99e598d4c9aa4",
+    "shell_ui_jobs": "8bef4eba7d255ac4e9d8850ebb67b41e97ac1a64472f78b6ea2611045f326d4f"
+  }
+}

@@ -1,0 +1,1566 @@
+{
+  "scope": "Read-only inspection of a completed demo found after resuming the interrupted task; initiation not witnessed",
+  "checks": {
+    "all_seven_patterns_and_42_steps": true,
+    "force_patterns_match_3n": true,
+    "render_matches_solved_geometry_1x": true,
+    "no_rejection": true
+  },
+  "accepted_steps": 42,
+  "trace": [
+    {
+      "mode": "FORCE-DRIVEN: Compression",
+      "tensions_n": [
+        0.75,
+        0.75,
+        0.75,
+        0.75,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "solve_wall_s": 3.8165027999784797,
+      "winch": null,
+      "cable_lengths_m": null,
+      "self_contact": {
+        "method": "IPC 1.6.0 barrier + conservative curved-frame CCD",
+        "scope": "Midsurfaces only; NO PLA/PET thickness clearance or friction",
+        "active_stencils": 0,
+        "minimum_active_distance_m": null,
+        "activation_distance_m": 1e-06,
+        "barrier_energy_j": 0.0
+      },
+      "relative_rotation_rad": [
+        -4.1381889495708867e-07,
+        -2.2960336490427513e-07,
+        8.658325519014066e-08
+      ],
+      "compression_fraction": 0.0012114877791500334,
+      "max_membrane_strain": 0.0008368060820405776,
+      "residual": 1.1465537864788183e-08
+    },
+    {
+      "mode": "FORCE-DRIVEN: Compression",
+      "tensions_n": [
+        1.5,
+        1.5,
+        1.5,
+        1.5,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "solve_wall_s": 3.849470300017856,
+      "winch": null,
+      "cable_lengths_m": null,
+      "self_contact": {
+        "method": "IPC 1.6.0 barrier + conservative curved-frame CCD",
+        "scope": "Midsurfaces only; NO PLA/PET thickness clearance or friction",
+        "active_stencils": 0,
+        "minimum_active_distance_m": null,
+        "activation_distance_m": 1e-06,
+        "barrier_energy_j": 0.0
+      },
+      "relative_rotation_rad": [
+        -8.628876426090143e-07,
+        -4.6567153779326735e-07,
+        1.8511684784507495e-07
+      ],
+      "compression_fraction": 0.0024530649940412985,
+      "max_membrane_strain": 0.001687903577692012,
+      "residual": 9.883487697557237e-08
+    },
+    {
+      "mode": "FORCE-DRIVEN: Compression",
+      "tensions_n": [
+        2.25,
+        2.25,
+        2.25,
+        2.25,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "solve_wall_s": 4.8318175000022165,
+      "winch": null,
+      "cable_lengths_m": null,
+      "self_contact": {
+        "method": "IPC 1.6.0 barrier + conservative curved-frame CCD",
+        "scope": "Midsurfaces only; NO PLA/PET thickness clearance or friction",
+        "active_stencils": 0,
+        "minimum_active_distance_m": null,
+        "activation_distance_m": 1e-06,
+        "barrier_energy_j": 0.0
+      },
+      "relative_rotation_rad": [
+        -1.3512532730431223e-06,
+        -7.098759427462087e-07,
+        2.953641774987971e-07
+      ],
+      "compression_fraction": 0.0037257628947753307,
+      "max_membrane_strain": 0.00255364956394659,
+      "residual": 1.9348664725971076e-08
+    },
+    {
+      "mode": "FORCE-DRIVEN: Compression",
+      "tensions_n": [
+        3.0,
+        3.0,
+        3.0,
+        3.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "solve_wall_s": 4.792810800019652,
+      "winch": null,
+      "cable_lengths_m": null,
+      "self_contact": {
+        "method": "IPC 1.6.0 barrier + conservative curved-frame CCD",
+        "scope": "Midsurfaces only; NO PLA/PET thickness clearance or friction",
+        "active_stencils": 0,
+        "minimum_active_distance_m": null,
+        "activation_distance_m": 1e-06,
+        "barrier_energy_j": 0.0
+      },
+      "relative_rotation_rad": [
+        -1.882664775215837e-06,
+        -9.63670742590521e-07,
+        4.1716476319896876e-07
+      ],
+      "compression_fraction": 0.005030679894395207,
+      "max_membrane_strain": 0.0034344123881220583,
+      "residual": 7.160527343286205e-08
+    },
+    {
+      "mode": "FORCE-DRIVEN: Compression",
+      "tensions_n": [
+        1.5,
+        1.5,
+        1.5,
+        1.5,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "solve_wall_s": 4.859737199964002,
+      "winch": null,
+      "cable_lengths_m": null,
+      "self_contact": {
+        "method": "IPC 1.6.0 barrier + conservative curved-frame CCD",
+        "scope": "Midsurfaces only; NO PLA/PET thickness clearance or friction",
+        "active_stencils": 0,
+        "minimum_active_distance_m": null,
+        "activation_distance_m": 1e-06,
+        "barrier_energy_j": 0.0
+      },
+      "relative_rotation_rad": [
+        -8.628966345307812e-07,
+        -4.6567273977903706e-07,
+        1.8511799644884966e-07
+      ],
+      "compression_fraction": 0.0024530715460830965,
+      "max_membrane_strain": 0.0016879074610736508,
+      "residual": 4.329060554475461e-09
+    },
+    {
+      "mode": "FORCE-DRIVEN: Compression",
+      "tensions_n": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "solve_wall_s": 3.9223126000142656,
+      "winch": null,
+      "cable_lengths_m": null,
+      "self_contact": {
+        "method": "IPC 1.6.0 barrier + conservative curved-frame CCD",
+        "scope": "Midsurfaces only; NO PLA/PET thickness clearance or friction",
+        "active_stencils": 0,
+        "minimum_active_distance_m": null,
+        "activation_distance_m": 1e-06,
+        "barrier_energy_j": 0.0
+      },
+      "relative_rotation_rad": [
+        6.088794325976541e-17,
+        -1.2587555108077218e-17,
+        -7.604881725478884e-18
+      ],
+      "compression_fraction": -2.4202861936828413e-14,
+      "max_membrane_strain": 9.985775461211801e-14,
+      "residual": 2.942742084210653e-11
+    },
+    {
+      "mode": "FORCE-DRIVEN: Bend X+",
+      "tensions_n": [
+        0.75,
+        0.75,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "solve_wall_s": 3.8451222000294365,
+      "winch": null,
+      "cable_lengths_m": null,
+      "self_contact": {
+        "method": "IPC 1.6.0 barrier + conservative curved-frame CCD",
+        "scope": "Midsurfaces only; NO PLA/PET thickness clearance or friction",
+        "active_stencils": 0,
+        "minimum_active_distance_m": null,
+        "activation_distance_m": 1e-06,
+        "barrier_energy_j": 0.0
+      },
+      "relative_rotation_rad": [
+        -0.0006073777577973538,
+        -2.187047474156436e-07,
+        4.378019558042223e-08
+      ],
+      "compression_fraction": 0.000602996641044018,
+      "max_membrane_strain": 0.000830107655992138,
+      "residual": 2.4848375707758704e-08
+    },
+    {
+      "mode": "FORCE-DRIVEN: Bend X+",
+      "tensions_n": [
+        1.5,
+        1.5,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "solve_wall_s": 4.73922530002892,
+      "winch": null,
+      "cable_lengths_m": null,
+      "self_contact": {
+        "method": "IPC 1.6.0 barrier + conservative curved-frame CCD",
+        "scope": "Midsurfaces only; NO PLA/PET thickness clearance or friction",
+        "active_stencils": 0,
+        "minimum_active_distance_m": null,
+        "activation_distance_m": 1e-06,
+        "barrier_energy_j": 0.0
+      },
+      "relative_rotation_rad": [
+        -0.0012203856237033395,
+        -4.3928042533330747e-07,
+        8.903621775676699e-08
+      ],
+      "compression_fraction": 0.0012151155102203548,
+      "max_membrane_strain": 0.0016683947769091326,
+      "residual": 2.900865431199051e-10
+    },
+    {
+      "mode": "FORCE-DRIVEN: Bend X+",
+      "tensions_n": [
+        2.25,
+        2.25,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "solve_wall_s": 4.814834100019652,
+      "winch": null,
+      "cable_lengths_m": null,
+      "self_contact": {
+        "method": "IPC 1.6.0 barrier + conservative curved-frame CCD",
+        "scope": "Midsurfaces only; NO PLA/PET thickness clearance or friction",
+        "active_stencils": 0,
+        "minimum_active_distance_m": null,
+        "activation_distance_m": 1e-06,
+        "barrier_energy_j": 0.0
+      },
+      "relative_rotation_rad": [
+        -0.0018391402083094731,
+        -6.618966095611348e-07,
+        1.3572697735599787e-07
+      ],
+      "compression_fraction": 0.0018365334275691758,
+      "max_membrane_strain": 0.0025149857722134954,
+      "residual": 1.4616621496488235e-09
+    },
+    {
+      "mode": "FORCE-DRIVEN: Bend X+",
+      "tensions_n": [
+        3.0,
+        3.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "solve_wall_s": 4.749896899971645,
+      "winch": null,
+      "cable_lengths_m": null,
+      "self_contact": {
+        "method": "IPC 1.6.0 barrier + conservative curved-frame CCD",
+        "scope": "Midsurfaces only; NO PLA/PET thickness clearance or friction",
+        "active_stencils": 0,
+        "minimum_active_distance_m": null,
+        "activation_distance_m": 1e-06,
+        "barrier_energy_j": 0.0
+      },
+      "relative_rotation_rad": [
+        -0.002463763564521124,
+        -8.867130067829983e-07,
+        1.8381227198545868e-07
+      ],
+      "compression_fraction": 0.0024674360566004916,
+      "max_membrane_strain": 0.0033700102220818413,
+      "residual": 4.644969109346419e-09
+    },
+    {
+      "mode": "FORCE-DRIVEN: Bend X+",
+      "tensions_n": [
+        1.5,
+        1.5,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "solve_wall_s": 4.889150100003462,
+      "winch": null,
+      "cable_lengths_m": null,
+      "self_contact": {
+        "method": "IPC 1.6.0 barrier + conservative curved-frame CCD",
+        "scope": "Midsurfaces only; NO PLA/PET thickness clearance or friction",
+        "active_stencils": 0,
+        "minimum_active_distance_m": null,
+        "activation_distance_m": 1e-06,
+        "barrier_energy_j": 0.0
+      },
+      "relative_rotation_rad": [
+        -0.0012203856356853323,
+        -4.3928040564251905e-07,
+        8.903621578273844e-08
+      ],
+      "compression_fraction": 0.0012151155321087348,
+      "max_membrane_strain": 0.0016683948068115621,
+      "residual": 6.304498867404362e-10
+    },
+    {
+      "mode": "FORCE-DRIVEN: Bend X+",
+      "tensions_n": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "solve_wall_s": 3.8475638999952935,
+      "winch": null,
+      "cable_lengths_m": null,
+      "self_contact": {
+        "method": "IPC 1.6.0 barrier + conservative curved-frame CCD",
+        "scope": "Midsurfaces only; NO PLA/PET thickness clearance or friction",
+        "active_stencils": 0,
+        "minimum_active_distance_m": null,
+        "activation_distance_m": 1e-06,
+        "barrier_energy_j": 0.0
+      },
+      "relative_rotation_rad": [
+        4.518887178178101e-16,
+        9.08519585867217e-17,
+        8.553914759161353e-18
+      ],
+      "compression_fraction": -5.10702591327572e-15,
+      "max_membrane_strain": 9.672948997187726e-14,
+      "residual": 1.2650194913191157e-11
+    },
+    {
+      "mode": "FORCE-DRIVEN: Bend X-",
+      "tensions_n": [
+        0.0,
+        0.0,
+        0.75,
+        0.75,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "solve_wall_s": 3.813066100003198,
+      "winch": null,
+      "cable_lengths_m": null,
+      "self_contact": {
+        "method": "IPC 1.6.0 barrier + conservative curved-frame CCD",
+        "scope": "Midsurfaces only; NO PLA/PET thickness clearance or friction",
+        "active_stencils": 0,
+        "minimum_active_distance_m": null,
+        "activation_distance_m": 1e-06,
+        "barrier_energy_j": 0.0
+      },
+      "relative_rotation_rad": [
+        0.0006069678394896817,
+        -8.422052287541298e-09,
+        3.9926115937380886e-08
+      ],
+      "compression_fraction": 0.0006027615431134503,
+      "max_membrane_strain": 0.0008320976027113602,
+      "residual": 2.303924766293139e-08
+    },
+    {
+      "mode": "FORCE-DRIVEN: Bend X-",
+      "tensions_n": [
+        0.0,
+        0.0,
+        1.5,
+        1.5,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "solve_wall_s": 4.858452400017995,
+      "winch": null,
+      "cable_lengths_m": null,
+      "self_contact": {
+        "method": "IPC 1.6.0 barrier + conservative curved-frame CCD",
+        "scope": "Midsurfaces only; NO PLA/PET thickness clearance or friction",
+        "active_stencils": 0,
+        "minimum_active_distance_m": null,
+        "activation_distance_m": 1e-06,
+        "barrier_energy_j": 0.0
+      },
+      "relative_rotation_rad": [
+        0.0012195402308340555,
+        -1.5537579645124008e-08,
+        8.471054032646283e-08
+      ],
+      "compression_fraction": 0.001214625683933157,
+      "max_membrane_strain": 0.0016723929096748597,
+      "residual": 4.309174561164977e-10
+    },
+    {
+      "mode": "FORCE-DRIVEN: Bend X-",
+      "tensions_n": [
+        0.0,
+        0.0,
+        2.25,
+        2.25,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "solve_wall_s": 4.940719900012482,
+      "winch": null,
+      "cable_lengths_m": null,
+      "self_contact": {
+        "method": "IPC 1.6.0 barrier + conservative curved-frame CCD",
+        "scope": "Midsurfaces only; NO PLA/PET thickness clearance or friction",
+        "active_stencils": 0,
+        "minimum_active_distance_m": null,
+        "activation_distance_m": 1e-06,
+        "barrier_energy_j": 0.0
+      },
+      "relative_rotation_rad": [
+        0.0018378325154220037,
+        -2.1502103795711614e-08,
+        1.3433362849061508e-07
+      ],
+      "compression_fraction": 0.0018357674289001258,
+      "max_membrane_strain": 0.0025210099374928293,
+      "residual": 2.0420000123048867e-09
+    },
+    {
+      "mode": "FORCE-DRIVEN: Bend X-",
+      "tensions_n": [
+        0.0,
+        0.0,
+        3.0,
+        3.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "solve_wall_s": 4.740290699992329,
+      "winch": null,
+      "cable_lengths_m": null,
+      "self_contact": {
+        "method": "IPC 1.6.0 barrier + conservative curved-frame CCD",
+        "scope": "Midsurfaces only; NO PLA/PET thickness clearance or friction",
+        "active_stencils": 0,
+        "minimum_active_distance_m": null,
+        "activation_distance_m": 1e-06,
+        "barrier_energy_j": 0.0
+      },
+      "relative_rotation_rad": [
+        0.002461965452072083,
+        -2.6480653011159883e-08,
+        1.887743775710084e-07
+      ],
+      "compression_fraction": 0.0024663706441847566,
+      "max_membrane_strain": 0.003378077871487574,
+      "residual": 6.152944507468051e-09
+    },
+    {
+      "mode": "FORCE-DRIVEN: Bend X-",
+      "tensions_n": [
+        0.0,
+        0.0,
+        1.5,
+        1.5,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "solve_wall_s": 4.816431000013836,
+      "winch": null,
+      "cable_lengths_m": null,
+      "self_contact": {
+        "method": "IPC 1.6.0 barrier + conservative curved-frame CCD",
+        "scope": "Midsurfaces only; NO PLA/PET thickness clearance or friction",
+        "active_stencils": 0,
+        "minimum_active_distance_m": null,
+        "activation_distance_m": 1e-06,
+        "barrier_energy_j": 0.0
+      },
+      "relative_rotation_rad": [
+        0.0012195402427359068,
+        -1.5537544874067056e-08,
+        8.471056633776706e-08
+      ],
+      "compression_fraction": 0.0012146257056457888,
+      "max_membrane_strain": 0.001672392939580145,
+      "residual": 8.349262670126478e-10
+    },
+    {
+      "mode": "FORCE-DRIVEN: Bend X-",
+      "tensions_n": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "solve_wall_s": 3.8679010000196286,
+      "winch": null,
+      "cable_lengths_m": null,
+      "self_contact": {
+        "method": "IPC 1.6.0 barrier + conservative curved-frame CCD",
+        "scope": "Midsurfaces only; NO PLA/PET thickness clearance or friction",
+        "active_stencils": 0,
+        "minimum_active_distance_m": null,
+        "activation_distance_m": 1e-06,
+        "barrier_energy_j": 0.0
+      },
+      "relative_rotation_rad": [
+        -4.3807561493936126e-16,
+        1.0816513251909756e-16,
+        -3.794390180727409e-17
+      ],
+      "compression_fraction": -5.10702591327572e-15,
+      "max_membrane_strain": 9.149718219640267e-14,
+      "residual": 3.219265623269861e-11
+    },
+    {
+      "mode": "FORCE-DRIVEN: Bend Y+",
+      "tensions_n": [
+        0.0,
+        0.75,
+        0.75,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "solve_wall_s": 3.934960199985653,
+      "winch": null,
+      "cable_lengths_m": null,
+      "self_contact": {
+        "method": "IPC 1.6.0 barrier + conservative curved-frame CCD",
+        "scope": "Midsurfaces only; NO PLA/PET thickness clearance or friction",
+        "active_stencils": 0,
+        "minimum_active_distance_m": null,
+        "activation_distance_m": 1e-06,
+        "barrier_energy_j": 0.0
+      },
+      "relative_rotation_rad": [
+        -3.0839673782655927e-07,
+        -0.0006072179068688281,
+        -2.5693092851508362e-08
+      ],
+      "compression_fraction": 0.000602944220149948,
+      "max_membrane_strain": 0.0008304835178607767,
+      "residual": 2.4485265899261587e-08
+    },
+    {
+      "mode": "FORCE-DRIVEN: Bend Y+",
+      "tensions_n": [
+        0.0,
+        1.5,
+        1.5,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "solve_wall_s": 5.185908799991012,
+      "winch": null,
+      "cable_lengths_m": null,
+      "self_contact": {
+        "method": "IPC 1.6.0 barrier + conservative curved-frame CCD",
+        "scope": "Midsurfaces only; NO PLA/PET thickness clearance or friction",
+        "active_stencils": 0,
+        "minimum_active_distance_m": null,
+        "activation_distance_m": 1e-06,
+        "barrier_energy_j": 0.0
+      },
+      "relative_rotation_rad": [
+        -6.275210604923899e-07,
+        -0.0012200553361575116,
+        -4.910103775040228e-08
+      ],
+      "compression_fraction": 0.0012150024144795823,
+      "max_membrane_strain": 0.0016691314806365541,
+      "residual": 2.662248388407562e-10
+    },
+    {
+      "mode": "FORCE-DRIVEN: Bend Y+",
+      "tensions_n": [
+        0.0,
+        2.25,
+        2.25,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "solve_wall_s": 5.221355999994557,
+      "winch": null,
+      "cable_lengths_m": null,
+      "self_contact": {
+        "method": "IPC 1.6.0 barrier + conservative curved-frame CCD",
+        "scope": "Midsurfaces only; NO PLA/PET thickness clearance or friction",
+        "active_stencils": 0,
+        "minimum_active_distance_m": null,
+        "activation_distance_m": 1e-06,
+        "barrier_energy_j": 0.0
+      },
+      "relative_rotation_rad": [
+        -9.576711616795488e-07,
+        -0.0018386285151783803,
+        -7.021575544928243e-08
+      ],
+      "compression_fraction": 0.0018363508769206893,
+      "max_membrane_strain": 0.0025160693878667757,
+      "residual": 1.336273410257327e-09
+    },
+    {
+      "mode": "FORCE-DRIVEN: Bend Y+",
+      "tensions_n": [
+        0.0,
+        3.0,
+        3.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "solve_wall_s": 5.075503600004595,
+      "winch": null,
+      "cable_lengths_m": null,
+      "self_contact": {
+        "method": "IPC 1.6.0 barrier + conservative curved-frame CCD",
+        "scope": "Midsurfaces only; NO PLA/PET thickness clearance or friction",
+        "active_stencils": 0,
+        "minimum_active_distance_m": null,
+        "activation_distance_m": 1e-06,
+        "barrier_energy_j": 0.0
+      },
+      "relative_rotation_rad": [
+        -1.299150718128265e-06,
+        -0.002463059096866823,
+        -8.902797793151439e-08
+      ],
+      "compression_fraction": 0.0024671747360250906,
+      "max_membrane_strain": 0.00337142787386994,
+      "residual": 4.231081395245084e-09
+    },
+    {
+      "mode": "FORCE-DRIVEN: Bend Y+",
+      "tensions_n": [
+        0.0,
+        1.5,
+        1.5,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "solve_wall_s": 5.171708699956071,
+      "winch": null,
+      "cable_lengths_m": null,
+      "self_contact": {
+        "method": "IPC 1.6.0 barrier + conservative curved-frame CCD",
+        "scope": "Midsurfaces only; NO PLA/PET thickness clearance or friction",
+        "active_stencils": 0,
+        "minimum_active_distance_m": null,
+        "activation_distance_m": 1e-06,
+        "barrier_energy_j": 0.0
+      },
+      "relative_rotation_rad": [
+        -6.27520996741767e-07,
+        -0.0012200553481227759,
+        -4.910103404278937e-08
+      ],
+      "compression_fraction": 0.0012150024363009049,
+      "max_membrane_strain": 0.0016691315105819837,
+      "residual": 6.124408064023257e-10
+    },
+    {
+      "mode": "FORCE-DRIVEN: Bend Y+",
+      "tensions_n": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "solve_wall_s": 4.496673600049689,
+      "winch": null,
+      "cable_lengths_m": null,
+      "self_contact": {
+        "method": "IPC 1.6.0 barrier + conservative curved-frame CCD",
+        "scope": "Midsurfaces only; NO PLA/PET thickness clearance or friction",
+        "active_stencils": 0,
+        "minimum_active_distance_m": null,
+        "activation_distance_m": 1e-06,
+        "barrier_energy_j": 0.0
+      },
+      "relative_rotation_rad": [
+        8.119775893348237e-17,
+        4.950553874012964e-16,
+        1.2215727868997981e-17
+      ],
+      "compression_fraction": -5.10702591327572e-15,
+      "max_membrane_strain": 8.108239982327103e-14,
+      "residual": 2.1331829038800045e-11
+    },
+    {
+      "mode": "FORCE-DRIVEN: Bend Y-",
+      "tensions_n": [
+        0.75,
+        0.0,
+        0.0,
+        0.75,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "solve_wall_s": 4.456143499992322,
+      "winch": null,
+      "cable_lengths_m": null,
+      "self_contact": {
+        "method": "IPC 1.6.0 barrier + conservative curved-frame CCD",
+        "scope": "Midsurfaces only; NO PLA/PET thickness clearance or friction",
+        "active_stencils": 0,
+        "minimum_active_distance_m": null,
+        "activation_distance_m": 1e-06,
+        "barrier_energy_j": 0.0
+      },
+      "relative_rotation_rad": [
+        -9.817780126572684e-08,
+        0.0006069881379194346,
+        1.0830680259150683e-07
+      ],
+      "compression_fraction": 0.000602813751219955,
+      "max_membrane_strain": 0.0008323419369217675,
+      "residual": 2.3408270775988264e-08
+    },
+    {
+      "mode": "FORCE-DRIVEN: Bend Y-",
+      "tensions_n": [
+        1.5,
+        0.0,
+        0.0,
+        1.5,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "solve_wall_s": 5.331643100013025,
+      "winch": null,
+      "cable_lengths_m": null,
+      "self_contact": {
+        "method": "IPC 1.6.0 barrier + conservative curved-frame CCD",
+        "scope": "Midsurfaces only; NO PLA/PET thickness clearance or friction",
+        "active_stencils": 0,
+        "minimum_active_distance_m": null,
+        "activation_distance_m": 1e-06,
+        "barrier_energy_j": 0.0
+      },
+      "relative_rotation_rad": [
+        -2.0428680218437552e-07,
+        0.001219589848811394,
+        2.1850665785724497e-07
+      ],
+      "compression_fraction": 0.0012147379349427556,
+      "max_membrane_strain": 0.0016729049663185545,
+      "residual": 3.875097557087489e-10
+    },
+    {
+      "mode": "FORCE-DRIVEN: Bend Y-",
+      "tensions_n": [
+        2.25,
+        0.0,
+        0.0,
+        2.25,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "solve_wall_s": 5.231767599994782,
+      "winch": null,
+      "cable_lengths_m": null,
+      "self_contact": {
+        "method": "IPC 1.6.0 barrier + conservative curved-frame CCD",
+        "scope": "Midsurfaces only; NO PLA/PET thickness clearance or friction",
+        "active_stencils": 0,
+        "minimum_active_distance_m": null,
+        "activation_distance_m": 1e-06,
+        "barrier_energy_j": 0.0
+      },
+      "relative_rotation_rad": [
+        -3.18966812882393e-07,
+        0.00183792088016211,
+        3.305762737865035e-07
+      ],
+      "compression_fraction": 0.0018359480911873671,
+      "max_membrane_strain": 0.0025218132831859317,
+      "residual": 2.010480592174336e-09
+    },
+    {
+      "mode": "FORCE-DRIVEN: Bend Y-",
+      "tensions_n": [
+        3.0,
+        0.0,
+        0.0,
+        3.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "solve_wall_s": 5.277481400000397,
+      "winch": null,
+      "cable_lengths_m": null,
+      "self_contact": {
+        "method": "IPC 1.6.0 barrier + conservative curved-frame CCD",
+        "scope": "Midsurfaces only; NO PLA/PET thickness clearance or friction",
+        "active_stencils": 0,
+        "minimum_active_distance_m": null,
+        "activation_distance_m": 1e-06,
+        "barrier_energy_j": 0.0
+      },
+      "relative_rotation_rad": [
+        -4.4286310002518415e-07,
+        0.002462102408689034,
+        4.444945981579315e-07
+      ],
+      "compression_fraction": 0.0024666286249492853,
+      "max_membrane_strain": 0.0033791962834046705,
+      "residual": 6.135098539383679e-09
+    },
+    {
+      "mode": "FORCE-DRIVEN: Bend Y-",
+      "tensions_n": [
+        1.5,
+        0.0,
+        0.0,
+        1.5,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "solve_wall_s": 5.309924500004854,
+      "winch": null,
+      "cable_lengths_m": null,
+      "self_contact": {
+        "method": "IPC 1.6.0 barrier + conservative curved-frame CCD",
+        "scope": "Midsurfaces only; NO PLA/PET thickness clearance or friction",
+        "active_stencils": 0,
+        "minimum_active_distance_m": null,
+        "activation_distance_m": 1e-06,
+        "barrier_energy_j": 0.0
+      },
+      "relative_rotation_rad": [
+        -2.0428679160164188e-07,
+        0.0012195898607417076,
+        2.185066573085492e-07
+      ],
+      "compression_fraction": 0.0012147379567220007,
+      "max_membrane_strain": 0.001672904996529306,
+      "residual": 8.529873474216743e-10
+    },
+    {
+      "mode": "FORCE-DRIVEN: Bend Y-",
+      "tensions_n": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "solve_wall_s": 4.330486899998505,
+      "winch": null,
+      "cable_lengths_m": null,
+      "self_contact": {
+        "method": "IPC 1.6.0 barrier + conservative curved-frame CCD",
+        "scope": "Midsurfaces only; NO PLA/PET thickness clearance or friction",
+        "active_stencils": 0,
+        "minimum_active_distance_m": null,
+        "activation_distance_m": 1e-06,
+        "barrier_energy_j": 0.0
+      },
+      "relative_rotation_rad": [
+        -7.238422325505135e-18,
+        -4.905292126414635e-16,
+        1.8231240977574652e-17
+      ],
+      "compression_fraction": -4.884981308350689e-15,
+      "max_membrane_strain": 8.836483633726732e-14,
+      "residual": 2.1421312575864027e-11
+    },
+    {
+      "mode": "FORCE-DRIVEN: Twist CW",
+      "tensions_n": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.75,
+        0.75,
+        0.75,
+        0.75,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "solve_wall_s": 4.1637244000448845,
+      "winch": null,
+      "cable_lengths_m": null,
+      "self_contact": {
+        "method": "IPC 1.6.0 barrier + conservative curved-frame CCD",
+        "scope": "Midsurfaces only; NO PLA/PET thickness clearance or friction",
+        "active_stencils": 0,
+        "minimum_active_distance_m": null,
+        "activation_distance_m": 1e-06,
+        "barrier_energy_j": 0.0
+      },
+      "relative_rotation_rad": [
+        -2.6996166219273595e-07,
+        -2.525268492245118e-07,
+        -0.00041630945613596473
+      ],
+      "compression_fraction": 0.0007976334104285998,
+      "max_membrane_strain": 0.0006357913978295096,
+      "residual": 1.562703100949081e-08
+    },
+    {
+      "mode": "FORCE-DRIVEN: Twist CW",
+      "tensions_n": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.5,
+        1.5,
+        1.5,
+        1.5,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "solve_wall_s": 4.2876012999913655,
+      "winch": null,
+      "cable_lengths_m": null,
+      "self_contact": {
+        "method": "IPC 1.6.0 barrier + conservative curved-frame CCD",
+        "scope": "Midsurfaces only; NO PLA/PET thickness clearance or friction",
+        "active_stencils": 0,
+        "minimum_active_distance_m": null,
+        "activation_distance_m": 1e-06,
+        "barrier_energy_j": 0.0
+      },
+      "relative_rotation_rad": [
+        -5.637967262102159e-07,
+        -5.091147963396942e-07,
+        -0.0008387851897992229
+      ],
+      "compression_fraction": 0.0016096027304105531,
+      "max_membrane_strain": 0.0012792324041857174,
+      "residual": 6.285930513605376e-08
+    },
+    {
+      "mode": "FORCE-DRIVEN: Twist CW",
+      "tensions_n": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        2.25,
+        2.25,
+        2.25,
+        2.25,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "solve_wall_s": 5.298402699991129,
+      "winch": null,
+      "cable_lengths_m": null,
+      "self_contact": {
+        "method": "IPC 1.6.0 barrier + conservative curved-frame CCD",
+        "scope": "Midsurfaces only; NO PLA/PET thickness clearance or friction",
+        "active_stencils": 0,
+        "minimum_active_distance_m": null,
+        "activation_distance_m": 1e-06,
+        "barrier_energy_j": 0.0
+      },
+      "relative_rotation_rad": [
+        -8.828852572239089e-07,
+        -7.70275495014267e-07,
+        -0.001267635066368511
+      ],
+      "compression_fraction": 0.002436265858438369,
+      "max_membrane_strain": 0.0019304966192790634,
+      "residual": 2.0962419333692137e-09
+    },
+    {
+      "mode": "FORCE-DRIVEN: Twist CW",
+      "tensions_n": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        3.0,
+        3.0,
+        3.0,
+        3.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "solve_wall_s": 5.269645699998364,
+      "winch": null,
+      "cable_lengths_m": null,
+      "self_contact": {
+        "method": "IPC 1.6.0 barrier + conservative curved-frame CCD",
+        "scope": "Midsurfaces only; NO PLA/PET thickness clearance or friction",
+        "active_stencils": 0,
+        "minimum_active_distance_m": null,
+        "activation_distance_m": 1e-06,
+        "barrier_energy_j": 0.0
+      },
+      "relative_rotation_rad": [
+        -1.2285813304992925e-06,
+        -1.0365011542366897e-06,
+        -0.001703073636692102
+      ],
+      "compression_fraction": 0.003277993387205691,
+      "max_membrane_strain": 0.002589761612718675,
+      "residual": 6.841793107059679e-09
+    },
+    {
+      "mode": "FORCE-DRIVEN: Twist CW",
+      "tensions_n": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.5,
+        1.5,
+        1.5,
+        1.5,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "solve_wall_s": 5.241781299991999,
+      "winch": null,
+      "cable_lengths_m": null,
+      "self_contact": {
+        "method": "IPC 1.6.0 barrier + conservative curved-frame CCD",
+        "scope": "Midsurfaces only; NO PLA/PET thickness clearance or friction",
+        "active_stencils": 0,
+        "minimum_active_distance_m": null,
+        "activation_distance_m": 1e-06,
+        "barrier_energy_j": 0.0
+      },
+      "relative_rotation_rad": [
+        -5.638000402721307e-07,
+        -5.09115706963938e-07,
+        -0.0008387857519711338
+      ],
+      "compression_fraction": 0.001609604325753633,
+      "max_membrane_strain": 0.0012792334575131013,
+      "residual": 8.670782370226448e-10
+    },
+    {
+      "mode": "FORCE-DRIVEN: Twist CW",
+      "tensions_n": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "solve_wall_s": 4.226515799993649,
+      "winch": null,
+      "cable_lengths_m": null,
+      "self_contact": {
+        "method": "IPC 1.6.0 barrier + conservative curved-frame CCD",
+        "scope": "Midsurfaces only; NO PLA/PET thickness clearance or friction",
+        "active_stencils": 0,
+        "minimum_active_distance_m": null,
+        "activation_distance_m": 1e-06,
+        "barrier_energy_j": 0.0
+      },
+      "relative_rotation_rad": [
+        -8.469473374940238e-17,
+        -4.972005144411593e-17,
+        -1.623947654621871e-16
+      ],
+      "compression_fraction": -5.995204332975845e-15,
+      "max_membrane_strain": 9.084963761772351e-14,
+      "residual": 2.6016549832367593e-11
+    },
+    {
+      "mode": "FORCE-DRIVEN: Twist CCW",
+      "tensions_n": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.75,
+        0.75,
+        0.75,
+        0.75
+      ],
+      "solve_wall_s": 4.278203400026541,
+      "winch": null,
+      "cable_lengths_m": null,
+      "self_contact": {
+        "method": "IPC 1.6.0 barrier + conservative curved-frame CCD",
+        "scope": "Midsurfaces only; NO PLA/PET thickness clearance or friction",
+        "active_stencils": 0,
+        "minimum_active_distance_m": null,
+        "activation_distance_m": 1e-06,
+        "barrier_energy_j": 0.0
+      },
+      "relative_rotation_rad": [
+        -2.7498419236842503e-07,
+        -5.122696797351036e-08,
+        0.0004164192716175528
+      ],
+      "compression_fraction": 0.000797709023337756,
+      "max_membrane_strain": 0.0006359923738211953,
+      "residual": 2.6333453251314864e-08
+    },
+    {
+      "mode": "FORCE-DRIVEN: Twist CCW",
+      "tensions_n": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.5,
+        1.5,
+        1.5,
+        1.5
+      ],
+      "solve_wall_s": 5.282830099982675,
+      "winch": null,
+      "cable_lengths_m": null,
+      "self_contact": {
+        "method": "IPC 1.6.0 barrier + conservative curved-frame CCD",
+        "scope": "Midsurfaces only; NO PLA/PET thickness clearance or friction",
+        "active_stencils": 0,
+        "minimum_active_distance_m": null,
+        "activation_distance_m": 1e-06,
+        "barrier_energy_j": 0.0
+      },
+      "relative_rotation_rad": [
+        -5.671961589328099e-07,
+        -1.068980777519256e-07,
+        0.0008390121953411108
+      ],
+      "compression_fraction": 0.001609769183723797,
+      "max_membrane_strain": 0.001279641816039854,
+      "residual": 6.482263475993122e-10
+    },
+    {
+      "mode": "FORCE-DRIVEN: Twist CCW",
+      "tensions_n": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        2.25,
+        2.25,
+        2.25,
+        2.25
+      ],
+      "solve_wall_s": 5.259788999974262,
+      "winch": null,
+      "cable_lengths_m": null,
+      "self_contact": {
+        "method": "IPC 1.6.0 barrier + conservative curved-frame CCD",
+        "scope": "Midsurfaces only; NO PLA/PET thickness clearance or friction",
+        "active_stencils": 0,
+        "minimum_active_distance_m": null,
+        "activation_distance_m": 1e-06,
+        "barrier_energy_j": 0.0
+      },
+      "relative_rotation_rad": [
+        -8.779118152112826e-07,
+        -1.6758460873592484e-07,
+        0.001267984968124154
+      ],
+      "compression_fraction": 0.0024365335200751126,
+      "max_membrane_strain": 0.0019311186131761879,
+      "residual": 3.750843080574384e-09
+    },
+    {
+      "mode": "FORCE-DRIVEN: Twist CCW",
+      "tensions_n": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        3.0,
+        3.0,
+        3.0,
+        3.0
+      ],
+      "solve_wall_s": 5.345231999992393,
+      "winch": null,
+      "cable_lengths_m": null,
+      "self_contact": {
+        "method": "IPC 1.6.0 barrier + conservative curved-frame CCD",
+        "scope": "Midsurfaces only; NO PLA/PET thickness clearance or friction",
+        "active_stencils": 0,
+        "minimum_active_distance_m": null,
+        "activation_distance_m": 1e-06,
+        "barrier_energy_j": 0.0
+      },
+      "relative_rotation_rad": [
+        -1.2083996340638086e-06,
+        -2.338408655359199e-07,
+        0.0017035537439353129
+      ],
+      "compression_fraction": 0.0032783770741889873,
+      "max_membrane_strain": 0.002590603146103612,
+      "residual": 1.3157857109424853e-08
+    },
+    {
+      "mode": "FORCE-DRIVEN: Twist CCW",
+      "tensions_n": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.5,
+        1.5,
+        1.5,
+        1.5
+      ],
+      "solve_wall_s": 5.261018499964848,
+      "winch": null,
+      "cable_lengths_m": null,
+      "self_contact": {
+        "method": "IPC 1.6.0 barrier + conservative curved-frame CCD",
+        "scope": "Midsurfaces only; NO PLA/PET thickness clearance or friction",
+        "active_stencils": 0,
+        "minimum_active_distance_m": null,
+        "activation_distance_m": 1e-06,
+        "barrier_energy_j": 0.0
+      },
+      "relative_rotation_rad": [
+        -5.671962138732606e-07,
+        -1.0689808777613816e-07,
+        0.0008390122150007929
+      ],
+      "compression_fraction": 0.0016097692389527296,
+      "max_membrane_strain": 0.0012796418526276239,
+      "residual": 1.9509168863729442e-09
+    },
+    {
+      "mode": "FORCE-DRIVEN: Twist CCW",
+      "tensions_n": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "solve_wall_s": 4.224289100035094,
+      "winch": null,
+      "cable_lengths_m": null,
+      "self_contact": {
+        "method": "IPC 1.6.0 barrier + conservative curved-frame CCD",
+        "scope": "Midsurfaces only; NO PLA/PET thickness clearance or friction",
+        "active_stencils": 0,
+        "minimum_active_distance_m": null,
+        "activation_distance_m": 1e-06,
+        "barrier_energy_j": 0.0
+      },
+      "relative_rotation_rad": [
+        -6.295777314585516e-17,
+        -4.417715690056351e-17,
+        1.5218262629000408e-16
+      ],
+      "compression_fraction": -5.995204332975845e-15,
+      "max_membrane_strain": 8.896381139737333e-14,
+      "residual": 2.730064999532637e-11
+    }
+  ],
+  "max_compression_fraction": 0.005030679894395207,
+  "max_rotation_abs_rad": [
+    0.002463763564521124,
+    0.002463059096866823,
+    0.0017035537439353129
+  ],
+  "source_sha256": "d578618a0f90342bd0093b4febe130dc0b07c18f1b223c4d6bf02c9f3d93ce35",
+  "material": {
+    "width_m": 0.03,
+    "pet_thickness_m": 8e-05,
+    "pla_thickness_m": 0.0004,
+    "pet_modulus_pa": 3500000000.0,
+    "pla_modulus_pa": 2200000000.0,
+    "pet_poisson": 0.35,
+    "pla_poisson": 0.35,
+    "hinge_gap_m": 0.0002,
+    "refinement": 1
+  },
+  "shell_config": {
+    "subdivision": 1,
+    "panel_to_crease_ratio": 100.0,
+    "crease_twist_ratio": 0,
+    "panel_bending_scale": 1.0,
+    "membrane_scale": 1.0,
+    "vertex_relief_fraction": 0.0,
+    "panel_strain_limit": 0.03,
+    "minimum_height_fraction": 0.08,
+    "max_iterations": 900,
+    "interior_refinement": 1,
+    "sparse_solver": true,
+    "physical_strip_bending": true,
+    "self_contact": true,
+    "contact_distance_m": 1e-06,
+    "contact_energy_j": 1e-06
+  },
+  "code_sha256": {
+    "shell_view": "d03c55e15e9f23023da19bf64f7c908a1c9b48d3ee0fa4680cd99e598d4c9aa4",
+    "shell_ui_jobs": "8bef4eba7d255ac4e9d8850ebb67b41e97ac1a64472f78b6ea2611045f326d4f",
+    "nonlinear_shell": "8f48d1ae3aa32578c3dbf503060d847b6ff9aaee6ba6bec3c7ed1838ad49ee0a",
+    "shell_sparse": "32a549332a6ee9d57cc4980390d3bb84eba44612db92523bcbb6acfb19f42489",
+    "shell_ipc": "62367ddf3cf0bd5bbd383a9f549e0cbe718ae47024ee8caffbe43431e7c71f9f"
+  }
+}

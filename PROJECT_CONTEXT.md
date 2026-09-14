@@ -627,6 +627,7 @@ serializes any new worker behind its completion. Rejections retain the last
 accepted state, visible geometry and trace, including a rejection of step one.
 
 The implementation is `exact_joint/shell_ui_jobs.py` plus `shell_view.py`.
+Local implementation commit: `3b0936438ba8316e148185cd9d1bdadfa9e6727c`.
 `test_shell_ui_jobs.py` checks replacement, pause, cancellation and error status.
 `record_button_live.py` records real desktop-click results, while
 `validate_button_guards_live.py` fault-injects controller guards without applying

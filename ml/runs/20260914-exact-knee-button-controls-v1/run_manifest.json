@@ -1,0 +1,46 @@
+{
+  "run_id": "20260914-exact-knee-button-controls-v1",
+  "status": "ui_controls_evaluated_physics_not_validated",
+  "baseline_commit": "5131a9740b3ce82e42331e923e1a45ffa396f71c",
+  "isaac_sim_version": "6.0.1-rc.7 / Kit 110.1.2",
+  "stage": "exact_joint/open_nonlinear_gui.py runtime overlay; v8 unchanged",
+  "environment_version": "shell_ui_jobs_v1; uncalibrated shell, not ML baseline",
+  "fea_case_id": "exact_joint_refined_contact_v1",
+  "fea_artifact_sha256": "c39289f23644e53a03610abf5f5b300387717797b95dab42534079a7ac91ee0d",
+  "algorithm": "deterministic UI regression evaluation; no ML",
+  "seed": 0,
+  "randomization": {},
+  "observations": [],
+  "actions": [],
+  "reward_version": "none",
+  "training": {
+    "command": "none",
+    "steps": 0,
+    "wall_time_s": 0
+  },
+  "evaluation": {
+    "command": "unittest discover exact_joint test_*.py; actual desktop clicks + record_button_live.py; validate_button_guards_live.py",
+    "conditions": "3 N/active strand; same intact PLA/PET refined shell and contact case",
+    "metrics": "metrics.json"
+  },
+  "artifacts": {
+    "config": "config.json",
+    "metrics": "metrics.json",
+    "checkpoint": null,
+    "checkpoint_sha256": null,
+    "sha256": {
+      "completed_demo.json": "254e0167ed33ebcdc3c602a69ea4953197e769c5099268009b049ab293572513",
+      "config.json": "7f46206ac0b5e32a8471f6c8a121351311b412c211a02979a780d4de94f29e16",
+      "controller_guards.json": "ba0b10396727425f357d9965e84100d06926e98c1b74702375badfccb9f91a13",
+      "desktop_button_1.json": "820c5af6b4b4fc8724a6bdd219c8e4c2eabab5e51d7ee1925d123034d2dd2fb3",
+      "desktop_button_2.json": "9d229070311f1db38683b7158e8969aa8c33feb4df6801e13d9a58272e79e55e",
+      "desktop_button_3.json": "dc489fec339fff15a44aa8fe46ab3e59bc36df95e6343594905e981a37c4c2e5",
+      "metrics.json": "60322330e98730e7efb0d34f4bc0ef7e4b4f28805a9d0aebafcd3a25802e25b3"
+    }
+  },
+  "notes": "UI-only follow-up, immutable parent case/run untouched. No training, baseline promotion or external publication.",
+  "starting_commit": "faf2945e09548710726e05d8d414b00f4cbe407a",
+  "implementation_commit": "3b0936438ba8316e148185cd9d1bdadfa9e6727c",
+  "parent_run": "20260914-exact-knee-refined-contact-v1",
+  "simulator_build_commit": "5131a9740b3ce82e42331e923e1a45ffa396f71c"
+}
