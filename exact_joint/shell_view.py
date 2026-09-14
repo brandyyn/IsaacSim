@@ -23,13 +23,14 @@ from exact_joint.nonlinear_shell import NonlinearShell, ShellConfig
 from exact_joint.scene import ExactLegScene, curves, material, mesh, set_points
 from exact_joint.shell_impact import ShellImpact, ShellImpactConfig
 from exact_joint.shell_actuation import winch_pull
+from exact_joint.shell_ui_jobs import ShellJobControls
 
 
-class ShellWorkshop(DropPreview):
+class ShellWorkshop(ShellJobControls, DropPreview):
     def __init__(self, lab):
         super().__init__(lab)
         self.shell = None
-        self.work = None
+        self.init_job_controls()
         self.owned_path = "/World/NonlinearFrameLeg"
         self.owned = None
         self.state = None
@@ -69,8 +70,22 @@ class ShellWorkshop(DropPreview):
                      style={"color": 0xFF80DFFF})
             with ui.HStack(height=29):
                 ui.Button("Drop 70 mm / recompute", clicked_fn=self.start_drop)
-                ui.Button("Pause / resume", clicked_fn=lambda: setattr(self, "running", not self.running))
+                ui.Button("Pause / resume", clicked_fn=self.pause_jobs)
                 ui.Button("Neutral / cancel", clicked_fn=self.neutral_shell)
+            self.progress_label = ui.Label("READY | Choose a cable movement below", height=30, word_wrap=True,
+                                           style={"color": 0xFF80DFFF})
+            self.movement_buttons = {}
+            for families in (("Compression", "Bend X+", "Bend X-"), ("Bend Y+", "Bend Y-", "Twist CW", "Twist CCW")):
+                with ui.HStack(height=29):
+                    for family in families:
+                        self.movement_buttons[family] = ui.Button(family, clicked_fn=lambda f=family: self.start_movement(f),
+                            tooltip="Apply the selected cable tension to this pattern. Force-driven; no target angle is imposed.")
+            self.inputs = {}
+            with ui.HStack(height=24):
+                ui.Label("Cable tension (N / active strand)", width=240)
+                field = ui.FloatField()
+                field.model.set_value(.25)
+                self.inputs["Cable tension (N)"] = field.model
             with ui.HStack(height=29):
                 self.cable_pattern = ui.ComboBox(0, "Compression", "Bend X+", "Bend X-", "Bend Y+", "Bend Y-", "Twist CW", "Twist CCW")
                 ui.Button("Apply cable + force", clicked_fn=lambda: self.start_range("manual"))
@@ -82,16 +97,16 @@ class ShellWorkshop(DropPreview):
             with ui.HStack(height=29):
                 ui.Button("Apply winch pull", clicked_fn=lambda: self.start_range("winch"))
                 ui.Button("Winch demo", clicked_fn=lambda: self.start_range("winch_demo"))
-                ui.Button("Material reference", clicked_fn=lambda: self.launch(self.preset(False)))
-                ui.Button("Relief experiment", clicked_fn=lambda: self.launch(self.preset(True)))
+                ui.Button("Material reference", clicked_fn=lambda: self.launch(self.preset(False), "Material reference"))
+                ui.Button("Relief experiment", clicked_fn=lambda: self.launch(self.preset(True), "Relief experiment"))
             with ui.HStack(height=29):
-                ui.Button("Rebuild stiffness", clicked_fn=lambda: self.launch(self.rebuild()))
+                ui.Button("Rebuild stiffness", clicked_fn=lambda: self.launch(self.rebuild(), "Rebuild stiffness"))
                 ui.Button("Save calculation", clicked_fn=self.save)
                 ui.Button("Return to reference FEM", clicked_fn=lambda: asyncio.ensure_future(self.restore()))
             with ui.HStack(height=27):
-                ui.Button("Replay recorded impact", clicked_fn=lambda: self.launch(self.replay_recorded()))
+                ui.Button("Replay recorded impact", clicked_fn=lambda: self.launch(self.replay_recorded(), "Recorded impact replay"))
                 ui.Button("Show peak bending", clicked_fn=self.show_peak)
-            self.telemetry = ui.Label("", height=88, word_wrap=True)
+            self.telemetry = ui.Label("", height=80, word_wrap=True)
             self.settings_label = ui.Label("", height=59, word_wrap=True)
             self.feedback = ui.Label("Apply and Cable demo solve forces; Drop solves impact. Full travel is not guaranteed by a force input.", height=44, word_wrap=True)
             with ui.ScrollingFrame(), ui.VStack(spacing=6, height=0):
@@ -109,7 +124,6 @@ class ShellWorkshop(DropPreview):
                     ui.Label("Interior refinement (0/1/2)", width=240)
                     self.refinement_input = ui.IntField().model
                     self.refinement_input.set_value(self.shell.config.interior_refinement)
-                self.inputs = {}
                 for label, value in (("Panel / crease bending ratio", 100), ("Crease twist coupling", self.shell.config.crease_twist_ratio),
                                      ("Panel bending scale", 1), ("Membrane stiffness scale", 1),
                                      ("PLA thickness (mm)", self.shell.material.pla_thickness_m*1000),
@@ -119,9 +133,7 @@ class ShellWorkshop(DropPreview):
                                      ("PET junction relief (%)", 0), ("Winch pull (mm)", .5),
                                      ("Winch stiffness (N/m)", 1000), ("Winch force cap (N)", 10),
                                      ("Static solver iterations", 900),
-                                     ("Membrane strain guard (%)", 3), ("Bend target (deg)", 30),
-                                     ("Twist target (deg)", 60), ("Compression target (%)", 70),
-                                     ("Cable tension (N)", .25), ("Roof test force (N)", 1),
+                                     ("Membrane strain guard (%)", 3), ("Roof test force (N)", 1),
                                      ("Lower frame force X (N)", 0), ("Lower frame force Y (N)", 0),
                                      ("Lower frame force Z (N)", 0), ("PET exposed gap (mm)", self.lab.config.hinge_gap_m*1000),
                                      ("Upper-side mass (g)", 30), ("Lower-side mass (g)", 20),
@@ -138,10 +150,35 @@ class ShellWorkshop(DropPreview):
                          "No fracture, delamination, cable-guide contact or strength rating.\n"
                          "Drop: assumed nodal/rigid inertia; backward Euler adds numerical damping.",
                          height=115, word_wrap=True)
-                ui.Label("DISPLACEMENT STUDIES ONLY - not cable-force predictions", height=25)
-                with ui.HStack(height=29):
-                    for title, mode in (("Bend range", "bend"), ("Twist range", "twist"), ("Compression range", "compression")):
-                        ui.Button(title, clicked_fn=lambda m=mode: self.start_range(m))
+                self.pose_buttons = []
+                with ui.CollapsableFrame("Advanced prescribed-pose studies (NOT cable motion)", collapsed=True):
+                    with ui.VStack(spacing=4):
+                        self.pose_note = ui.Label("", height=42, word_wrap=True)
+                        for label, value in (("Bend target (deg)", 30), ("Twist target (deg)", 60), ("Compression target (%)", 70)):
+                            with ui.HStack(height=24):
+                                ui.Label(label, width=240)
+                                field = ui.FloatField()
+                                field.model.set_value(value)
+                                self.inputs[label] = field.model
+                        with ui.HStack(height=29):
+                            for title, mode in (("Bend range", "bend"), ("Twist range", "twist"), ("Compression range", "compression")):
+                                self.pose_buttons.append(ui.Button(title, clicked_fn=lambda m=mode: self.start_range(m),
+                                    tooltip="Unavailable with IPC self-contact. These impose frame displacement; use the cable buttons above."))
+                self.refresh_pose_controls()
+
+    def refresh_pose_controls(self):
+        enabled = self.shell.contact is None
+        for button in self.pose_buttons:
+            button.enabled = enabled
+        self.pose_note.text = ("Prescribed displacement; NOT a prediction of cable-driven travel." if enabled else
+                               "Disabled with self-contact ON. Use the Compression/Bend/Twist cable buttons at the top.")
+
+    def start_movement(self, family):
+        families = ("Compression", "Bend X+", "Bend X-", "Bend Y+", "Bend Y-", "Twist CW", "Twist CCW")
+        if family not in families:
+            raise ValueError("Unknown cable movement")
+        self.cable_pattern.model.get_item_value_model().set_value(families.index(family))
+        self.launch(self.range_job("single_cable"), "Cable "+family)
 
     def make_scene(self):
         s, root, model = self.stage, self.owned_path, self.shell
@@ -282,10 +319,7 @@ class ShellWorkshop(DropPreview):
         self.frames += 1
 
     def neutral_shell(self):
-        if self.work and not self.work.done():
-            self.work.cancel()
-        self.work = None
-        self.running = False
+        self.cancel_jobs()
         self.state = np.zeros(self.shell.ndof)
         self.drop = None
         self.display_index = None
@@ -297,30 +331,6 @@ class ShellWorkshop(DropPreview):
         self.last_rejection = None
         self.render()
         self.feedback.text = "Neutral. Original crease geometry restored; roof interiors remain free."
-
-    def launch(self, coroutine):
-        if self.work and not self.work.done():
-            coroutine.close()
-            self.feedback.text = "A calculation is active. Use Neutral / cancel before starting another."
-            return
-        self.running = True
-        self.work = asyncio.ensure_future(self.guard_job(coroutine))
-
-    async def guard_job(self, coroutine):
-        try:
-            await coroutine
-        except asyncio.CancelledError:
-            pass
-        except Exception as exc:
-            self.feedback.text = "NOT APPLIED: "+str(exc)
-        finally:
-            self.running = False
-
-    async def wait_running(self):
-        while not self.running:
-            if self.closed:
-                raise asyncio.CancelledError()
-            await omni.kit.app.get_app().next_update_async()
 
     async def rebuild(self):
         get = lambda name: self.inputs[name].as_float
@@ -340,7 +350,7 @@ class ShellWorkshop(DropPreview):
             pla_thickness_m=get("PLA thickness (mm)")/1000, pet_thickness_m=get("PET thickness (um)")*1e-6,
             pla_modulus_pa=get("PLA modulus (GPa, assumed)")*1e9, pet_modulus_pa=get("PET modulus (GPa, assumed)")*1e9)
         material.validate()
-        candidate = await asyncio.to_thread(NonlinearShell, self.lab.model.source, material, config)
+        candidate = await self.compute(NonlinearShell, self.lab.model.source, material, config)
         self.shell = candidate
         self.state = np.zeros(candidate.ndof)
         self.drop = None
@@ -357,6 +367,7 @@ class ShellWorkshop(DropPreview):
         self.owned.GetPrim().SetCustomDataByKey("source_sha256", candidate.source["sha256"])
         self.owned.GetPrim().SetCustomDataByKey("scope", "Experimental shell; junction relief changes the manufacturing pattern")
         self.make_scene()
+        self.refresh_pose_controls()
         self.render()
         self.feedback.text = "Stiffness rebuilt. New controls apply to subsequent range/cable/drop calculations."
 
@@ -383,7 +394,7 @@ class ShellWorkshop(DropPreview):
 
     def start_drop(self):
         self.timeline_action = "drop"
-        self.launch(self.drop_job())
+        self.launch(self.drop_job(), "70 mm impact")
 
     async def drop_job(self):
         get = lambda name: self.inputs[name].as_float
@@ -391,8 +402,9 @@ class ShellWorkshop(DropPreview):
             lower_mass_kg=get("Lower-side mass (g)")/1000, contact_stiffness_n_m=get("Contact stiffness (N/m)"),
             contact_damping_ns_m=get("Contact damping (N s/m)"), step_s=get("Drop timestep (us)")*1e-6,
             duration_s=get("Drop duration (ms)")*.001)
-        candidate = await asyncio.to_thread(ShellImpact, self.shell, config)
+        candidate = await self.compute(ShellImpact, self.shell, config)
         self.drop, self.state = candidate, candidate.state.copy()
+        self.job_steps = math.ceil(config.duration_s/config.step_s)
         self.display_index = None
         self.snapshots, self.last_rejection = [], None
         self.static_trace = []
@@ -417,18 +429,21 @@ class ShellWorkshop(DropPreview):
             self.feedback.text = "Solving nodal/frame inertia + shell deformation + foot contact..."
             candidate = copy.copy(self.drop)
             candidate.trace = self.drop.trace.copy()
-            await asyncio.to_thread(candidate.step)
+            await self.compute(candidate.step)
             await self.wait_running()
             self.drop = candidate
             self.state = candidate.state.copy()
+            self.job_step = len(candidate.trace)-1
             self.snapshots.append(self.state.copy())
             self.render()
             await omni.kit.app.get_app().next_update_async()
         self.last_rejection = self.drop.last_candidate if "GUARD" in str(self.drop.reason) or "LIMIT" in str(self.drop.reason) else None
+        if self.last_rejection is not None:
+            self.job_outcome = "STOPPED: numerical guard"
         self.feedback.text = self.drop.reason+"\nThis is an uncalibrated mechanical response, not a survival verdict."
 
     def start_range(self, mode):
-        self.launch(self.range_job(mode))
+        self.launch(self.range_job(mode), mode.replace("_", " "))
 
     async def range_job(self, mode):
         jobs = []
@@ -445,21 +460,22 @@ class ShellWorkshop(DropPreview):
                 coordinate = {"bend": 4, "twist": 5, "compression": 2}[mode]
                 si_value = self.shell.height*value/100 if mode == "compression" else np.deg2rad(value)
                 jobs.append(({"lower_constraints": {coordinate: si_value}}, f"PRESCRIBED {mode.upper()} {value:.1f}; other coordinates free"))
-        elif mode in ("cables", "manual", "winch", "winch_demo"):
+        elif mode in ("cables", "manual", "single_cable", "winch", "winch_demo"):
             amplitude = self.inputs["Cable tension (N)"].as_float
-            if mode in ("cables", "manual") and (not np.isfinite(amplitude) or not 0 <= amplitude <= 10):
+            if mode in ("cables", "manual", "single_cable") and (not np.isfinite(amplitude) or not 0 <= amplitude <= 10):
                 raise ValueError("Experimental cable tension must be 0-10 N")
             families = ("Compression", "Bend X+", "Bend X-", "Bend Y+", "Bend Y-", "Twist CW", "Twist CCW")
             force = np.zeros(3)
-            if mode in ("manual", "winch"):
+            if mode in ("manual", "winch", "single_cable"):
                 index = self.cable_pattern.model.get_item_value_model().as_int
                 families = (families[index],)
-                force = np.array([self.inputs[f"Lower frame force {axis} (N)"].as_float for axis in "XYZ"])
+                if mode != "single_cable":
+                    force = np.array([self.inputs[f"Lower frame force {axis} (N)"].as_float for axis in "XYZ"])
                 if not np.isfinite(force).all() or np.abs(force).max() > 100:
                     raise ValueError("Use finite experimental frame-force components within +/-100 N")
             nodes = self.shell.mesh["bottom"]
             for family in families:
-                fractions = np.linspace(0, 1, 9)[1:].tolist() if mode in ("manual", "winch") else (.25, .5, .75, 1, .5, 0)
+                fractions = np.linspace(0, 1, 9)[1:].tolist() if mode in ("manual", "single_cable", "winch") else (.25, .5, .75, 1, .5, 0)
                 if mode in ("winch", "winch_demo"):
                     pull = self.inputs["Winch pull (mm)"].as_float
                     if not np.isfinite(pull) or not 0 <= pull <= 20:
@@ -492,28 +508,31 @@ class ShellWorkshop(DropPreview):
             jobs.append(({"nodal_loads": load}, f"ROOF CENTER FORCE {amplitude:g} N; PERIMETER FIXED"))
         # Invalid inputs must leave the last accepted physical state intact.
         self.timeline_action = mode
-        self.state = np.zeros(self.shell.ndof)
-        self.drop, self.last_rejection = None, None
-        self.display_index = None
-        self.offset = self.lab.scene.top_height-self.shell.height
-        self.snapshots, self.static_trace = [], []
-        self.tensions = np.zeros(12)
+        initial = np.zeros(self.shell.ndof)
         self.close_view()
-        for parameters, label in jobs:
+        self.job_steps, self.job_step = len(jobs), 0
+        for index, (parameters, label) in enumerate(jobs):
             await self.wait_running()
-            self.mode = label
             self.feedback.text = "Solving "+label+"; last accepted shape remains visible."
             solve_started = time.perf_counter()
-            state, report = await asyncio.to_thread(self.shell.solve, initial=self.state, **parameters)
+            state, report = await self.compute(self.shell.solve, initial=initial, **parameters)
             solve_wall_s = time.perf_counter()-solve_started
             await self.wait_running()
             if not report["accepted"]:
+                self.job_outcome = "STOPPED: numerical guard"
                 self.last_rejection = report
                 self.feedback.text = (f"STOPPED: candidate NOT applied. Residual {report['gradient_max_j_per_scaled_coordinate']:.3g}; "
                     f"strain {report['max_membrane_strain']*100:.2f}%; intersections {len(report['surface_intersection_pairs'])}.\n"
                     "Requested full range has NOT been established. Last accepted state held.")
                 return
-            self.state = state
+            if index == 0:
+                self.drop, self.last_rejection = None, None
+                self.display_index = None
+                self.offset = self.lab.scene.top_height-self.shell.height
+                self.snapshots, self.static_trace = [], []
+            self.state = initial = state
+            self.mode = label
+            self.job_step = index+1
             self.tensions = np.asarray(report["tensions_n"])
             self.snapshots.append(state.copy())
             self.static_trace.append({"mode": label, "tensions_n": self.tensions.tolist(),
@@ -527,7 +546,7 @@ class ShellWorkshop(DropPreview):
                                       "residual": report["gradient_max_j_per_scaled_coordinate"]})
             self.render()
             reaction = report["required_frame_reactions_world_n_nm"][1]
-            if mode in ("manual", "cables", "roof", "winch", "winch_demo"):
+            if mode in ("manual", "single_cable", "cables", "roof", "winch", "winch_demo"):
                 self.feedback.text = (f"Converged. Cable peak {max(self.tensions):.3g} N/strand. "
                     f"Residual {report['gradient_max_j_per_scaled_coordinate']:.2g} J/scaled coordinate.\n"
                     "Shape and strain are solved at these loads; no angle is imposed.")
@@ -535,7 +554,9 @@ class ShellWorkshop(DropPreview):
                 self.feedback.text = (f"Prescribed study. Required moment X/Y/Z: "
                     f"{reaction[3]:.4g} / {reaction[4]:.4g} / {reaction[5]:.4g} N m.")
             await omni.kit.app.get_app().next_update_async()
-        self.feedback.text = "Requested calculation completed within current numerical guards; physical calibration still required."
+        self.feedback.text = (f"COMPLETE: {self.job_step}/{self.job_steps} steps. "
+                              "Read the angles/compression above: small solved motion can look stationary at 1x. "
+                              "Full physical folding is not yet calibrated.")
 
     def show_peak(self):
         if self.work and not self.work.done():
@@ -571,10 +592,10 @@ class ShellWorkshop(DropPreview):
         try:
             while not self.closed:
                 await omni.kit.app.get_app().next_update_async()
+                self.progress_label.text = self.progress_text()
                 if self.stage != omni.usd.get_context().get_stage():
-                    self.running = False
-                    if self.work:
-                        self.work.cancel()
+                    self.cancel_jobs()
+                    self.job_outcome = "STOPPED: scene changed"
                     self.feedback.text = "Scene changed. Calculation halted; return to the reference workshop."
                     continue
                 playing = app_utils.is_playing()
@@ -615,10 +636,11 @@ class ShellWorkshop(DropPreview):
     async def restore(self):
         if self.closed:
             return
-        if self.work:
-            self.work.cancel()
+        previous_work = self.work
+        self.cancel_jobs()
+        if previous_work:
             try:
-                await self.work
+                await previous_work
             except asyncio.CancelledError:
                 pass
         if self.owned and self.owned.GetPrim().IsValid():

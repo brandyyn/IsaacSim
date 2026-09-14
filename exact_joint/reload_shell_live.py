@@ -15,7 +15,7 @@ if lab.drop_preview is not None:
     await lab.drop_preview.restore()
 importlib.invalidate_caches()
 loaded = {}
-for name in ("shell_ipc", "shell_sparse", "nonlinear_shell", "shell_impact", "shell_view"):
+for name in ("shell_ipc", "shell_sparse", "nonlinear_shell", "shell_impact", "shell_ui_jobs", "shell_view"):
     qualified = "exact_joint."+name
     module = sys.modules.get(qualified) or types.ModuleType(qualified)
     sys.modules[qualified] = module

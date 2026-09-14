@@ -263,3 +263,30 @@ ensure discarded workers cannot mutate the newly accepted model or USD.
 
 Iteration note (2026-09-09, Kit 110.1.2): added subtree-handle rebinding and
 accepted-state publication checks after nonlinear knee UI return/pause tests.
+
+## Buttons That Reject Their Own Default Solver Mode
+
+A visible, enabled control can invoke its callback correctly and still appear
+broken if the default backend rejects that operation. In the knee workshop,
+prescribed-pose range buttons were enabled while IPC supports only force/winch
+actuation. Disable unsupported controls from the **active assembled model**, not
+from checkbox values that have not been rebuilt. Offer separately named,
+supported cable-pattern buttons; do not silently turn off contact or change
+material stiffness to make a button appear successful.
+
+For slow numerical callbacks, keep a progress label in the independent app
+update loop, not inside the coroutine blocked awaiting the numerical worker.
+Show starting, accepted-step progress, pause, switching, completion and rejection.
+Do not relabel a guarded stop COMPLETE merely because the coroutine returned.
+Test actual desktop clicks as well as controller calls, and distinguish a tiny
+converged physical response from a callback failure.
+
+When replacing a busy job, retain only the latest pending request, close unused
+coroutines, and discard the superseded candidate before publication. Neutral
+may cancel the wrapper, but must drain its worker under a shared lock before
+another numerical worker starts. An old task's finalizer must not pause or
+relabel a newer job. `exact_joint/shell_ui_jobs.py` and its async tests exercise
+these cases without changing the mechanical solver.
+
+Iteration note (2026-09-14): explicit force-driven movement buttons, active-mode
+enablement and serialized replacement after real knee-window button failures.

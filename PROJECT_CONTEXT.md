@@ -614,6 +614,29 @@ control and the outstanding geometry/force-motion measurements. Local commits
 have not been published: automatic review blocked the earlier push; explicit
 approval to publish the scoped artifacts to origin was requested and is pending.
 
+## Movement controls follow-up (2026-09-14)
+
+The default IPC model rejected the old prescribed Bend/Twist/Compression range
+buttons even though they were enabled. The nonlinear workshop now exposes seven
+direct force-driven cable buttons and the cable-tension input at the top. Pose
+studies are in an advanced collapsed group, disabled when the assembled model
+has IPC enabled. The main update loop displays calculation progress independently
+of worker completion. A newer movement replaces the old request at a safe solver
+boundary; unused requests are closed. Neutral discards the old candidate and
+serializes any new worker behind its completion. Rejections retain the last
+accepted state, visible geometry and trace, including a rejection of step one.
+
+The implementation is `exact_joint/shell_ui_jobs.py` plus `shell_view.py`.
+`test_shell_ui_jobs.py` checks replacement, pause, cancellation and error status.
+`record_button_live.py` records real desktop-click results, while
+`validate_button_guards_live.py` fault-injects controller guards without applying
+fabricated geometry. The immutable UI-only evaluation is
+`ml/runs/20260914-exact-knee-button-controls-v1`, linked to the unchanged refined
+contact case and parent run. This is a control repair, not material calibration:
+3 N still yields very small motion and does not reproduce full physical folding.
+No source geometry, stiffness, contact law, solver tolerance or v8 ML baseline
+was changed. See `exact_joint/CONTACT_AND_REFINEMENT.md` for the current controls.
+
 ## Conversation intent in one sentence
 
 Use the original triangulated panel joint as the visible, continuous compressing shell of a paper-guided robot knee, while keeping the actual PhysX mechanism stable enough to run, share, and later serve as the environment for machine-learning experiments.

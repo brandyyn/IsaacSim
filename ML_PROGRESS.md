@@ -25,6 +25,17 @@ This is the shared progress log. Update it whenever the FEA model, simulator env
 
 ## Roadmap
 
+Movement-button follow-up (2026-09-14): seven direct force-driven cable buttons
+replace the misleading default path through unsupported prescribed-pose controls.
+Unsupported pose studies are disabled with active IPC; progress, pause, latest-job
+replacement, neutral cancellation and first-candidate result preservation are
+explicit. The UI-only evaluation `20260914-exact-knee-button-controls-v1` links to
+the unchanged `exact_joint_refined_contact_v1` case. Actual Compression/Twist/Bend
+button ramps and controller guards are checked separately from material validity.
+The completed seven-pattern demo remains around 0.503% compression, 0.141 degrees
+bend and 0.098 degrees twist at 3 N. Full folding/calibration remain unresolved;
+no mechanical parameters changed, no ML training or baseline promotion.
+
 Intact-material contact/refinement follow-up (2026-09-14): implementation
 `f41302c5`, case `exact_joint_refined_contact_v1`, evaluation
 `20260914-exact-knee-refined-contact-v1`. Sparse interior refinement, physical PET

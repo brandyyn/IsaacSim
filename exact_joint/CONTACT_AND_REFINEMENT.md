@@ -81,9 +81,12 @@ Open the nonlinear launcher as usual, or send `reload_shell_live.py` through the
 project's running-Isaac remote helper. Do not start a second Kit instance.
 
 1. Choose **Material reference**, then **Knee close-up**.
-2. Choose Compression, Bend X+/X-, Bend Y+/Y-, or Twist CW/CCW. Set **Cable tension
-   (N)** and press **Apply cable + force**. It ramps eight force steps, with no
-   prescribed final angle. **Cable demo** loads/unloads all seven patterns.
+2. Set **Cable tension (N / active strand)**, then click a top **Compression**,
+   **Bend X+/X-**, **Bend Y+/Y-**, or **Twist CW/CCW** button. Each starts an
+   eight-step cable-only ramp immediately; it does not need Play or Apply.
+   For combined external forces, choose the dropdown pattern, set the lower-frame
+   force inputs, and press **Apply cable + force**. **Cable demo** loads/unloads
+   all seven patterns. No mode prescribes a final cable-driven angle.
 3. For displacement-controlled cable take-up, set **Winch pull (mm)** and use
    **Apply winch pull**. The cable rest length changes; joint displacement is
    still solved. Tension is `min(k * max(length-rest_length, 0), force_cap)`.
@@ -116,10 +119,26 @@ project's running-Isaac remote helper. Do not start a second Kit instance.
 | PET junction relief (%) | Actual PET connection cuts near source vertices. Zero is intact; nonzero changes the manufacturing design. |
 | Strain / height guards | Stop checks, not yield/fracture criteria. Raising them is not evidence that the material can survive. |
 
-Prescribed Bend/Twist/Compression range studies do not currently support IPC;
-their controls reject the operation without changing the accepted state. Use
-force/winch modes, or explicitly disable contact and rebuild for a separately
-labelled displacement study. Such a study is not evidence of achievable travel.
+The status line updates while the numerical worker runs: **SOLVING** shows the
+movement, accepted step count and elapsed wall time. At 3 N the previously
+measured solve took roughly five seconds per step; it is not a real-time animation.
+**Pause / resume** holds publication of the next candidate. Choosing a different
+movement replaces the previous job after its current solver step; the latest
+button wins, without another click. **Neutral / cancel** restores the source
+shape immediately and discards the old candidate. A worker already running must
+finish before a new numerical worker can start, so cancellation can leave a
+short delay before the new movement begins.
+
+The old **Bend/Twist/Compression range** controls were prescribed-displacement
+studies, not cable patterns. They are now inside a collapsed **Advanced
+prescribed-pose studies** group and disabled with IPC self-contact active. Use
+the top cable buttons. Explicitly disabling contact and rebuilding enables
+separately labelled displacement studies, not evidence of achievable travel.
+
+**A completed calculation can still look almost stationary at 1x.** Check the
+numeric angles/compression and loaded gold strands. The button fix does not
+change material stiffness, magnify geometry, establish full physical folding,
+or validate FEM accuracy. A numerical guard remains a STOPPED result, not COMPLETE.
 
 ## Reproduce / dependencies
 
