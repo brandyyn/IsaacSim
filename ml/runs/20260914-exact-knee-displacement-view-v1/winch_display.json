@@ -1,0 +1,57 @@
+{
+  "scope": "DISPLAY ONLY verification, not physical folding validation",
+  "checks": {
+    "real_replay_button_cycles_recorded_states": true,
+    "physical_state_mesh_and_trace_unchanged": true,
+    "magnification_formula_50x_to_200x": true,
+    "material_and_solver_config_unchanged": true
+  },
+  "observed_plot_span_m": 0.0019339978462085128,
+  "recorded_indices_seen": [
+    2,
+    2,
+    0,
+    0,
+    0,
+    1,
+    2,
+    2
+  ],
+  "true_relative_displacement_max_m": 1.9339955660912248e-05,
+  "display_gain": 100.0,
+  "regression_tests": 63,
+  "source_sha256": "d578618a0f90342bd0093b4febe130dc0b07c18f1b223c4d6bf02c9f3d93ce35",
+  "material": {
+    "width_m": 0.03,
+    "pet_thickness_m": 8e-05,
+    "pla_thickness_m": 0.0004,
+    "pet_modulus_pa": 3500000000.0,
+    "pla_modulus_pa": 2200000000.0,
+    "pet_poisson": 0.35,
+    "pla_poisson": 0.35,
+    "hinge_gap_m": 0.0002,
+    "refinement": 1
+  },
+  "shell_config": {
+    "subdivision": 1,
+    "panel_to_crease_ratio": 100.0,
+    "crease_twist_ratio": 0,
+    "panel_bending_scale": 1.0,
+    "membrane_scale": 1.0,
+    "vertex_relief_fraction": 0.0,
+    "panel_strain_limit": 0.03,
+    "minimum_height_fraction": 0.08,
+    "max_iterations": 900,
+    "interior_refinement": 1,
+    "sparse_solver": true,
+    "physical_strip_bending": true,
+    "self_contact": true,
+    "contact_distance_m": 1e-06,
+    "contact_energy_j": 1e-06
+  },
+  "code_sha256": {
+    "shell_view": "592c71c4d2fefe424daae382444d49488fd6130a763595b7b363ff3254a94a63",
+    "shell_display_math": "a412defba9d3cb11e486c3f3cf2eb136135bdcaee342abd53a240ecafba54347",
+    "shell_displacement_view": "10f37d4d864603b4adcb8a1c9028a5e063ef929d54f9cf36af965a38e74aa4af"
+  }
+}

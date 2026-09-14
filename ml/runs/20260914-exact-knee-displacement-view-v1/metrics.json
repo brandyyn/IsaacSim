@@ -1,0 +1,26 @@
+{
+  "regression_tests_passed": 63,
+  "display_projection_tests_included": 3,
+  "checks": {
+    "real_replay_button_cycles_recorded_states": true,
+    "physical_state_mesh_and_trace_unchanged": true,
+    "magnification_formula_50x_to_200x": true,
+    "material_and_solver_config_unchanged": true
+  },
+  "replay_pause_resume_checked": true,
+  "actual_desktop_clicks": [
+    "Knee close-up",
+    "Replay response (winch and bend)",
+    "Bend Y+ (eight accepted steps)"
+  ],
+  "final_pause_check_input": "controller API replay; record retained with original field names",
+  "full_physical_folding_fixed": false,
+  "full_fem_validated": false,
+  "survives_drop": null,
+  "notes": [
+    "Records retain source hashes across final label/pause refinements.",
+    "Latest pause test followed an API replay call; earlier replay tests followed real desktop clicks.",
+    "No mechanical parameters, geometry, contact law or solver tolerances changed.",
+    "No new drop or physical calibration run was performed."
+  ]
+}

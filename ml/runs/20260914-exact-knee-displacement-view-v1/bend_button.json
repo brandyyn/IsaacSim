@@ -1,0 +1,45 @@
+{
+  "scope": "Result of a real desktop click; implementation QA, NOT physical validation",
+  "family": "Bend Y+",
+  "status": "COMPLETE",
+  "source_sha256": "d578618a0f90342bd0093b4febe130dc0b07c18f1b223c4d6bf02c9f3d93ce35",
+  "code_sha256": {
+    "shell_view": "384b47739bacf79515478419b7a333d7c5878a7c68ea585d47dcf0d6c6897772",
+    "shell_ui_jobs": "8bef4eba7d255ac4e9d8850ebb67b41e97ac1a64472f78b6ea2611045f326d4f",
+    "nonlinear_shell": "8f48d1ae3aa32578c3dbf503060d847b6ff9aaee6ba6bec3c7ed1838ad49ee0a",
+    "shell_sparse": "32a549332a6ee9d57cc4980390d3bb84eba44612db92523bcbb6acfb19f42489",
+    "shell_ipc": "62367ddf3cf0bd5bbd383a9f549e0cbe718ae47024ee8caffbe43431e7c71f9f"
+  },
+  "accepted_steps": 8,
+  "force_pattern_matches": true,
+  "physical_1x_render_matches": true,
+  "unsupported_pose_buttons_disabled": true,
+  "max_cable_tension_n": 3.0,
+  "compression_fraction": 0.0024671747944055022,
+  "relative_rotation_rad": [
+    -1.299150482952954e-06,
+    -0.0024630591295003914,
+    -8.902794097839932e-08
+  ],
+  "max_membrane_strain": 0.0033714279518888986,
+  "solve_wall_s": [
+    3.998491699981969,
+    4.082874800020363,
+    3.964486700017005,
+    3.9027737000142224,
+    3.9336921999929473,
+    3.8856965000159107,
+    4.827937999973074,
+    4.868080399988685
+  ],
+  "residuals": [
+    1.5065271188806172e-09,
+    6.5545721003166835e-09,
+    1.5709337196286336e-08,
+    2.971030945050202e-08,
+    4.9155912081651904e-08,
+    7.471293416824363e-08,
+    1.2075262856292567e-09,
+    2.069400780735364e-09
+  ]
+}
