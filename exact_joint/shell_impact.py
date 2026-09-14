@@ -79,21 +79,34 @@ class ShellImpact:
         self.energy_reference_z = self.previous_particles[:, 2].clone()
         # Linearized mass is used only to scale the optimizer. Kinematics,
         # inertia forces and contact are evaluated nonlinearly in the objective.
-        jacobian = np.zeros((len(self.masses)*3, shell.ndof))
-        for i, node in enumerate(shell.free_nodes):
-            jacobian[3*node:3*node+3, 3*i:3*i+3] = np.eye(3)*shell.width
-        rest_particles = self.previous_particles.numpy()
-        for frame in range(2):
-            indices = np.r_[shell.mesh[("top", "bottom")[frame]],
-                            np.arange(len(shell.points)+8*frame, len(shell.points)+8*(frame+1))]
-            for node in indices:
-                x, y, z = rest_particles[node]-shell.frame_centers[frame].numpy()
-                negative_skew = np.array([[0, z, -y], [-z, 0, x], [y, -x, 0]])
-                start = shell.frame_start+6*frame
-                jacobian[3*node:3*node+3, start:start+6] = np.c_[np.eye(3)*shell.width, negative_skew]
-        self.mass_scaling = jacobian.T @ (np.repeat(self.masses.numpy(), 3)[:, None]*jacobian)
+        from scipy.sparse import diags
+        jacobian = self.particle_jacobian(self.state)
+        self.mass_scaling = (jacobian.T@diags(np.repeat(self.masses.numpy(), 3))@jacobian).tocsc()
+        if not shell.config.sparse_solver:
+            self.mass_scaling = self.mass_scaling.toarray()
         self.scaling_cache = {}
         self.record()
+
+    def particle_jacobian(self, state):
+        """Local frame Jacobians avoid a dense 3N-by-DOF mass allocation."""
+        from scipy.sparse import coo_matrix, vstack
+        from exact_joint.nonlinear_shell import rotation_matrix
+        from exact_joint.shell_sparse import position_jacobian
+        shell = self.shell
+        rows, columns, values = [], [], []
+        for frame in range(2):
+            offset = shell.frame_start+6*frame
+            center = shell.frame_centers[frame]
+
+            def positions(q):
+                return (self.body_points[frame]-center)@rotation_matrix(q[3:]).T+center+shell.width*q[:3]
+
+            jac = torch.autograd.functional.jacobian(positions, shell._tensor(state[offset:offset+6])).numpy().reshape(24, 6)
+            rows.extend(np.broadcast_to((24*frame+np.arange(24))[:, None], jac.shape).ravel())
+            columns.extend(np.broadcast_to(offset+np.arange(6), jac.shape).ravel())
+            values.extend(jac.ravel())
+        bodies = coo_matrix((values, (rows, columns)), shape=(48, shell.ndof)).tocsr()
+        return vstack((position_jacobian(shell, state), bodies), format="csr")
 
     def particles(self, state):
         shell = self.shell
@@ -122,15 +135,39 @@ class ShellImpact:
             closing = torch.clamp_min(previous_gaps-gap, 0) * (gap < 0)
             energy = energy + cfg.contact_damping_ns_m/(8*dt)*torch.sum(closing**2)
             grad = torch.autograd.grad(energy, state)[0]
-            return float(energy.detach()), grad.detach().numpy()
+            result, derivative = float(energy.detach()), grad.detach().numpy()
+            if shell.contact is not None:
+                from exact_joint.shell_sparse import position_jacobian
+                contact_energy, contact_gradient, _ = shell.contact.evaluate(particles[:len(shell.points)].detach().numpy())
+                result += contact_energy
+                derivative += position_jacobian(shell, value).T@contact_gradient
+            return result, derivative
 
         # Same neutral geometry, masses and nominal timestep share a scaling.
         # Cache only optimization coordinates, never physical force evaluations.
-        key = round(dt, 14)
-        if key not in self.scaling_cache:
-            self.scaling_cache[key] = shell.stiffness_scaling(shell.reference_hessian()+self.mass_scaling/dt**2)
-        solution = shell.minimize_scaled(objective, self.state, None, cfg.max_iterations,
-                                         transform=self.scaling_cache[key])
+        if shell.config.sparse_solver:
+            from scipy.sparse import csr_matrix, diags
+            from exact_joint.shell_sparse import minimize_sparse
+
+            def inertia_contact_stiffness(state):
+                jac = self.particle_jacobian(state)
+                result = jac.T@diags(np.repeat(self.masses.numpy(), 3)/dt**2)@jac
+                value = shell._tensor(state)
+                gap = self.gaps(value).numpy()
+                gap_jac = csr_matrix(torch.autograd.functional.jacobian(self.gaps, value, vectorize=True).numpy())
+                weight = (gap < 0)*(cfg.contact_stiffness_n_m
+                          + (previous_gaps.numpy() > gap)*cfg.contact_damping_ns_m/dt)/4
+                return result+gap_jac.T@diags(weight)@gap_jac
+
+            solution = minimize_sparse(shell, self.state, np.arange(shell.ndof), objective,
+                                       extra_stiffness=inertia_contact_stiffness, max_iterations=cfg.max_iterations,
+                                       gradient_tolerance=1e-6)
+        else:
+            key = round(dt, 14)
+            if key not in self.scaling_cache:
+                self.scaling_cache[key] = shell.stiffness_scaling(shell.reference_hessian()+self.mass_scaling/dt**2)
+            solution = shell.minimize_scaled(objective, self.state, None, cfg.max_iterations,
+                                             transform=self.scaling_cache[key])
         candidate = shell.diagnostics(solution.x)
         residual = float(np.abs(solution.jac).max())
         candidate["residual_j_per_scaled_coordinate"] = residual
@@ -174,5 +211,10 @@ class ShellImpact:
                "energy_fraction_of_initial": float(energy/self.initial_energy_j),
                "minimum_foot_gap_m": float(gap.min()), "nonlinear_iterations": iterations,
                "residual_j_per_scaled_coordinate": residual, "stop_reason": self.reason}
+        if self.shell.contact is not None:
+            contact = self.shell.contact.report(report["points"])
+            row["self_contact"] = contact
+            row["mechanical_energy_j"] += contact["barrier_energy_j"]
+            row["energy_fraction_of_initial"] = row["mechanical_energy_j"]/self.initial_energy_j
         self.trace.append(row)
         return row

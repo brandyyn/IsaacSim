@@ -448,3 +448,23 @@ interpret the last accepted frame as the full motion or impact envelope.
 
 Iteration log: 2026-09-10 — distilled from force/take-up and PET-junction
 experiments; full folding and physical calibration remain unvalidated.
+
+For refinement studies, split panel interiors as well as boundaries and verify
+neutral surface area, material coverage and original crease chains. Sparse
+element-local Jacobians make this practical; compare their assembled tangent
+against the existing dense formulation before relying on performance gains.
+Apply the sparse mapping to inertia as well, or refined impact can still allocate
+a prohibitive dense global mass Jacobian.
+
+For IPC Toolkit 1.6.0, verify API semantics with a two-triangle benchmark:
+`is_step_collision_free` returns true for a clear path, while
+`NormalCollisions.compute_minimum_distance` returns **squared** distance despite
+its name. Test barrier gradients, force balance and swept crossings separately.
+Endpoint-linear CCD does not certify a curved rigid-frame trajectory. Include
+a conservative trajectory bound or nonlinear CCD, and distinguish midsurface
+nonpenetration from finite-thickness material clearance. A contact-inactive
+small-motion case cannot validate the large-fold contact regime.
+
+Iteration log: 2026-09-14 — refined PLA/PET shell, sparse impact and optional IPC
+implementation checks; spatial convergence and measured crease response remain
+open gates. See `exact_joint/CONTACT_AND_REFINEMENT.md`.

@@ -31,12 +31,26 @@ class ShellConfig:
     panel_strain_limit: float = 0.03
     minimum_height_fraction: float = 0.08
     max_iterations: int = 900
+    interior_refinement: int = 0
+    sparse_solver: bool = False
+    physical_strip_bending: bool = False
+    self_contact: bool = False
+    contact_distance_m: float = 1e-6
+    contact_energy_j: float = 1e-6
 
     def validate(self):
         if not np.isfinite(list(asdict(self).values())).all():
             raise ValueError("Shell parameters must be finite")
         if self.subdivision not in (1, 2):
             raise ValueError("Shell subdivision must be 1 or 2")
+        if self.interior_refinement not in (0, 1, 2):
+            raise ValueError("Uniform interior refinement must be 0, 1 or 2")
+        if self.interior_refinement and not self.sparse_solver:
+            raise ValueError("Uniform refinement requires the sparse solver")
+        if self.self_contact and not self.sparse_solver:
+            raise ValueError("Continuous self-contact requires the sparse solver")
+        if not 1e-8 <= self.contact_distance_m <= 1e-4 or not 1e-10 <= self.contact_energy_j <= .01:
+            raise ValueError("Contact activation 0.01-100 um and energy scale 1e-10-0.01 J required")
         if not 1 <= self.panel_to_crease_ratio <= 10000:
             raise ValueError("Panel/crease bending ratio must be 1-10000")
         if not 0 <= self.crease_twist_ratio <= 10:
@@ -53,7 +67,7 @@ class ShellConfig:
             raise ValueError("Iteration limit must be an integer 10-5000")
 
 
-def surface_mesh(source, subdivision=1, gap_m=0.0, vertex_relief_fraction=0.0):
+def surface_mesh(source, subdivision=1, gap_m=0.0, vertex_relief_fraction=0.0, interior_refinement=0):
     """Subdivide original planar faces; keep every source vertex and crease chain.
 
 No averaged extrusion normals are used, so refinement preserves the reference
@@ -138,6 +152,25 @@ the eight original square perimeter edges are attached to rigid frames.
             triangles.append(face)
             owners.append(owner)
             laminate.append(has_pla)
+    for level in range(interior_refinement):
+        midpoint_ids = {}
+
+        def middle(a, b):
+            key = tuple(sorted((a, b)))
+            if key not in midpoint_ids:
+                midpoint_ids[key] = len(points)
+                points.append(((np.asarray(points[a])+points[b])/2).tolist())
+            return midpoint_ids[key]
+
+        refined = []
+        for a, b, c in triangles:
+            ab, bc, ca = middle(a, b), middle(b, c), middle(c, a)
+            refined.extend([[a, ab, ca], [ab, b, bc], [ca, bc, c], [ab, bc, ca]])
+        triangles = refined
+        owners = np.repeat(owners, 4).tolist()
+        laminate = np.repeat(laminate, 4).tolist()
+        chains = [[item for a, b in zip(chain[:-1], chain[1:]) for item in (a, middle(a, b))]+[chain[-1]]
+                  for chain in chains]
     points, triangles, owners = np.asarray(points), np.asarray(triangles), np.asarray(owners)
     top, bottom = [], []
     frame_line_ids = []
@@ -195,7 +228,7 @@ class NonlinearShell:
         self.material.validate()
         self.config.validate()
         self.mesh = surface_mesh(source, self.config.subdivision, self.material.hinge_gap_m,
-                                 self.config.vertex_relief_fraction)
+                                 self.config.vertex_relief_fraction, self.config.interior_refinement)
         self.points = self.mesh["points"]
         self.width = self.material.width_m
         self.height = source["height_m"]
@@ -239,6 +272,8 @@ class NonlinearShell:
         # to PET in-plane modulus. All PET strip hinges use this rigidity, so
         # widening the strip actually changes its folding/twisting compliance.
         self.effective_strip_rigidity_nm = self.panel_rigidity_nm/self.config.panel_to_crease_ratio
+        if self.config.physical_strip_bending:
+            self.effective_strip_rigidity_nm = self.pet_rigidity_nm
         h = self.points[self.mesh["hinges"]]
         edge = h[:, 1] - h[:, 0]
         edge_length = np.linalg.norm(edge, axis=1)
@@ -265,6 +300,11 @@ class NonlinearShell:
         self.cable_top, self.cable_bottom = self._tensor(top), self._tensor(bottom)
         self.last_report = None
         self.preconditioners = {}
+        self.contact = None
+        if self.config.self_contact:
+            from exact_joint.shell_ipc import MidsurfaceContact
+            self.contact = MidsurfaceContact(self.points, self.mesh["triangles"],
+                                             self.config.contact_distance_m, self.config.contact_energy_j)
 
     def reference_hessian(self):
         """Neutral Gauss-Newton stiffness for optimization scaling, not new physics."""
@@ -395,7 +435,13 @@ class NonlinearShell:
         load_tensor = self._tensor(nodal_loads) if nodal_loads is not None else None
         energy = self.energy(value, tension_tensor, load_tensor, winch)
         gradient = torch.autograd.grad(energy, value)[0]
-        return float(energy.detach()), gradient.detach().numpy()
+        result, derivative = float(energy.detach()), gradient.detach().numpy()
+        if self.contact is not None:
+            from exact_joint.shell_sparse import position_jacobian
+            contact_energy, contact_gradient, _ = self.contact.evaluate(self.positions(value).detach().numpy())
+            result += contact_energy
+            derivative += position_jacobian(self, state).T@contact_gradient
+        return result, derivative
 
     def diagnostics(self, state):
         with torch.no_grad():
@@ -436,6 +482,8 @@ the candidate plus explicit convergence/strain checks without silently applying.
             winch.validate()
             if np.any(tensions) or lower_pose is not None or lower_constraints is not None:
                 raise ValueError("Winch experiments cannot also impose tension or frame coordinates")
+        if self.contact is not None and (lower_pose is not None or lower_constraints is not None):
+            raise ValueError("IPC currently supports force/winch solves, not abrupt prescribed-frame studies")
         if nodal_loads is not None:
             nodal_loads = np.asarray(nodal_loads, dtype=float)
             if nodal_loads.shape != self.points.shape or not np.isfinite(nodal_loads).all():
@@ -467,13 +515,17 @@ the candidate plus explicit convergence/strain checks without silently applying.
             energy, gradient = self.value_gradient(candidate, tensions, nodal_loads, winch)
             return energy, gradient[active]
 
-        reference = (self.reference_hessian()+self.winch_stiffness(state, winch))[np.ix_(active, active)]
-        solution = self.minimize_scaled(objective, state[active], reference, min(250, self.config.max_iterations))
+        if self.config.sparse_solver:
+            from exact_joint.shell_sparse import minimize_sparse
+            solution = minimize_sparse(self, state, active, objective, winch)
+        else:
+            reference = (self.reference_hessian()+self.winch_stiffness(state, winch))[np.ix_(active, active)]
+            solution = self.minimize_scaled(objective, state[active], reference, min(250, self.config.max_iterations))
         total_iterations = int(solution.nit)
         # At large rotations the neutral-coordinate scaling becomes poor.
         # Recompute a current-geometry preconditioner, while keeping the same
         # exact nonlinear potential and force-residual acceptance criterion.
-        while np.abs(solution.jac).max() >= 1e-5 and total_iterations < self.config.max_iterations:
+        while not self.config.sparse_solver and np.abs(solution.jac).max() >= 1e-5 and total_iterations < self.config.max_iterations:
             state[active] = solution.x
             reference = (self.gauss_newton_stiffness(state)+self.winch_stiffness(state, winch))[np.ix_(active, active)]
             solution = self.minimize_scaled(objective, solution.x, reference,
@@ -502,6 +554,8 @@ the candidate plus explicit convergence/strain checks without silently applying.
         report["surface_intersection_pairs"] = intersection_pairs(report["points"], self.mesh["triangles"]).tolist()
         report["accepted"] = (report["converged"] and report["within_strain_guard"] and report["within_height_guard"]
                               and not report["surface_intersection_pairs"])
+        if self.contact is not None:
+            report["self_contact"] = self.contact.report(report["points"])
         # Rotation-vector gradients are not Cartesian moments at finite angle.
         _, full_gradient = self.value_gradient(state, tensions, nodal_loads, winch)
         reactions = []

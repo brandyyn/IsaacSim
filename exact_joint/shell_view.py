@@ -46,7 +46,9 @@ class ShellWorkshop(DropPreview):
         self.timeline_action = "manual"
 
     async def start(self):
-        self.shell = await asyncio.to_thread(NonlinearShell, self.lab.model.source, self.lab.config)
+        config = ShellConfig(sparse_solver=True, interior_refinement=1,
+                             physical_strip_bending=True, self_contact=True, crease_twist_ratio=0)
+        self.shell = await asyncio.to_thread(NonlinearShell, self.lab.model.source, self.lab.config, config)
         self.state = np.zeros(self.shell.ndof)
         await super().start()
         self.original_leg_active = self.root.IsActive()
@@ -61,9 +63,9 @@ class ShellWorkshop(DropPreview):
     def build_ui(self):
         super().build_ui()
         self.window.title = "Nonlinear knee - rigid frames / flexible panels"
-        with self.window.frame, ui.VStack(spacing=5):
-            ui.Label("RIGID SQUARE FRAMES | FLEXIBLE INTERIORS", height=26, style={"font_size": 18})
-            ui.Label("NONLINEAR SHELL EXPERIMENT - not validated solid FEM\n1x geometry; colour = membrane strain, NOT failure/stress", height=43,
+        with self.window.frame, ui.VStack(spacing=3):
+            ui.Label("RIGID SQUARE FRAMES | FLEXIBLE INTERIORS", height=22, style={"font_size": 18})
+            ui.Label("NONLINEAR SHELL EXPERIMENT - not validated solid FEM\n1x geometry; colour = membrane strain, NOT failure/stress", height=33,
                      style={"color": 0xFF80DFFF})
             with ui.HStack(height=29):
                 ui.Button("Drop 70 mm / recompute", clicked_fn=self.start_drop)
@@ -89,14 +91,31 @@ class ShellWorkshop(DropPreview):
             with ui.HStack(height=27):
                 ui.Button("Replay recorded impact", clicked_fn=lambda: self.launch(self.replay_recorded()))
                 ui.Button("Show peak bending", clicked_fn=self.show_peak)
-            self.telemetry = ui.Label("", height=112, word_wrap=True)
-            self.settings_label = ui.Label("", height=47, word_wrap=True)
-            self.feedback = ui.Label("Apply and Cable demo solve forces; Drop solves impact. Full travel is not guaranteed by a force input.", height=64, word_wrap=True)
+            self.telemetry = ui.Label("", height=88, word_wrap=True)
+            self.settings_label = ui.Label("", height=59, word_wrap=True)
+            self.feedback = ui.Label("Apply and Cable demo solve forces; Drop solves impact. Full travel is not guaranteed by a force input.", height=44, word_wrap=True)
             with ui.ScrollingFrame(), ui.VStack(spacing=6, height=0):
                 ui.Label("INPUTS: stiffness changes require Rebuild", height=25)
+                self.flags = {}
+                for label, value in (("Thickness-derived PET bending (ignores ratio)", self.shell.config.physical_strip_bending),
+                                     ("Sparse element solver", self.shell.config.sparse_solver),
+                                     ("Midsurface self-contact + CCD", self.shell.config.self_contact)):
+                    with ui.HStack(height=24):
+                        field = ui.CheckBox(width=24)
+                        field.model.set_value(value)
+                        self.flags[label] = field.model
+                        ui.Label(label)
+                with ui.HStack(height=24):
+                    ui.Label("Interior refinement (0/1/2)", width=240)
+                    self.refinement_input = ui.IntField().model
+                    self.refinement_input.set_value(self.shell.config.interior_refinement)
                 self.inputs = {}
-                for label, value in (("Panel / crease bending ratio", 100), ("Crease twist coupling", .1),
+                for label, value in (("Panel / crease bending ratio", 100), ("Crease twist coupling", self.shell.config.crease_twist_ratio),
                                      ("Panel bending scale", 1), ("Membrane stiffness scale", 1),
+                                     ("PLA thickness (mm)", self.shell.material.pla_thickness_m*1000),
+                                     ("PET thickness (um)", self.shell.material.pet_thickness_m*1e6),
+                                     ("PLA modulus (GPa, assumed)", self.shell.material.pla_modulus_pa/1e9),
+                                     ("PET modulus (GPa, assumed)", self.shell.material.pet_modulus_pa/1e9),
                                      ("PET junction relief (%)", 0), ("Winch pull (mm)", .5),
                                      ("Winch stiffness (N/m)", 1000), ("Winch force cap (N)", 10),
                                      ("Static solver iterations", 900),
@@ -115,7 +134,7 @@ class ShellWorkshop(DropPreview):
                         self.inputs[label] = field.model
                 ui.Label("Ratios/scales are uncalibrated experiments, not new material data.\n"
                          "Ranges stop on strain, separation, intersection or convergence guards.\n"
-                         "Discrete intersection check is NOT finite-thickness self-contact/CCD.\n"
+                         "IPC checks midsurface paths; finite-thickness clearance is NOT modelled.\n"
                          "No fracture, delamination, cable-guide contact or strength rating.\n"
                          "Drop: assumed nodal/rigid inertia; backward Euler adds numerical damping.",
                          height=115, word_wrap=True)
@@ -202,7 +221,10 @@ class ShellWorkshop(DropPreview):
             set_points(self.relief_lines, points[self.relief_edges].reshape(-1, 3))
         cfg = self.shell.config
         self.settings_label.text = (f"ACTIVE: panel bend x{cfg.panel_bending_scale:g}, membrane x{cfg.membrane_scale:g}, "
-            f"ratio {cfg.panel_to_crease_ratio:g}, PET gap {self.shell.material.hinge_gap_m*1000:g} mm\n"
+            + ("PET bending from E,t" if cfg.physical_strip_bending else f"ratio {cfg.panel_to_crease_ratio:g}")
+            + f", gap {self.shell.material.hinge_gap_m*1000:g} mm\n"
+            f"PLA {self.shell.material.pla_thickness_m*1000:g} mm + PET {self.shell.material.pet_thickness_m*1e6:g} um; "
+            f"refinement {cfg.interior_refinement}, " + ("IPC midsurface CCD" if cfg.self_contact else "NO self-contact forces") + "\n"
             f"PET junction relief {cfg.vertex_relief_fraction*100:g}% "
             + ("- MODIFIED CUT DESIGN (cyan edges)" if cfg.vertex_relief_fraction else "- intact source pattern"))
         set_points(self.frames_curve, points[self.frame_edges].reshape(-1, 3))
@@ -306,11 +328,17 @@ class ShellWorkshop(DropPreview):
                              crease_twist_ratio=get("Crease twist coupling"), panel_bending_scale=get("Panel bending scale"),
                              membrane_scale=get("Membrane stiffness scale"), panel_strain_limit=get("Membrane strain guard (%)")/100,
                              vertex_relief_fraction=get("PET junction relief (%)")/100,
-                             max_iterations=get("Static solver iterations"))
+                             max_iterations=get("Static solver iterations"),
+                             sparse_solver=self.flags["Sparse element solver"].as_bool,
+                             physical_strip_bending=self.flags["Thickness-derived PET bending (ignores ratio)"].as_bool,
+                             self_contact=self.flags["Midsurface self-contact + CCD"].as_bool,
+                             interior_refinement=self.refinement_input.as_int)
         config.validate()
         config = dataclasses.replace(config, max_iterations=int(config.max_iterations))
         self.feedback.text = "Assembling the new nonlinear shell; displayed result held until ready."
-        material = dataclasses.replace(self.shell.material, hinge_gap_m=get("PET exposed gap (mm)")/1000)
+        material = dataclasses.replace(self.shell.material, hinge_gap_m=get("PET exposed gap (mm)")/1000,
+            pla_thickness_m=get("PLA thickness (mm)")/1000, pet_thickness_m=get("PET thickness (um)")*1e-6,
+            pla_modulus_pa=get("PLA modulus (GPa, assumed)")*1e9, pet_modulus_pa=get("PET modulus (GPa, assumed)")*1e9)
         material.validate()
         candidate = await asyncio.to_thread(NonlinearShell, self.lab.model.source, material, config)
         self.shell = candidate
@@ -334,17 +362,24 @@ class ShellWorkshop(DropPreview):
 
     async def preset(self, relief):
         values = {"Panel / crease bending ratio": 1000 if relief else 100,
-                  "Crease twist coupling": .1, "Panel bending scale": .01 if relief else 1,
+                  "Crease twist coupling": .1 if relief else 0, "Panel bending scale": .01 if relief else 1,
+                  "PLA thickness (mm)": .4, "PET thickness (um)": 80,
+                  "PLA modulus (GPa, assumed)": 2.2, "PET modulus (GPa, assumed)": 3.5,
                   "Membrane stiffness scale": 1, "PET junction relief (%)": 20 if relief else 0,
                   "PET exposed gap (mm)": .8 if relief else .2, "Membrane strain guard (%)": 3,
                   "Static solver iterations": 3000 if relief else 900,
                   "Winch pull (mm)": .5, "Winch stiffness (N/m)": 1000, "Winch force cap (N)": 10}
         for name, value in values.items():
             self.inputs[name].set_value(value)
+        self.flags["Sparse element solver"].set_value(True)
+        self.flags["Thickness-derived PET bending (ignores ratio)"].set_value(not relief)
+        self.flags["Midsurface self-contact + CCD"].set_value(True)
+        self.refinement_input.set_value(0 if relief else 1)
         await self.rebuild()
         self.feedback.text = ("Experimental PET cuts + 100x softer bending; NOT measured PLA/PET. "
                               "Use Apply winch pull. Adjacent-section twist coupling is inactive in this coarse cut mesh." if relief
-                              else "Material reference restored: intact pattern, nominal moduli, assumed crease law.")
+                              else "Intact PLA 0.4 mm / PET 80 um; unscaled assumed moduli, thickness-derived bending. "
+                                   "Refined mesh + midsurface IPC; NOT calibrated creased-PET or finite-thickness contact.")
 
     def start_drop(self):
         self.timeline_action = "drop"
@@ -356,7 +391,7 @@ class ShellWorkshop(DropPreview):
             lower_mass_kg=get("Lower-side mass (g)")/1000, contact_stiffness_n_m=get("Contact stiffness (N/m)"),
             contact_damping_ns_m=get("Contact damping (N s/m)"), step_s=get("Drop timestep (us)")*1e-6,
             duration_s=get("Drop duration (ms)")*.001)
-        candidate = ShellImpact(self.shell, config)
+        candidate = await asyncio.to_thread(ShellImpact, self.shell, config)
         self.drop, self.state = candidate, candidate.state.copy()
         self.display_index = None
         self.snapshots, self.last_rejection = [], None
@@ -393,12 +428,14 @@ class ShellWorkshop(DropPreview):
         self.feedback.text = self.drop.reason+"\nThis is an uncalibrated mechanical response, not a survival verdict."
 
     def start_range(self, mode):
-        self.timeline_action = mode
         self.launch(self.range_job(mode))
 
     async def range_job(self, mode):
         jobs = []
         if mode in ("bend", "twist", "compression"):
+            if self.shell.contact is not None:
+                raise ValueError("Prescribed-frame studies do not support IPC yet; use force/winch actuation, "
+                                 "or explicitly disable self-contact and Rebuild for a non-contact displacement study")
             label = {"bend": "Bend target (deg)", "twist": "Twist target (deg)", "compression": "Compression target (%)"}[mode]
             target = self.inputs[label].as_float
             if not np.isfinite(target) or not 0 < target <= (90 if mode == "compression" else 150):
@@ -454,6 +491,7 @@ class ShellWorkshop(DropPreview):
             load[center, 2] = -amplitude
             jobs.append(({"nodal_loads": load}, f"ROOF CENTER FORCE {amplitude:g} N; PERIMETER FIXED"))
         # Invalid inputs must leave the last accepted physical state intact.
+        self.timeline_action = mode
         self.state = np.zeros(self.shell.ndof)
         self.drop, self.last_rejection = None, None
         self.display_index = None
@@ -465,7 +503,9 @@ class ShellWorkshop(DropPreview):
             await self.wait_running()
             self.mode = label
             self.feedback.text = "Solving "+label+"; last accepted shape remains visible."
+            solve_started = time.perf_counter()
             state, report = await asyncio.to_thread(self.shell.solve, initial=self.state, **parameters)
+            solve_wall_s = time.perf_counter()-solve_started
             await self.wait_running()
             if not report["accepted"]:
                 self.last_rejection = report
@@ -477,7 +517,9 @@ class ShellWorkshop(DropPreview):
             self.tensions = np.asarray(report["tensions_n"])
             self.snapshots.append(state.copy())
             self.static_trace.append({"mode": label, "tensions_n": self.tensions.tolist(),
+                                      "solve_wall_s": solve_wall_s,
                                       "winch": report.get("winch"), "cable_lengths_m": report.get("cable_lengths_m"),
+                                      "self_contact": report.get("self_contact"),
                                       "nodal_loads_n": np.asarray(parameters.get("nodal_loads", np.zeros_like(self.shell.points))).tolist(),
                                       "relative_rotation_rad": report["relative_rotation_rad"].tolist(),
                                       "compression_fraction": report["compression_fraction"],
@@ -559,6 +601,8 @@ class ShellWorkshop(DropPreview):
                   "tensions_n": self.tensions.tolist(), "static_trace": self.static_trace,
                   "state": self.state, "snapshots": self.snapshots, "current": self.shell.diagnostics(self.state),
                   "last_rejected_candidate": self.last_rejection, "survives": None}
+        if self.shell.contact is not None:
+            report["self_contact"] = self.shell.contact.report(report["current"]["points"])
         if self.drop:
             report["impact_config"] = dataclasses.asdict(self.drop.config)
             report["impact_trace"] = self.drop.trace

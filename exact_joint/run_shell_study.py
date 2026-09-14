@@ -22,12 +22,17 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--mode", choices=["cables", "drop", "winch"], default="cables")
     parser.add_argument("--ratio", type=float, default=100)
+    parser.add_argument("--crease-twist-ratio", type=float, default=.1)
     parser.add_argument("--gap-mm", type=float, default=.2)
     parser.add_argument("--subdivision", type=int, choices=[1, 2], default=1)
     parser.add_argument("--panel-bending-scale", type=float, default=1)
     parser.add_argument("--membrane-scale", type=float, default=1)
     parser.add_argument("--vertex-relief-fraction", type=float, default=0)
     parser.add_argument("--max-iterations", type=int, default=900)
+    parser.add_argument("--interior-refinement", type=int, choices=[0, 1, 2], default=0)
+    parser.add_argument("--sparse", action="store_true")
+    parser.add_argument("--physical-strip", action="store_true")
+    parser.add_argument("--self-contact", action="store_true")
     parser.add_argument("--pulls-mm", type=float, nargs="+", default=[.1, .5, 1, 2, 4, 6, 8, 12, 16, 20])
     parser.add_argument("--winch-stiffness", type=float, default=1000)
     parser.add_argument("--force-cap", type=float, default=10)
@@ -41,12 +46,15 @@ def main():
     source = load_source(root/"source_joint.json")
     material = JointConfig(hinge_gap_m=args.gap_mm/1000)
     shell = NonlinearShell(source, material, ShellConfig(panel_to_crease_ratio=args.ratio, subdivision=args.subdivision,
+                          crease_twist_ratio=args.crease_twist_ratio,
                           panel_bending_scale=args.panel_bending_scale, membrane_scale=args.membrane_scale,
-                          vertex_relief_fraction=args.vertex_relief_fraction, max_iterations=args.max_iterations))
+                          vertex_relief_fraction=args.vertex_relief_fraction, max_iterations=args.max_iterations,
+                          interior_refinement=args.interior_refinement, sparse_solver=args.sparse,
+                          physical_strip_bending=args.physical_strip, self_contact=args.self_contact))
     result = {"source_sha256": source["sha256"], "material": dataclasses.asdict(material),
               "shell_config": dataclasses.asdict(shell.config), "arguments": vars(args),
               "code_sha256": {name: hashlib.sha256((root/name).read_bytes()).hexdigest()
-                              for name in ("nonlinear_shell.py", "shell_impact.py", "shell_contact.py", "shell_actuation.py")},
+                              for name in ("nonlinear_shell.py", "shell_impact.py", "shell_contact.py", "shell_actuation.py", "shell_sparse.py", "shell_ipc.py")},
               "nodes": len(shell.points), "triangles": len(shell.mesh["triangles"]),
               "scope": "Uncalibrated exploratory shell; no survival verdict", "cases": []}
     destination = root/"results"/(datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S_%fZ")+"_shell_study.json")
@@ -81,6 +89,7 @@ def main():
                        "intersection_pairs": report["surface_intersection_pairs"],
                        "candidate_state": candidate.tolist() if not report["accepted"] else None,
                        "energy_j": report["energy_j"],
+                       "self_contact": report.get("self_contact"),
                        "state": candidate.tolist() if report["accepted"] else None}
                 result["cases"].append(row)
                 print(json.dumps({key: value for key, value in row.items() if key not in ("state", "candidate_state", "intersection_pairs")}), flush=True)

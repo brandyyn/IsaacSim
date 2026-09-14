@@ -1,0 +1,2 @@
+# Optional; install into project-local tmp/knee_contact_deps, not the Kit runtime.
+ipctk==1.6.0
