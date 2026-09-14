@@ -1,0 +1,92 @@
+{
+  "numerical_tests_passed": 53,
+  "controller_checks": {
+    "source_frames_and_refined_material_preset": true,
+    "thickness_edit_changes_assembled_stiffness_and_force_response": true,
+    "invalid_material_preserves_model": true,
+    "winch_force_contact_diagnostics_and_1x_render": true,
+    "unsupported_contact_pose_preserves_accepted_state": true,
+    "saved_material_mesh_and_contact_provenance": true
+  },
+  "desktop_apply_button": "Actual click verified 8 accepted steps at 3 N; rendered 1x deformation and loaded gold cables inspected",
+  "live_demo": {
+    "scope": "Live custom workshop, uncalibrated material response; app intervals NOT GPU frame timings",
+    "checks": {
+      "seven_patterns_completed": true,
+      "no_rejected_candidate": true,
+      "unloaded_at_end": true,
+      "render_matches_solved_geometry_1x": true
+    },
+    "wall_s": 194.92612080002436,
+    "accepted_steps": 42,
+    "app_updates": 11133,
+    "app_interval_median_ms": 10.050299984868616,
+    "app_interval_p95_ms": 13.465560029726474,
+    "solve_wall_median_s": 4.80534125000122,
+    "solve_wall_max_s": 5.365373900043778,
+    "max_compression_fraction": 0.005030679894395207,
+    "max_rotation_abs_rad": [
+      0.002463763564521124,
+      0.002463059096866823,
+      0.0017035537439353129
+    ],
+    "source_sha256": "d578618a0f90342bd0093b4febe130dc0b07c18f1b223c4d6bf02c9f3d93ce35",
+    "saved_calculation": "20260914T162048_686353Z_nonlinear_shell",
+    "export_note": "Recovered unchanged measurements after converting NumPy boolean to JSON boolean"
+  },
+  "live_torch_threads_observed": 20,
+  "mesh_comparison_3n": {
+    "Compression": {
+      "refinement_1": 0.0050205100763376365,
+      "refinement_2": 0.005819103727294661,
+      "relative_change_vs_refinement_1": 0.15906623805435782
+    },
+    "Bend Y+": {
+      "refinement_1": -0.002460955925461179,
+      "refinement_2": -0.0035093546317910814,
+      "relative_change_vs_refinement_1": 0.42601279262383956
+    },
+    "Twist CW": {
+      "refinement_1": -0.001702016268492358,
+      "refinement_2": -0.0019880269895567056,
+      "relative_change_vs_refinement_1": 0.16804229569303433
+    }
+  },
+  "mesh_5percent_gate_passed": false,
+  "impact_stopping_comparison": [
+    {
+      "step_s": 9.999999999999999e-05,
+      "end_time_s": 0.001,
+      "window_max_ground_force_n": 20.05435363599151,
+      "window_max_bend_y_rad": 0.0012473354381234687,
+      "window_max_compression_fraction": 0.004622636762986465,
+      "wall_s_before": 68.71039850002853,
+      "wall_s_after": 65.03529269999126,
+      "maximum_reported_iterations_before": 4,
+      "maximum_reported_iterations_after": 4,
+      "relative_force_change_after_stopping_fix": 4.547159893064645e-08,
+      "stop_reason": "TIME_WINDOW_COMPLETE; survival not evaluated"
+    },
+    {
+      "step_s": 4.9999999999999996e-05,
+      "end_time_s": 0.001,
+      "window_max_ground_force_n": 20.269264531881085,
+      "window_max_bend_y_rad": 0.001150291891006282,
+      "window_max_compression_fraction": 0.004656504765311209,
+      "wall_s_before": 4492.469943000004,
+      "wall_s_after": 137.2467350999941,
+      "maximum_reported_iterations_before": 180,
+      "maximum_reported_iterations_after": 4,
+      "relative_force_change_after_stopping_fix": 2.9030106762917285e-08,
+      "stop_reason": "TIME_WINDOW_COMPLETE; survival not evaluated"
+    }
+  ],
+  "full_motion_validated": false,
+  "survives_drop": null,
+  "notes": [
+    "Offline benchmarks used 4 Torch threads; live Kit used 20. Not a like-for-like speed comparison.",
+    "Wall clock can include host scheduling/suspension; do not interpret the old long run as a controlled speedup measurement.",
+    "1 ms impact window is not the complete impact peak or a timestep-convergence result.",
+    "Reference/wide-gap calculations preceded final instrumentation; archived original code hashes remain explicit."
+  ]
+}

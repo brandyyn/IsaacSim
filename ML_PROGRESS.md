@@ -25,6 +25,17 @@ This is the shared progress log. Update it whenever the FEA model, simulator env
 
 ## Roadmap
 
+Intact-material contact/refinement follow-up (2026-09-14): implementation
+`f41302c5`, case `exact_joint_refined_contact_v1`, evaluation
+`20260914-exact-knee-refined-contact-v1`. Sparse interior refinement, physical PET
+bending, midsurface IPC/CCD and sparse impact are implemented. 53 numerical and
+six controller checks pass; the live seven-pattern 3 N demo completed 42 steps
+in 194.93 s (median solve 4.81 s). Motion remains only 0.503% compression,
+0.141 degrees bend and 0.098 degrees twist. Mesh convergence fails; physical
+seams, crease response and finite-thickness contact remain uncalibrated. The
+drop check covers 1 ms after contact, not the full peak/survival. No training or
+baseline promotion. Source JSON unchanged; publication requires authorization.
+
 Winch/relief follow-up (2026-09-10): case `exact_joint_winch_relief_v1`, evaluation
 `20260910-exact-knee-winch-relief-v1`. Separate elastic winch take-up and modified
 PET-junction cut experiments now have live controls. 41 numerical checks and six

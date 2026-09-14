@@ -1,0 +1,58 @@
+{
+  "run_id": "20260914-exact-knee-refined-contact-v1",
+  "status": "evaluated_not_calibrated_full_motion_unestablished",
+  "baseline_commit": "5131a9740b3ce82e42331e923e1a45ffa396f71c",
+  "isaac_sim_version": "6.0.1-rc.7 / Kit 110.1.2",
+  "stage": "exact_joint/open_nonlinear_gui.py runtime overlay; v8 unchanged",
+  "environment_version": "exact_joint_refined_contact_v1; not ML baseline",
+  "fea_case_id": "exact_joint_refined_contact_v1",
+  "fea_artifact_sha256": "c39289f23644e53a03610abf5f5b300387717797b95dab42534079a7ac91ee0d",
+  "algorithm": "deterministic implementation evaluation; no ML",
+  "seed": 0,
+  "randomization": {},
+  "observations": [],
+  "actions": [],
+  "reward_version": "none",
+  "training": {
+    "command": "none",
+    "steps": 0,
+    "wall_time_s": 0
+  },
+  "evaluation": {
+    "command": "See archived arguments, measure_demo_live.py and CONTACT_AND_REFINEMENT.md",
+    "conditions": "Intact 30 mm joint, PLA 0.4 mm / PET 80 um; assumed constitutive properties",
+    "metrics": "metrics.json"
+  },
+  "artifacts": {
+    "config": "config.json",
+    "metrics": "metrics.json",
+    "checkpoint": null,
+    "checkpoint_sha256": null,
+    "sha256": {
+      "config.json": "ae2f9579efa81b0c3b84e8d73593ecddead1ada8f7a57401c346c5ad65db0eb7",
+      "controller_checks.json.gz": "b7e8e314d620e64452501cae3a10d29a8a89ba0b87aeb7ae53ee132f87fa324b",
+      "force_contact.json.gz": "aabf7cc85fd47e13d1e2f7ffeaad16a3b2b952a613ec4e4d256af7c308f46a57",
+      "impact_after_stopping_fix.json.gz": "ebc5056a118d7fb752a604a4d3b737a7c4d02a57c4e4dcd70e5ee6968534459e",
+      "impact_before_stopping_fix.json.gz": "3f03bf10f5c798fe87460f800900cbef31d9adb8db48e8345909f03aac2e84b6",
+      "live_calculation.json.gz": "ace52f8a160458526e36771b93a2d4c8b79a913e09de9ccf12dcf4d00c9a7e53",
+      "live_demo.json.gz": "1e3dbfc584993fe4d2a4c1973e8df857e0fda1d713249c3b1dd3985233be7e90",
+      "metrics.json": "53e5b3602cd0bc69444e56db3f76c705d6cb7a245a164761050280c294364436",
+      "provenance.json": "e130a09efbd59a488dd87178e10e8d76c020b36bd8f1c439932d79cc218dc21e",
+      "reference_metric.json": "a65b9a5bf15227066d7650d5528a94259ab14dd579727f48b46bca8123e2243f",
+      "refinement_1.json.gz": "26de64fb43d6ac4247a30c6e8e6f9cb00f6ede3245c3bb809fb6f8eb0f7d3a54",
+      "refinement_2.json.gz": "27e68ff93133f61f30ebe81cf2c9f31228f542e4f4153e05c12e99aa4a039582",
+      "wide_strip.json.gz": "bda5d2cb28cbe5ba25ffeeb0e6b11dee5108d750317a381883133a8959cae869"
+    }
+  },
+  "notes": "Exact original raw bytes archived with gzip; no external sharing, training or baseline replacement.",
+  "starting_commit": "90576c6a392d49ea00bcb2ab134dda1081af2149",
+  "implementation_commit": "f41302c5fe130ec1262a1496542f2e90d9286327",
+  "simulator_build_commit": "5131a9740b3ce82e42331e923e1a45ffa396f71c",
+  "implementation_sha256": {
+    "nonlinear_shell": "8f48d1ae3aa32578c3dbf503060d847b6ff9aaee6ba6bec3c7ed1838ad49ee0a",
+    "shell_sparse": "32a549332a6ee9d57cc4980390d3bb84eba44612db92523bcbb6acfb19f42489",
+    "shell_ipc": "62367ddf3cf0bd5bbd383a9f549e0cbe718ae47024ee8caffbe43431e7c71f9f",
+    "shell_impact": "ad2f453d58940b18ed8dbccc787e91f12009688f25203145e6e78c276242b26e",
+    "shell_view": "5a8a56846b0495d8864d8b94b941250931c3abbeeb1087a33b7a52ef9e183756"
+  }
+}

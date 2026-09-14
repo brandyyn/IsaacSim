@@ -4,6 +4,45 @@ This file is the portable technical context reconstructed from the Codex convers
 
 ## Current checkpoint
 
+### 2026-09-14: intact-material refinement and midsurface contact
+
+Starting commit `90576c6a392d49ea00bcb2ab134dda1081af2149`; implementation
+`f41302c5fe130ec1262a1496542f2e90d9286327`. The exact source JSON and v8 ML
+baseline are unchanged. The nonlinear launcher now defaults to intact
+0.4 mm PLA / 80 um PET, unscaled assumed moduli, thickness-derived PET bending,
+zero extra empirical crease coupling, uniform interior refinement 1 and optional
+IPC Toolkit 1.6.0 midsurface contact. All panel/roof interiors deform; only square
+perimeters are rigid. Sparse local shell and inertia assembly replace dense
+global allocations in this mode. IPC barriers and conservative curved-frame CCD
+do not model finite-thickness clearance, friction or cable guides.
+
+53 numerical tests and six in-Kit controller checks passed. The actual Apply
+button produced eight accepted 3 N load steps and matching 1x geometry. A live
+seven-pattern cable demo completed 42/42 accepted steps in 194.93 s; median
+solve time 4.81 s. Maximum response at 3 N/active strand: 0.503% compression,
+about 0.141 degrees bend and 0.098 degrees twist. This remains inconsistent with
+the large motion in the user's videos. Refinement 1-to-2 changes the 3 N response
+by 15.9%/42.6%/16.8% in compression/bend/twist: spatial convergence fails.
+
+A 70 mm / assumed 50 g drop diagnostic covers only the first 1 ms after contact.
+At 50 us it reaches 20.27 N ground force, 0.466% compression and 0.066 degrees
+bend, not the full impact peak. An internal optimizer stopping target was changed
+from 1e-7 to 1e-6 to avoid an already-small residual stalling for 180 iterations;
+physical acceptance remains 3e-5 and response changes below one part per million
+in window-maximum ground force. No stiffness/strain guard was relaxed. A rejected
+prescribed-frame study no longer replaces Play's last valid action. A NumPy-bool
+performance-export error was fixed; original measurements were recovered from
+the completed task's exception frame without rerunning or inventing values.
+
+Case `fea/exact_joint_refined_contact_v1`; immutable evaluation
+`ml/runs/20260914-exact-knee-refined-contact-v1`. Raw studies and the live solved
+calculation are losslessly gzip-archived, with source/implementation hashes.
+Guide: `exact_joint/CONTACT_AND_REFINEMENT.md`. Local checkpoint only; publication
+remains pending authorization. No training, calibrated full travel or survival
+verdict. Next: confirm PET slits/continuity/overlaps at waist vertices and actual
+cable paths, calibrate pre-creased film response, resolve spatial convergence,
+then finite-thickness contact and complete converged impact validation.
+
 ### 2026-09-10: winch and PET-junction experiment
 
 Starting commit `4d1af8fee892438989c322e97a5c3f4073a6f3a9`; fast-forward pull

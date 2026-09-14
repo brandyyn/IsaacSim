@@ -1,0 +1,47 @@
+{
+  "refinement_1": {
+    "original_sha256": "ae9762c44c38c3f4ed02fbc3da82a056ab6a841793ef9a1d677cdd88aed6961c",
+    "archive": "refinement_1.json.gz",
+    "archive_sha256": "26de64fb43d6ac4247a30c6e8e6f9cb00f6ede3245c3bb809fb6f8eb0f7d3a54"
+  },
+  "refinement_2": {
+    "original_sha256": "18123db27d66a54eae77b2a5f050eb53ec9df257b1ef339709479e5bd36f4709",
+    "archive": "refinement_2.json.gz",
+    "archive_sha256": "27e68ff93133f61f30ebe81cf2c9f31228f542e4f4153e05c12e99aa4a039582"
+  },
+  "force_contact": {
+    "original_sha256": "23206534347217507a2975eb0af1f32217895dec58a53ef2fee014b1e57a44fa",
+    "archive": "force_contact.json.gz",
+    "archive_sha256": "aabf7cc85fd47e13d1e2f7ffeaad16a3b2b952a613ec4e4d256af7c308f46a57"
+  },
+  "wide_strip": {
+    "original_sha256": "403edee0e267fd94099f79c14b151f6303332720a4133d76d1bc7e8baec0c8b7",
+    "archive": "wide_strip.json.gz",
+    "archive_sha256": "bda5d2cb28cbe5ba25ffeeb0e6b11dee5108d750317a381883133a8959cae869"
+  },
+  "impact_before_stopping_fix": {
+    "original_sha256": "4ae9581353d9ea9bc1e8e1693e0054a26ee9146667ac482fc412a2fe6b002ada",
+    "archive": "impact_before_stopping_fix.json.gz",
+    "archive_sha256": "3f03bf10f5c798fe87460f800900cbef31d9adb8db48e8345909f03aac2e84b6"
+  },
+  "impact_after_stopping_fix": {
+    "original_sha256": "9ab3b6e6d3a11d6560883bbf0a98bebe17b1a7bdcfe4c3ddee77bb8c61591bde",
+    "archive": "impact_after_stopping_fix.json.gz",
+    "archive_sha256": "ebc5056a118d7fb752a604a4d3b737a7c4d02a57c4e4dcd70e5ee6968534459e"
+  },
+  "controller_checks": {
+    "original_sha256": "3cc69ce76f3dba2f101892816eae5f88bb4221407cc744f622fcfa855dcfb2b7",
+    "archive": "controller_checks.json.gz",
+    "archive_sha256": "b7e8e314d620e64452501cae3a10d29a8a89ba0b87aeb7ae53ee132f87fa324b"
+  },
+  "live_demo": {
+    "original_sha256": "2c6ada71ecdaba59f2860b8baf82a5e45343033903d700cd725d8f8372c44043",
+    "archive": "live_demo.json.gz",
+    "archive_sha256": "1e3dbfc584993fe4d2a4c1973e8df857e0fda1d713249c3b1dd3985233be7e90"
+  },
+  "live_calculation": {
+    "original_sha256": "46c2297781a89d895dded04790203fb4ebf020c4ceec7b606f0a3264898c943e",
+    "archive": "live_calculation.json.gz",
+    "archive_sha256": "ace52f8a160458526e36771b93a2d4c8b79a913e09de9ccf12dcf4d00c9a7e53"
+  }
+}
