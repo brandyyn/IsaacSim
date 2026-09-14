@@ -77,6 +77,34 @@ would not validate the actual material.
 
 ## Use the updated workshop
 
+### Seeing very small calculated movements
+
+The nonlinear workshop now has a separate cyan **magnified displacement plot**
+on the right. The actual leg on the left always remains at 1x. The checkbox
+shows/hides the plot; the adjacent number changes displacement gain from 1 to
+500 (default 100). Grey lines mark the neutral reference. Gain applies only to
+displayed displacement vectors, never to cable force, material stiffness,
+strain, contact, solver state or the saved physical calculation.
+
+**Replay response** loops neutral and recorded accepted states on the right at
+two steps per second. **Pause / resume** pauses this replay when no solve is
+active. **Hold** returns that plot to the current solved result.
+No new FEM solve or physical time integration occurs during this replay. A new
+cable/drop command stops diagnostic replay and updates the plot as new accepted
+states arrive. The right plot removes upper-frame rigid-body motion, so whole-leg
+fall translation is not magnified as deformation. **Knee close-up** frames both
+views while the plot is enabled.
+
+This is a vector visualization, not a mechanically admissible large-fold shape:
+linear magnification can distort rigid-frame lengths and create apparent
+intersections. Do not infer travel, strain or survival from it. In the user's
+0.5 mm twist-winch example, the actual maximum displacement was only 19.34 um
+and twist 0.0155 degrees; x100 shows a 1.934 mm vector-plot change. That makes
+the numerical response visible but does not fix the model's failure to reproduce
+the physical joint's full folding. The physical-response problem remains open.
+
+### Calculate a response
+
 Open the nonlinear launcher as usual, or send `reload_shell_live.py` through the
 project's running-Isaac remote helper. Do not start a second Kit instance.
 

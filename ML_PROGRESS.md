@@ -25,6 +25,18 @@ This is the shared progress log. Update it whenever the FEA model, simulator env
 
 ## Roadmap
 
+Small-motion visibility follow-up (2026-09-14 UTC / September 15 local): the
+user's completed 0.5 mm Twist CW winch input gave only 19.34 um maximum relative
+displacement and 0.0155 degrees twist. The physical viewport matched the solved
+mesh; this was not an inactive callback. A separate cyan displacement-vector
+plot (default x100) and recorded-state replay make that response inspectable.
+The left leg remains physical 1x, and display replay does not change the solver,
+loads, material or saved physical state. Sixty-three regression tests and four
+live display checks pass. This visualization is NOT a large-fold geometry or
+evidence of correct full-range FEM. Physical folding remains unresolved. The
+UI-only run is `20260914-exact-knee-displacement-view-v1`, linked to the unchanged
+`exact_joint_refined_contact_v1` case. No training or baseline promotion.
+
 Movement-button follow-up (2026-09-14), implementation `3b093643`: seven direct force-driven cable buttons
 replace the misleading default path through unsupported prescribed-pose controls.
 Unsupported pose studies are disabled with active IPC; progress, pause, latest-job

@@ -4,6 +4,32 @@ This file is the portable technical context reconstructed from the Codex convers
 
 ## Current checkpoint
 
+### 2026-09-14 UTC: distinguish invisible response from inactive buttons
+
+The user's 0.5 mm Twist CW winch command did execute, but produced only 19.34 um
+maximum relative displacement, 0.0155 degrees twist and 0.0517% compression.
+The rendered physical mesh matched the solution within 7.5 nm. The camera was
+also panned above the knee; the actual close-up button recentered it correctly.
+Passing button tests had not addressed the user's missing visible folding.
+
+The workshop now includes a **separate cyan displacement-vector plot**, default
+x100, beside the physical 1x leg. It removes upper-frame rigid translation and
+rotation before magnifying displacement, retains grey neutral outlines, and
+labels its gain/scope in both the panel and viewport. Replay response cycles
+neutral plus recorded accepted states only on the plot at two steps/second;
+it does not recompute physics or change the actual leg. Hold restores the plot
+to the current solution. New cable/drop solves update it on accepted steps.
+Saved physical calculations record display settings separately.
+
+`shell_display_math.py` separates this display formula from mechanics;
+`shell_displacement_view.py` owns only the diagnostic subtree. Sixty-three tests
+pass, including three display-projection tests. Live replay/gain tests check
+that state, physical USD, material/config and trace remain unchanged. This is
+not a repaired/calibrated large-fold model: linear displacement magnification
+can distort rigid lengths and must not be interpreted as travel, contact or
+strength. Evaluation: `ml/runs/20260914-exact-knee-displacement-view-v1`, parent
+FEA case unchanged. Full-motion and physical-calibration limitations remain open.
+
 ### 2026-09-14: intact-material refinement and midsurface contact
 
 Starting commit `90576c6a392d49ea00bcb2ab134dda1081af2149`; implementation

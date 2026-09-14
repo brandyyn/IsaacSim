@@ -290,3 +290,18 @@ these cases without changing the mechanical solver.
 
 Iteration note (2026-09-14): explicit force-driven movement buttons, active-mode
 enablement and serialized replacement after real knee-window button failures.
+
+## "Nothing Happens" Despite Accepted Numerical Steps
+
+Check the user's actual last command, true displacement magnitude, rendered
+mesh-vs-solution error, camera framing and visible scene roots before repeating
+button tests. A 19 um displacement on a 30 mm knee can be below a pixel. Passing
+controller tests does not resolve a complaint about missing physical folding.
+
+A separate labelled displacement-vector plot can expose small responses without
+changing the physical model. Keep it in an owned non-physical subtree, show the
+gain in both controls and viewport, retain a neutral outline, and explicitly
+label recorded-state replay. Remove global rigid motion before magnifying impact
+deformation. Test that gain/replay leave the physical mesh, solver state, loads,
+material/config and trace unchanged. Linear vector magnification is NOT a valid
+large-rotation geometry and must not be interpreted as range or capacity.

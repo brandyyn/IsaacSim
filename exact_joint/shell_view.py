@@ -24,6 +24,7 @@ from exact_joint.scene import ExactLegScene, curves, material, mesh, set_points
 from exact_joint.shell_impact import ShellImpact, ShellImpactConfig
 from exact_joint.shell_actuation import winch_pull
 from exact_joint.shell_ui_jobs import ShellJobControls
+from exact_joint.shell_displacement_view import ShellDisplacementView
 
 
 class ShellWorkshop(ShellJobControls, DropPreview):
@@ -45,6 +46,9 @@ class ShellWorkshop(ShellJobControls, DropPreview):
         self.display_index = None
         self.static_trace = []
         self.timeline_action = "manual"
+        self.show_response = True
+        self.response_gain = 100.0
+        self.inspector = None
 
     async def start(self):
         config = ShellConfig(sparse_solver=True, interior_refinement=1,
@@ -66,7 +70,7 @@ class ShellWorkshop(ShellJobControls, DropPreview):
         self.window.title = "Nonlinear knee - rigid frames / flexible panels"
         with self.window.frame, ui.VStack(spacing=3):
             ui.Label("RIGID SQUARE FRAMES | FLEXIBLE INTERIORS", height=22, style={"font_size": 18})
-            ui.Label("NONLINEAR SHELL EXPERIMENT - not validated solid FEM\n1x geometry; colour = membrane strain, NOT failure/stress", height=33,
+            ui.Label("NONLINEAR SHELL EXPERIMENT - not validated solid FEM\nLeft leg: 1x + strain colour. Right plot: DISPLAY ONLY", height=33,
                      style={"color": 0xFF80DFFF})
             with ui.HStack(height=29):
                 ui.Button("Drop 70 mm / recompute", clicked_fn=self.start_drop)
@@ -74,6 +78,17 @@ class ShellWorkshop(ShellJobControls, DropPreview):
                 ui.Button("Neutral / cancel", clicked_fn=self.neutral_shell)
             self.progress_label = ui.Label("READY | Choose a cable movement below", height=30, word_wrap=True,
                                            style={"color": 0xFF80DFFF})
+            with ui.HStack(height=25):
+                self.response_visible = ui.CheckBox(width=22).model
+                self.response_visible.set_value(self.show_response)
+                self.response_visible.add_value_changed_fn(lambda m: self.change_response(visible=m.as_bool))
+                ui.Label("Magnified response", width=145)
+                self.response_gain_input = ui.FloatField(width=65).model
+                self.response_gain_input.set_value(self.response_gain)
+                self.response_gain_input.add_value_changed_fn(lambda m: self.change_response(gain=m.as_float))
+                ui.Button("Replay response", clicked_fn=lambda: self.inspector.replay())
+                ui.Button("Hold", clicked_fn=lambda: self.inspector.stop())
+            self.response_label = ui.Label("", height=45, word_wrap=True, style={"color": 0xFF80DFFF})
             self.movement_buttons = {}
             for families in (("Compression", "Bend X+", "Bend X-"), ("Bend Y+", "Bend Y-", "Twist CW", "Twist CCW")):
                 with ui.HStack(height=29):
@@ -173,6 +188,21 @@ class ShellWorkshop(ShellJobControls, DropPreview):
         self.pose_note.text = ("Prescribed displacement; NOT a prediction of cable-driven travel." if enabled else
                                "Disabled with self-contact ON. Use the Compression/Bend/Twist cable buttons at the top.")
 
+    def change_response(self, visible=None, gain=None):
+        if gain is not None:
+            if not np.isfinite(gain) or not 1 <= gain <= 500:
+                self.feedback.text = "Display magnification must be 1-500. It does not change the FEM."
+                return
+            self.response_gain = float(gain)
+        if visible is not None:
+            self.show_response = bool(visible)
+        if self.inspector is not None:
+            self.inspector.stop()
+            self.render()
+            if not self.show_response:
+                self.response_label.text = "Magnified plot hidden. Physical leg remains at 1x."
+            self.close_view()
+
     def start_movement(self, family):
         families = ("Compression", "Bend X+", "Bend X-", "Bend Y+", "Bend Y-", "Twist CW", "Twist CCW")
         if family not in families:
@@ -233,6 +263,7 @@ class ShellWorkshop(ShellJobControls, DropPreview):
             else:
                 cube(str(body.GetPath())+"/Shank", (0, 0, -.042), (.009, .012, .067), link)
                 cube(str(body.GetPath())+"/Foot", (.012, 0, -.083), (.05, .026, .009), link)
+        self.inspector = ShellDisplacementView(self)
 
     def set_time(self, elapsed):
         self.elapsed = elapsed  # Base initialization only; our jobs own the release.
@@ -242,7 +273,11 @@ class ShellWorkshop(ShellJobControls, DropPreview):
 
     def close_view(self):
         center = self.offset+self.shell.height/2 if self.shell else .132
-        ViewportManager.set_camera_view("/OmniverseKit_Persp", eye=[.08, -.13, center+.045], target=[0, 0, center])
+        if self.show_response:
+            center = self.lab.scene.top_height-self.shell.height/2
+            ViewportManager.set_camera_view("/OmniverseKit_Persp", eye=[.090, -.175, center+.060], target=[.028, 0, center])
+        else:
+            ViewportManager.set_camera_view("/OmniverseKit_Persp", eye=[.08, -.13, center+.045], target=[0, 0, center])
 
     def render(self):
         if self.owned is None:
@@ -316,10 +351,18 @@ class ShellWorkshop(ShellJobControls, DropPreview):
         self.legend.text = (f"{self.mode.split(';')[0]} | RIGID GOLD FRAMES | 1x\n"
                             f"Bend Y {angles[1]:.3f} deg | twist {angles[2]:.3f} deg | compression {report['compression_fraction']*100:.2f}%\n"
                             "Uncalibrated shell | strain, NOT failure | Ground lines: 2 mm/N")
+        if self.inspector is not None:
+            self.inspector.update(self.state)
+            if self.show_response:
+                self.legend.text = (f"LEFT: physical leg 1x | RIGHT: displacement x{self.response_gain:g}, DISPLAY ONLY\n"
+                    f"TRUE bend Y {angles[1]:.3f} deg | twist {angles[2]:.3f} deg | compression {report['compression_fraction']*100:.3f}%\n"
+                    "Right is a vector plot, NOT a physical fold or validated capacity.")
         self.frames += 1
 
     def neutral_shell(self):
         self.cancel_jobs()
+        if self.inspector is not None:
+            self.inspector.playing = False
         self.state = np.zeros(self.shell.ndof)
         self.drop = None
         self.display_index = None
@@ -331,6 +374,13 @@ class ShellWorkshop(ShellJobControls, DropPreview):
         self.last_rejection = None
         self.render()
         self.feedback.text = "Neutral. Original crease geometry restored; roof interiors remain free."
+
+    def pause_jobs(self):
+        if (self.inspector is not None and self.inspector.playing
+                and (self.work is None or self.work.done())):
+            self.inspector.toggle_pause()
+        else:
+            super().pause_jobs()
 
     async def rebuild(self):
         get = lambda name: self.inputs[name].as_float
@@ -397,6 +447,7 @@ class ShellWorkshop(ShellJobControls, DropPreview):
         self.launch(self.drop_job(), "70 mm impact")
 
     async def drop_job(self):
+        self.inspector.playing = False
         get = lambda name: self.inputs[name].as_float
         config = ShellImpactConfig(upper_mass_kg=get("Upper-side mass (g)")/1000,
             lower_mass_kg=get("Lower-side mass (g)")/1000, contact_stiffness_n_m=get("Contact stiffness (N/m)"),
@@ -446,6 +497,7 @@ class ShellWorkshop(ShellJobControls, DropPreview):
         self.launch(self.range_job(mode), mode.replace("_", " "))
 
     async def range_job(self, mode):
+        self.inspector.playing = False
         jobs = []
         if mode in ("bend", "twist", "compression"):
             if self.shell.contact is not None:
@@ -598,6 +650,8 @@ class ShellWorkshop(ShellJobControls, DropPreview):
                     self.job_outcome = "STOPPED: scene changed"
                     self.feedback.text = "Scene changed. Calculation halted; return to the reference workshop."
                     continue
+                if self.inspector is not None:
+                    self.inspector.tick()
                 playing = app_utils.is_playing()
                 if playing != self.timeline_was_playing:
                     self.timeline_was_playing = playing
@@ -618,6 +672,9 @@ class ShellWorkshop(ShellJobControls, DropPreview):
         convert = lambda value: value.tolist() if isinstance(value, np.ndarray) else str(value)
         report = {"source_sha256": self.shell.source["sha256"], "material": dataclasses.asdict(self.shell.material),
                   "shell_config": dataclasses.asdict(self.shell.config), "mode": self.mode,
+                  "display": {"physical_geometry_gain": 1, "diagnostic_gain": self.response_gain,
+                              "diagnostic_visible": self.show_response,
+                              "scope": "Diagnostic vector plot only; not a physical configuration or strain magnification"},
                   "inspected_trace_index": self.display_index,
                   "tensions_n": self.tensions.tolist(), "static_trace": self.static_trace,
                   "state": self.state, "snapshots": self.snapshots, "current": self.shell.diagnostics(self.state),
