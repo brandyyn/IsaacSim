@@ -40,6 +40,7 @@ class ShellConfig:
     # Full exposed width on the roof side of each rigid perimeter. Zero keeps
     # the legacy roof laminate; this is independent of the side-panel gap.
     frame_hinge_width_m: float = 0.0
+    open_ends: bool = False
 
     def validate(self):
         if not np.isfinite(list(asdict(self).values())).all():
@@ -68,6 +69,8 @@ class ShellConfig:
             raise ValueError("Experimental PET vertex relief must be 0-20% of each edge")
         if not 0 <= self.frame_hinge_width_m <= .002:
             raise ValueError("Frame-to-plate PET hinge width must be 0-2 mm (0 disables it)")
+        if self.open_ends and self.frame_hinge_width_m <= 0:
+            raise ValueError("Open-ended photo design needs a positive frame-to-side-panel PET hinge width")
         if not .001 <= self.panel_strain_limit <= .1:
             raise ValueError("Exploratory membrane strain guard must be 0.1-10%")
         if not .02 <= self.minimum_height_fraction <= .5:
@@ -77,16 +80,18 @@ class ShellConfig:
 
 
 def surface_mesh(source, subdivision=1, gap_m=0.0, vertex_relief_fraction=0.0, interior_refinement=0,
-                 frame_hinge_width_m=0.0):
+                 frame_hinge_width_m=0.0, open_ends=False):
     """Subdivide original planar faces; keep every source vertex and crease chain.
 
 No averaged extrusion normals are used, so refinement preserves the reference
 midsurface. The two roof interiors receive free membrane nodes. Only nodes on
 the eight original square perimeter edges are attached to rigid frames.
 An optional PET-only roof border connects each free PLA/PET plate to its frame.
-Its full perpendicular width lies inside the roof; no source vertex is moved,
-no slit is introduced, and no zero-stiffness revolute joint is substituted.
+The photo variant omits the two caps and exposes full-width PET borders on the
+adjacent side panels instead. No source vertex is moved and no slit is added.
     """
+    if open_ends and (gap_m <= 0 or frame_hinge_width_m <= 0):
+        raise ValueError("Open-ended mesh requires positive side gap and frame PET hinge width")
     points = source["points"].tolist()
     chains, edge_chains = [], {}
     for line in source["lines"]:
@@ -109,13 +114,15 @@ no slit is introduced, and no zero-stiffness revolute joint is substituted.
     triangles, owners, laminate, frame_hinge = [], [], [], []
     for owner, panel in enumerate(source["panels"]):
         ids = panel["vertices"]
+        if open_ends and len(ids) == 4:
+            continue  # Photos show open frames, not either of the JSON roof caps.
         center = len(points)
         center_point = source["points"][ids].mean(axis=0)
         points.append(center_point.tolist())
         boundary = []
         for a, b in zip(ids, ids[1:]+ids[:1]):
             boundary.extend(edge_chains[a, b][:-1])
-        faces, face_laminate = [], []
+        faces, face_laminate, face_frame_hinge = [], [], []
         if len(ids) == 4:
             plate_boundary = boundary
             if frame_hinge_width_m:
@@ -136,6 +143,7 @@ no slit is introduced, and no zero-stiffness revolute joint is substituted.
                     a, b, c, d = boundary[i], boundary[j], plate_boundary[j], plate_boundary[i]
                     faces.extend([[a, b, c], [a, c, d]])
                     face_laminate.extend([False, False])
+                    face_frame_hinge.extend([True, True])
             # An inner roof ring gives the membrane independent bending/twist
             # nodes; none are included in the rigid perimeter-frame constraint.
             inner = []
@@ -147,6 +155,7 @@ no slit is introduced, and no zero-stiffness revolute joint is substituted.
                 a, b, c, d = plate_boundary[i], plate_boundary[j], inner[j], inner[i]
                 faces.extend([[a, b, c], [a, c, d], [d, c, center]])
                 face_laminate.extend([True, True, True])
+                face_frame_hinge.extend([False, False, False])
         else:
             # Explicit PET-only strip, half the total exposed gap on each
             # adjacent face. Insetting about the incenter gives the specified
@@ -156,14 +165,28 @@ no slit is introduced, and no zero-stiffness revolute joint is substituted.
             incenter = np.average(face, axis=0, weights=sides)
             radius = np.linalg.norm(np.cross(face[1]-face[0], face[2]-face[0]))/sides.sum()
             fraction = gap_m/(2*radius)
+            inset_shift = fraction*incenter
+            frame_sides = np.zeros(3, dtype=bool)
+            if open_ends:
+                # Barycentric half-plane offsets allow a distinct full PET width
+                # between each frame and its adjacent side triangle. Other
+                # creases retain half of the shared exposed side-panel gap.
+                ends = face[[[1, 2], [2, 0], [0, 1]]]
+                frame_sides = np.all(np.isclose(ends[:, :, 2], 0, atol=1e-12), axis=1) | np.all(
+                    np.isclose(ends[:, :, 2], source["height_m"], atol=1e-12), axis=1)
+                setbacks = np.where(frame_sides, frame_hinge_width_m, gap_m/2)
+                altitude = np.linalg.norm(np.cross(face[1]-face[0], face[2]-face[0]))/sides
+                barycentric = setbacks/altitude
+                fraction = barycentric.sum()
+                inset_shift = barycentric @ face
             if not 0 <= fraction < .8:
                 raise ValueError("PET gap is too wide for an original panel")
-            if gap_m:
+            if gap_m or (open_ends and np.any(frame_sides)):
                 inner = []
                 for vertex in boundary:
                     inner.append(len(points))
-                    points.append(((1-fraction)*np.asarray(points[vertex])+fraction*incenter).tolist())
-                points[center] = ((1-fraction)*center_point+fraction*incenter).tolist()
+                    points.append(((1-fraction)*np.asarray(points[vertex])+inset_shift).tolist())
+                points[center] = ((1-fraction)*center_point+inset_shift).tolist()
                 for i in range(len(boundary)):
                     j = (i+1) % len(boundary)
                     a, b, c, d = boundary[i], boundary[j], inner[j], inner[i]
@@ -171,11 +194,16 @@ no slit is introduced, and no zero-stiffness revolute joint is substituted.
                         continue
                     faces.extend([[a, b, c], [a, c, d]])
                     face_laminate.extend([False, False])
+                    edge_z = np.asarray(points)[[a, b], 2]
+                    at_frame = open_ends and (np.allclose(edge_z, 0, atol=1e-12)
+                                              or np.allclose(edge_z, source["height_m"], atol=1e-12))
+                    face_frame_hinge.extend([at_frame, at_frame])
             else:
                 inner = boundary
             faces.extend([[a, b, center] for a, b in zip(inner, inner[1:]+inner[:1])])
             face_laminate.extend([True]*len(inner))
-        for face, has_pla in zip(faces, face_laminate):
+            face_frame_hinge.extend([False]*len(inner))
+        for face, has_pla, is_frame_strip in zip(faces, face_laminate, face_frame_hinge):
             p = np.asarray(points)[face]
             normal = np.cross(p[1] - p[0], p[2] - p[0])
             outward = p.mean(axis=0) - [0, 0, source["height_m"] / 2]
@@ -184,7 +212,7 @@ no slit is introduced, and no zero-stiffness revolute joint is substituted.
             triangles.append(face)
             owners.append(owner)
             laminate.append(has_pla)
-            frame_hinge.append(len(ids) == 4 and not has_pla)
+            frame_hinge.append(is_frame_strip)
     for level in range(interior_refinement):
         midpoint_ids = {}
 
@@ -224,8 +252,10 @@ no slit is introduced, and no zero-stiffness revolute joint is substituted.
                      for a, b in zip(chain[:-1], chain[1:])}
     hinges, crease_ids, hinge_faces = [], [], []
     for edge, adjacent in edge_faces.items():
-        if vertex_relief_fraction and len(adjacent) == 1:
-            continue  # A physical free boundary of a PET relief cut.
+        frame_boundary = (np.allclose(points[list(edge), 2], 0, atol=1e-12)
+                          or np.allclose(points[list(edge), 2], source["height_m"], atol=1e-12))
+        if len(adjacent) == 1 and (vertex_relief_fraction or (open_ends and frame_boundary)):
+            continue  # An open mounting-frame boundary or an explicit PET relief cut.
         if len(adjacent) != 2:
             raise ValueError("Original shell must remain a closed two-manifold surface")
         first, second = adjacent
@@ -270,7 +300,7 @@ class NonlinearShell:
         self.config.validate()
         self.mesh = surface_mesh(source, self.config.subdivision, self.material.hinge_gap_m,
                                  self.config.vertex_relief_fraction, self.config.interior_refinement,
-                                 self.config.frame_hinge_width_m)
+                                 self.config.frame_hinge_width_m, self.config.open_ends)
         self.points = self.mesh["points"]
         self.width = self.material.width_m
         self.height = source["height_m"]

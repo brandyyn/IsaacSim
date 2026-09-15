@@ -481,3 +481,15 @@ mechanism travel. See `exact_joint/test_frame_hinges.py` and `exact_joint/FRAME_
 
 Iteration log: 2026-09-15 — roof/frame PET-flexure implementation; narrow-strip
 shell validity and full-travel physical calibration remain open.
+
+When photos and CAD disagree, audit actual load-bearing topology before tuning
+stiffness: distinguish open mounting frames from mesh end caps, and record any
+excluded regions as a separate variant without editing the source asset. An
+ideal rigid-facet edge-Jacobian rank check can identify missing first-order
+mechanisms, but cannot validate a deformable film or finite folding path.
+For smooth custom-solver display, retain accepted numerical states separately
+from interpolated poses; hide strain contours and label intermediates as display
+only. Test pause, cancellation, replay restoration and final mesh coordinates.
+See `exact_joint/fold_compatibility.py`, `shell_presentation.py` and `PHOTO_JOINT.md`.
+Iteration log: 2026-09-16 — photo topology audit and accepted-state presentation;
+full physical travel remains unresolved.

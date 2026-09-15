@@ -4,8 +4,12 @@
 `launch.ps1 -RuntimeRoot <built-release> -Nonlinear` for the new force-driven
 Apply/cable/drop workshop. It has PET-only folding strips, deformable panel/roof
 interiors and rigid perimeter frames. See [controls and limitations](NONLINEAR_GUIDE.md).
-The nonlinear launcher now includes adjustable PET hinges between both roof
-plates and their rigid frames. See [frame-hinge controls and results](FRAME_HINGES.md).
+The nonlinear launcher now defaults to the **photo-based open-ended version**:
+no end caps, unchanged JSON side panels, continuous PET frame-to-panel hinges,
+and smooth display-only transitions between accepted calculations.
+See [photo joint controls, results and limitations](PHOTO_JOINT.md).
+The earlier capped version remains under **Capped comparison**;
+its historical results are in [frame-hinge controls and results](FRAME_HINGES.md).
 It has **not** matched the physical joint's full travel or established survival.
 The remainder of this page describes the separately preserved rigid-roof reference.
 

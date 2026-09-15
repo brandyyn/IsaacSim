@@ -26,6 +26,7 @@ def main():
     parser.add_argument("--gap-mm", type=float, default=.2)
     parser.add_argument("--frame-hinge-mm", type=float, default=0,
                         help="PET-only border inside both roof frames; 0 keeps the legacy roof")
+    parser.add_argument("--open-ends", action="store_true", help="Photo-based open frames; requires positive frame hinge width")
     parser.add_argument("--subdivision", type=int, choices=[1, 2, 3, 4, 5], default=1)
     parser.add_argument("--panel-bending-scale", type=float, default=1)
     parser.add_argument("--membrane-scale", type=float, default=1)
@@ -50,6 +51,7 @@ def main():
     shell = NonlinearShell(source, material, ShellConfig(panel_to_crease_ratio=args.ratio, subdivision=args.subdivision,
                           crease_twist_ratio=args.crease_twist_ratio,
                           frame_hinge_width_m=args.frame_hinge_mm/1000,
+                          open_ends=args.open_ends,
                           panel_bending_scale=args.panel_bending_scale, membrane_scale=args.membrane_scale,
                           vertex_relief_fraction=args.vertex_relief_fraction, max_iterations=args.max_iterations,
                           interior_refinement=args.interior_refinement, sparse_solver=args.sparse,

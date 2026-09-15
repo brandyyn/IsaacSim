@@ -35,7 +35,7 @@ elif previous is not None:
     await lab.drop_preview.restore()
 importlib.invalidate_caches()
 loaded = {}
-for name in ("shell_ipc", "shell_sparse", "nonlinear_shell", "shell_impact", "shell_ui_jobs", "shell_display_math", "shell_displacement_view", "shell_view"):
+for name in ("shell_ipc", "shell_sparse", "nonlinear_shell", "shell_impact", "shell_ui_jobs", "shell_display_math", "shell_displacement_view", "shell_presentation", "shell_view"):
     qualified = "exact_joint."+name
     module = sys.modules.get(qualified) or types.ModuleType(qualified)
     sys.modules[qualified] = module
@@ -64,6 +64,12 @@ if in_place:
         job_metadata["job_step"] = int(sum(b["time_after_contact_s"] > a["time_after_contact_s"]
                                           for a, b in zip(previous.drop.trace, previous.drop.trace[1:])))
     previous.scene_disconnected = False
+    previous.smooth_motion = getattr(previous, "smooth_motion", True)
+    previous.strain_colours = getattr(previous, "strain_colours", False)
+    previous.presentation = None
+    previous.presentation_clock = __import__("time").perf_counter()
+    previous.presentation_frames = 0
+    previous.accepted_report = None
     previous.window.destroy()
     previous.build_ui()
     for name, value in values.items():

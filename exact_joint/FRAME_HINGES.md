@@ -1,5 +1,10 @@
 # Frame-to-plate PET hinges
 
+Historical capped experiment, 2026-09-15. The current launcher instead defaults
+to [the open-ended photo variant](PHOTO_JOINT.md). The former **Frame hinge design**
+button is now **Capped comparison**. The results below describe the capped case,
+not the revised physical-joint interpretation.
+
 Both square roof plates now have a continuous PET-only border between the rigid
 perimeter and the inset PLA/PET plate. The border is a finite-stiffness flexure,
 not a frictionless pin joint and not a disconnected surface. All four sides of
