@@ -1,0 +1,106 @@
+{
+  "case_id": "exact_joint_boundary_refinement_v1",
+  "status": "mesh_sensitivity_and_reconnection_evaluated_full_folding_unresolved",
+  "parent_case": "exact_joint_refined_contact_v1",
+  "starting_commit": "59172762ab70a0fce9585ff6802da04b6b1e974b",
+  "geometry": {
+    "source_asset": "exact_joint/open_nonlinear_gui.py runtime overlay",
+    "source_topology": "exact_joint/source_joint.json",
+    "geometry_revision": "Unchanged source 28/50/76 neutral geometry; intact PET, rigid square perimeters and free roof interiors",
+    "sha256": "d578618a0f90342bd0093b4febe130dc0b07c18f1b223c4d6bf02c9f3d93ce35",
+    "width_m": 0.03,
+    "neutral_height_m": 0.0264
+  },
+  "units": {
+    "length": "m",
+    "mass": "kg",
+    "time": "s",
+    "force": "N",
+    "torque": "N*m",
+    "stress": "Pa",
+    "angle": "rad"
+  },
+  "frames": {
+    "fea_frame": "Origin lower perimeter center; Z upwards; source rotated +90 degrees about X and uniformly scaled from 250-unit width to 0.03 m",
+    "isaac_frame": "Same orientation plus recorded vertical display offset",
+    "transform_fea_to_isaac": "Identity rotation and scale; translation [0,0,offset] in saved calculation",
+    "joint_axis_in_isaac": [
+      0,
+      1,
+      0
+    ],
+    "neutral_angle_rad": 0,
+    "positive_angle_direction": "Right-hand relative frame rotation vector, not independent Euler angles"
+  },
+  "material": {
+    "model": "Finite-rotation Green membrane strain / plane-stress StVK plus discrete hinges; uncalibrated",
+    "parameters": {
+      "pet_thickness_m": 8e-05,
+      "pla_thickness_m": 0.0004,
+      "pet_modulus_pa": 3500000000,
+      "pla_modulus_pa": 2200000000,
+      "pet_poisson": 0.35,
+      "pla_poisson": 0.35
+    },
+    "assumptions": "User thicknesses; unmeasured elastic moduli, perfectly bonded isotropic PLA/PET. Material reference uses physical PET bending and zero extra crease coupling. PET pre-creasing/plasticity uncalibrated.",
+    "sensitivity_note": "Separate one-at-a-time strip, panel bending and membrane experiments are fully recorded; no soft experiment promoted to actual PLA/PET"
+  },
+  "mesh": {
+    "element_type": "Triangular membrane with discrete bending hinges and explicit PET-only borders",
+    "element_count": 3648,
+    "mesh_revision": "Boundary subdivision 1-5; independent uniform interior 0-2; size guard",
+    "convergence_summary": "Boundary 3, interior 0->1 response changes ~8.7/17.4/8.0 percent for compression/bend/twist; 5% gate failed"
+  },
+  "boundary_conditions": [
+    "Static upper perimeter frame fixed; lower frame and shell free under applied loads",
+    "Roof interiors deform; only square perimeters rigid",
+    "No prescribed joint angle in winch or cable-force experiments",
+    "Drop: both frames dynamic; four frictionless compliant normal foot contacts"
+  ],
+  "loads": [
+    "Existing independent constant-tension mode retained, 12 pull-only strands",
+    "Elastic winch: T=min(k*max(L-L0,0),force_cap), inactive cables have T=0; potential is the exact integral of this law",
+    "Winch pull shortens active cable rest lengths relative to neutral; unselected cables slack, no implied preload or physical guide routing",
+    "Optional lower-frame resultant force distributed over its perimeter",
+    "70 mm foot-first drop; assumed 30 g upper / 20 g lower assembly, shell mass included, no payload, unloaded cables"
+  ],
+  "solver": {
+    "software": "Project NumPy/SciPy/Torch sparse nonlinear shell + IPC Toolkit 1.6.0 rendered in Isaac",
+    "version": "Implementation commit and source-file hashes in linked run manifest",
+    "analysis_type": "Quasistatic load continuation; separate implicit backward-Euler drop diagnostic",
+    "time_step_s": null,
+    "notes": "Actual elastic/cable/contact energy gradients; Gauss-Newton search tangent. Midsurface barrier and conservative curved-frame CCD, NOT finite-thickness contact. Impact numerical stopping target 1e-6; physical residual rejection remains 3e-5."
+  },
+  "outputs": {
+    "raw_files": [
+      "ml/runs/20260915-exact-knee-refinement-reconnect-v1/baseline.json.gz",
+      "ml/runs/20260915-exact-knee-refinement-reconnect-v1/sensitivity.json.gz",
+      "ml/runs/20260915-exact-knee-refinement-reconnect-v1/bend_button.json.gz",
+      "ml/runs/20260915-exact-knee-refinement-reconnect-v1/reload_preservation.json.gz",
+      "ml/runs/20260915-exact-knee-refinement-reconnect-v1/twist_button.json.gz",
+      "ml/runs/20260915-exact-knee-refinement-reconnect-v1/boundary_control.json.gz",
+      "ml/runs/20260915-exact-knee-refinement-reconnect-v1/live_drop_control.json.gz",
+      "ml/runs/20260915-exact-knee-refinement-reconnect-v1/drop.json.gz"
+    ],
+    "processed_files": [
+      "ml/runs/20260915-exact-knee-refinement-reconnect-v1/metrics.json"
+    ],
+    "response_model": null
+  },
+  "limitations": [
+    "Full folding motion is not reproduced",
+    "Spatial convergence not established",
+    "Actual PET seam connectivity and cable guides unconfirmed",
+    "Creased-film plasticity, hysteresis, bonds and print anisotropy uncalibrated",
+    "Midsurface contact has no laminate thickness clearance, friction or cable contact",
+    "No training or baseline promotion",
+    "Drop result window/stop reason in metrics; no strength or survival verdict"
+  ],
+  "review": {
+    "prepared_by": "Codex",
+    "reviewed_by": [],
+    "date_utc": "2026-09-15",
+    "notes": "Local only; controls tested in reopened USD; no external publication"
+  },
+  "implementation_commit": "c3a8e7206c5eb916283d8631c4ba61a407fe22fb"
+}
