@@ -31,8 +31,8 @@ design**. Reload alone deliberately preserves the existing model/settings.
 4. Use the **Compression**, **Bend**, **Twist**, or **Cable demo** controls for
    cable loads. These solve immediately; Play is not required. **Drop 70 mm /
    recompute** includes the new flexures in the dynamic model.
-5. Change **Frame-plate PET hinge (mm)** in the scrolling inputs, then click
-   **Rebuild stiffness**. The ACTIVE readout must show the new width before the
+5. Change **PET hinge (mm)** beside **Frame hinge design**, then click
+   **Apply hinge width** (or **Rebuild stiffness**). The ACTIVE readout must show the new width before the
    next calculation. Rebuild invalidates old states because the mesh changed.
 
 | Control/value | Meaning |
@@ -42,7 +42,7 @@ design**. Reload alone deliberately preserves the existing model/settings.
 | Roof hinge 0.4 mm | Wider test strip; more PLA setback, generally lower rotational restraint |
 | PET exposed gap (mm) | Separate side-panel fold gap; does not set the roof hinge width |
 | Thickness-derived PET bending | Uses the assumed PET modulus and actual thickness; ignores the panel/crease ratio |
-| Rebuild stiffness | Applies geometry/material inputs and resets to neutral |
+| Apply hinge width / Rebuild stiffness | Applies geometry/material inputs and resets to neutral |
 | Magnified response | Right-side displacement plot only; left leg always remains physical 1x |
 
 The width input accepts 0-2 mm with an additional geometry guard. This is a

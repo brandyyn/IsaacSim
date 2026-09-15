@@ -125,9 +125,13 @@ class ShellWorkshop(ShellJobControls, DropPreview):
                 ui.Button("Save calculation", clicked_fn=self.save)
                 ui.Button("Return to reference FEM", clicked_fn=lambda: asyncio.ensure_future(self.restore()))
             with ui.HStack(height=29):
-                ui.Button("Frame hinge design", clicked_fn=lambda: self.launch(self.preset(False, frame_hinges=True), "Frame hinge design"),
+                ui.Button("Frame hinge design", width=180, clicked_fn=lambda: self.launch(self.preset(False, frame_hinges=True), "Frame hinge design"),
                           tooltip="Rebuild both roofs with a 0.2 mm PET flexure border. PLA 0.4 mm / PET 80 um; no artificial material softening.")
-                ui.Label("Green roof outlines = PET / PLA hinge boundary", word_wrap=True)
+                ui.Label("PET hinge (mm)", width=120)
+                self.inputs["Frame-plate PET hinge (mm)"] = ui.FloatField(width=65).model
+                self.inputs["Frame-plate PET hinge (mm)"].set_value(self.shell.config.frame_hinge_width_m*1000)
+                ui.Button("Apply hinge width", clicked_fn=lambda: self.launch(self.rebuild(), "Apply hinge width"),
+                          tooltip="Apply the displayed roof hinge width and all pending material/mesh inputs. Green outlines mark the PET/PLA interfaces.")
             with ui.HStack(height=27):
                 ui.Button("Replay recorded impact", clicked_fn=lambda: self.launch(self.replay_recorded(), "Recorded impact replay"))
                 ui.Button("Show peak bending", clicked_fn=self.show_peak)
@@ -159,7 +163,6 @@ class ShellWorkshop(ShellJobControls, DropPreview):
                                      ("PET thickness (um)", self.shell.material.pet_thickness_m*1e6),
                                      ("PLA modulus (GPa, assumed)", self.shell.material.pla_modulus_pa/1e9),
                                      ("PET modulus (GPa, assumed)", self.shell.material.pet_modulus_pa/1e9),
-                                     ("Frame-plate PET hinge (mm)", self.shell.config.frame_hinge_width_m*1000),
                                      ("PET junction relief (%)", 0), ("Winch pull (mm)", .5),
                                      ("Winch stiffness (N/m)", 1000), ("Winch force cap (N)", 10),
                                      ("Static solver iterations", 900),
