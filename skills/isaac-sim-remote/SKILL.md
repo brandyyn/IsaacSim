@@ -431,6 +431,17 @@ See `references/api-reference.md` for full details. See `references/pitfalls.md`
 If a reload reports success but the viewport remains unchanged, use the loaded-code
 and source-hash checks in `references/pitfalls.md` before validating the new stage.
 
+Saved-stage control recovery: a live Python workshop can survive opening another
+USD while its cached `Usd.Stage` and prim handles expire. Before debugging material
+stiffness, compare the workshop's stage with the current context. Guard worker
+publication both before and after its background solve. Offer explicit, source-
+checked reconnection; do not silently bind another asset or treat saved display
+points as a material/solver checkpoint. If the old stage has expired, do not call
+its schema methods while hot-reloading: update the controller and validate the
+new stage first. Preserve completed-job metadata as well as geometry on an idle
+reload. See `exact_joint/reload_shell_live.py` and `validate_scene_binding_live.py`.
+Iteration log: 2026-09-15, recovered the matching saved nonlinear knee in Kit 110.
+
 ## Important Notes
 
 - **Lighting in headless mode**: No lights = black image. Always add a `DomeLight` with intensity 1000–5000.

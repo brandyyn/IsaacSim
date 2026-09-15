@@ -25,6 +25,20 @@ This is the shared progress log. Update it whenever the FEA model, simulator env
 
 ## Roadmap
 
+Refinement/reconnection follow-up (2026-09-15): reproduced a stale workshop
+binding after opening a saved nonlinear USD. Added explicit checksum-guarded
+reconnection, before/after-worker scene guards, and result-preserving hot reload.
+The current saved USD is reconnected without saving over it. Added independent
+boundary subdivision 1-5 and an 18-case compliance study with unchanged source
+geometry/thicknesses. Softer strip/panel bending does not yield full motion;
+100x softer membrane candidates violate the strain guard and are not promoted.
+Boundary 3/interior 1 gives 0.625% compression, 0.178 degrees bend and 0.096 degrees
+twist at 3 N in separate cases; the spatial-convergence gate still fails.
+66 numerical/controller checks pass; real button/render and scene guards tested
+live. See case `exact_joint_boundary_refinement_v1` and evaluation
+`20260915-exact-knee-refinement-reconnect-v1`. Full folding and physical material
+validation remain unresolved. No training or v8 baseline promotion.
+
 Small-motion visibility follow-up (2026-09-14 UTC / September 15 local): the
 user's completed 0.5 mm Twist CW winch input gave only 19.34 um maximum relative
 displacement and 0.0155 degrees twist. The physical viewport matched the solved

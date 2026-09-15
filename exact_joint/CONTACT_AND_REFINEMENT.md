@@ -5,6 +5,62 @@ joint, a solid-stress FEM result, or a drop-survival calculation. The custom
 CPU shell solver runs inside the Isaac workshop; PhysX is not calculating these
 shell stresses. The v8 machine-learning baseline is unchanged.
 
+## Refinement and saved-scene recovery, 2026-09-15
+
+The opened saved USD and the running workshop can be different USD stage
+instances. This was reproduced: the workshop still referenced an expired stage,
+so its scene-change guard cancelled every new action. There is now a visible
+**Reconnect opened knee** button. It checks the original JSON checksum, units,
+reference mesh and root transforms before attaching. It keeps the current
+material/mesh settings, resets only the owned nonlinear overlay to neutral,
+and does **not** save over the USD. A USD drawing is not a solver checkpoint.
+Unrelated scenes are rejected. Numerical workers check the scene both before
+and after solving, so a late result cannot publish into a newly opened scene.
+Code reload also retains accepted results/settings when the stage is unchanged.
+
+**Boundary subdivision (1-5)** now provides 2, 4, 8, 16 or 32 segments along
+each original fold line, independently of interior refinement. This changes the
+numerical discretization, not material properties or the source geometry.
+Levels above 2 require sparse assembly; oversized combinations are rejected.
+The default remains boundary 1 / interior 1 because convergence is still open.
+Higher subdivision is a study setting, not a claim of improved physical accuracy.
+
+An 18-case sensitivity study isolated each change at 3 N per active cable,
+with the original 0.4 mm PLA / 80 um PET thicknesses and intact connections:
+
+| Configuration | Compression (%) | Y bend (degrees) | Twist magnitude (degrees) |
+|---|---:|---:|---:|
+| Material reference: boundary 1 / interior 1 | 0.503 | 0.141 | 0.098 |
+| Effective strip ratio 10,000, NOT measured PET bending | 0.947 | 0.165 | 0.109 |
+| Panel bending x0.01, NOT actual laminate rigidity | 0.750 | 0.161 | 0.112 |
+| Boundary 3 / interior 0, unchanged material | 0.576 | 0.151 | 0.089 |
+| Boundary 3 / interior 1, unchanged material | 0.625 | 0.178 | 0.096 |
+
+These are three separate load patterns per row, not simultaneous travel.
+Reducing membrane stiffness 100x produced rejected candidates with 6.0-16.5%
+membrane strain; they were **not** accepted or installed as a material preset.
+The original model's membrane energy accounts for about 54-65% of elastic
+energy in these three loads. Softening only the PLA bending or the PET folding
+does not release a full-range mechanism. This is evidence against that simple
+tuning fix, not proof of the correct physical crease model.
+
+At boundary 3, interior refinement 0 to 1 changes compression about 8.7%, bend
+17.4% and twist 8.0%; the 5% spatial-convergence gate still fails. The exact
+source vertices, per-panel area and PLA/PET coverage remain invariant under the
+new boundary subdivisions. Sixty-six numerical/controller tests pass, including
+discarding a worker result after scene change. Live scene-binding checks verify
+a real eight-step Bend Y+ button command, 1x rendered coordinates, and safe
+rejection of unrelated or disconnected scenes. These checks do not validate
+material response, full folding, strength or impact survival.
+
+The study is reproducible with `python -m exact_joint.probe_shell_compliance`
+(`--output-dir` is optional). Case `exact_joint_boundary_refinement_v1` and run
+`20260915-exact-knee-refinement-reconnect-v1` retain the data and provenance.
+
+The distinction between panel stretching, panel bending and crease folding is
+also used in [Filipov et al., Bar and hinge models for scalable analysis of origami](https://doi.org/10.1016/j.ijsolstr.2017.05.028).
+That literature motivates separate diagnostics; it does not calibrate this sample.
+
 ## What changed on 2026-09-14
 
 - Every triangular cell can now be subdivided into four, including panel and
@@ -142,6 +198,7 @@ project's running-Isaac remote helper. Do not start a second Kit instance.
 | PET exposed gap (mm) | Wider PET-only strip between inset PLA facets. Changes the fabrication geometry and folding compliance, not PET modulus. Confirm a buildable width. |
 | Panel bending / membrane scales | Experimental multipliers. Leave both at 1 for the unscaled material reference. |
 | Interior refinement 0/1/2 | 912 / 3,648 / 14,592 triangles at boundary subdivision 1. Higher levels are slower; current results are not yet spatially converged. |
+| Boundary subdivision 1-5 | 2-32 segments per original fold line before interior refinement; independent numerical mesh control. Does not change the exposed PET gap. |
 | Sparse element solver | Required for interior refinement and IPC. Numerical method, not a stiffness scale. |
 | Midsurface self-contact + CCD | Barrier forces plus swept-path checks. Does not enforce the 0.48 mm laminate clearance or friction. |
 | PET junction relief (%) | Actual PET connection cuts near source vertices. Zero is intact; nonzero changes the manufacturing design. |

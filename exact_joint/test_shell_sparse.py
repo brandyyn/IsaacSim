@@ -98,9 +98,26 @@ class SparseShellTests(unittest.TestCase):
 
     def test_invalid_refinement_and_contact_combinations(self):
         for change in ({"interior_refinement": 3}, {"interior_refinement": 1}, {"self_contact": True},
-                       {"contact_distance_m": 0}, {"contact_energy_j": -1}):
+                       {"contact_distance_m": 0}, {"contact_energy_j": -1}, {"subdivision": 3},
+                       {"subdivision": 6}, {"subdivision": 1.5},
+                       {"subdivision": 5, "interior_refinement": 2, "sparse_solver": True}):
             with self.assertRaises(ValueError):
                 dataclasses.replace(ShellConfig(), **change).validate()
+
+    def test_fine_boundary_subdivision_preserves_source_and_material_areas(self):
+        previous = None
+        for level in (1, 3, 5):
+            ShellConfig(subdivision=level, sparse_solver=True).validate()
+            mesh = surface_mesh(self.source, subdivision=level, gap_m=.0002)
+            np.testing.assert_array_equal(mesh["points"][:28], self.source["points"])
+            p = mesh["points"][mesh["triangles"]]
+            area = np.linalg.norm(np.cross(p[:, 1]-p[:, 0], p[:, 2]-p[:, 0]), axis=1)/2
+            values = np.r_[np.bincount(mesh["owners"], weights=area), area[mesh["laminate"]].sum()]
+            if previous is not None:
+                np.testing.assert_allclose(values, previous, atol=1e-16, rtol=1e-12)
+            previous = values
+            self.assertTrue(all(len(chain) == 2**level+1 for chain in mesh["chains"]))
+            self.assertEqual(len(mesh["free_boundary_edges"]), 0)
 
 
 class IPCTests(unittest.TestCase):

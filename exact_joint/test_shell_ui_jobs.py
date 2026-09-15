@@ -138,6 +138,29 @@ class JobTests(unittest.IsolatedAsyncioTestCase):
         self.assertIsNone(coroutine.cr_frame)
         self.assertEqual(c.published, [])
 
+    async def test_scene_change_while_worker_runs_never_publishes_candidate(self):
+        c = Controller()
+        c.valid = True
+        c.job_context_valid = lambda: c.valid
+        started, release, worker = await self.blocked_worker()
+        c.launch(c.job(worker), "motion")
+        await started.wait()
+        c.valid = False
+        release.set()
+        await self.finish(c)
+        self.assertEqual(c.published, [])
+        self.assertEqual(c.job_outcome, "NOT APPLIED")
+        self.assertIn("Reconnect opened knee", c.feedback.text)
+
+    async def test_disconnected_context_never_starts_worker(self):
+        c = Controller()
+        c.job_context_valid = lambda: False
+        started = []
+        c.launch(c.job(lambda: started.append(True)), "motion")
+        await self.finish(c)
+        self.assertEqual(started, [])
+        self.assertEqual(c.published, [])
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -49,6 +49,7 @@ class ShellWorkshop(ShellJobControls, DropPreview):
         self.show_response = True
         self.response_gain = 100.0
         self.inspector = None
+        self.scene_disconnected = False
 
     async def start(self):
         config = ShellConfig(sparse_solver=True, interior_refinement=1,
@@ -116,6 +117,8 @@ class ShellWorkshop(ShellJobControls, DropPreview):
                 ui.Button("Relief experiment", clicked_fn=lambda: self.launch(self.preset(True), "Relief experiment"))
             with ui.HStack(height=29):
                 ui.Button("Rebuild stiffness", clicked_fn=lambda: self.launch(self.rebuild(), "Rebuild stiffness"))
+                ui.Button("Reconnect opened knee", clicked_fn=self.reconnect_opened,
+                          tooltip="Bind the matching opened USD using the current material/mesh settings. Resets only the owned knee overlay to neutral; does not save the USD.")
                 ui.Button("Save calculation", clicked_fn=self.save)
                 ui.Button("Return to reference FEM", clicked_fn=lambda: asyncio.ensure_future(self.restore()))
             with ui.HStack(height=27):
@@ -135,6 +138,10 @@ class ShellWorkshop(ShellJobControls, DropPreview):
                         field.model.set_value(value)
                         self.flags[label] = field.model
                         ui.Label(label)
+                with ui.HStack(height=24):
+                    ui.Label("Boundary subdivision (1-5)", width=240)
+                    self.boundary_input = ui.IntField().model
+                    self.boundary_input.set_value(self.shell.config.subdivision)
                 with ui.HStack(height=24):
                     ui.Label("Interior refinement (0/1/2)", width=240)
                     self.refinement_input = ui.IntField().model
@@ -188,7 +195,99 @@ class ShellWorkshop(ShellJobControls, DropPreview):
         self.pose_note.text = ("Prescribed displacement; NOT a prediction of cable-driven travel." if enabled else
                                "Disabled with self-contact ON. Use the Compression/Bend/Twist cable buttons at the top.")
 
+    def scene_is_current(self):
+        try:
+            return (self.stage == omni.usd.get_context().get_stage()
+                    and self.owned is not None and self.owned.GetPrim().IsValid())
+        except (RuntimeError, TypeError):
+            return False
+
+    def job_context_valid(self):
+        return self.scene_is_current()
+
+    def ensure_current_scene(self):
+        if self.scene_is_current():
+            return True
+        self.feedback.text = "Scene disconnected. Click Reconnect opened knee before changing the displayed result."
+        return False
+
+    def launch(self, coroutine, label="Calculation"):
+        if not self.scene_is_current():
+            coroutine.close()
+            self.job_outcome = "NOT APPLIED: scene disconnected"
+            self.feedback.text = "Click Reconnect opened knee. Controls are bound to a different scene; no calculation was started."
+            return
+        super().launch(coroutine, label)
+
+    def reconnect_opened(self):
+        """Explicit recovery, never silently attach a different robot or import code from USD."""
+        if self.work is not None and not self.work.done():
+            self.feedback.text = "Cancel the active calculation and wait for its worker before reconnecting."
+            return
+        try:
+            self.rebind_scene(omni.usd.get_context().get_stage())
+        except Exception as exc:
+            self.job_outcome = "NOT RECONNECTED"
+            self.feedback.text = "NOT RECONNECTED: " + str(exc)
+
+    def rebind_scene(self, stage):
+        if stage is None:
+            raise ValueError("Open a saved exact-knee USD first.")
+        overlay = stage.GetPrimAtPath(self.owned_path)
+        if not overlay or overlay.GetCustomDataByKey("source_sha256") != self.shell.source["sha256"]:
+            raise ValueError("Opened scene does not contain this original JSON knee overlay; nothing changed.")
+        reference = stage.GetPrimAtPath("/World/ExactLeg")
+        diagnostic = stage.GetPrimAtPath("/World/ExactFemDisplay")
+        if not reference or not diagnostic or not stage.GetPrimAtPath("/World/Plinth"):
+            raise ValueError("Saved knee is missing its reference leg, diagnostic or floor.")
+        cache = UsdGeom.XformCache()
+        for prim in (stage.GetPrimAtPath("/World"), reference, overlay):
+            if cache.GetLocalToWorldTransform(prim) != Gf.Matrix4d(1):
+                raise ValueError("Reconnect requires the original untransformed leg/world roots; nothing changed.")
+        # Temporarily expose the saved reference only for read-only schema and
+        # source/config validation. Restore activation even when validation fails.
+        active = reference.IsActive()
+        reference.SetActive(True)
+        try:
+            candidate = ExactLegScene.attach(stage, self.lab.model)
+        finally:
+            reference.SetActive(active)
+        self.cancel_jobs()
+        self.stage, self.root, self.lab.scene = stage, reference, candidate
+        self.original_leg_active = True
+        self.original_type = reference.GetTypeName()
+        order = reference.GetAttribute("xformOpOrder").Get()
+        self.original_order = Vt.TokenArray([name for name in (order or []) if name != "xformOp:translate:dropPreview"])
+        self.original_order_authored = bool(len(self.original_order))
+        attr = reference.GetAttribute("xformOp:translate:dropPreview")
+        self.op = UsdGeom.XformOp(attr) if attr else None
+        self.diagnostic = UsdGeom.Imageable(diagnostic)
+        self.diagnostic_active = True
+        self.diagnostic_visibility = UsdGeom.Tokens.inherited
+        reference.SetActive(False)
+        diagnostic.SetActive(False)
+        # Only our hash-checked overlay is regenerated. No USD file is saved;
+        # camera, lights, unrelated prims and current numerical settings survive.
+        stage.RemovePrim(self.owned_path)
+        self.owned = UsdGeom.Xform.Define(stage, self.owned_path)
+        self.owned.GetPrim().SetCustomDataByKey("source_sha256", self.shell.source["sha256"])
+        self.state = np.zeros(self.shell.ndof)
+        self.snapshots, self.static_trace = [], []
+        self.drop = self.last_rejection = self.display_index = None
+        self.tensions = np.zeros(12)
+        self.offset = self.lab.scene.top_height-self.shell.height
+        self.mode = "NEUTRAL - RECONNECTED"
+        self.timeline_was_playing = app_utils.is_playing()
+        self.scene_disconnected = False
+        self.make_scene()
+        self.render()
+        self.job_outcome = "READY: reconnected"
+        self.job_label = "Choose a cable movement"
+        self.feedback.text = "RECONNECTED. Current material/mesh settings retained; owned knee reset to neutral. USD alone is not a solver checkpoint."
+
     def change_response(self, visible=None, gain=None):
+        if not self.ensure_current_scene():
+            return
         if gain is not None:
             if not np.isfinite(gain) or not 1 <= gain <= 500:
                 self.feedback.text = "Display magnification must be 1-500. It does not change the FEM."
@@ -212,6 +311,8 @@ class ShellWorkshop(ShellJobControls, DropPreview):
 
     def make_scene(self):
         s, root, model = self.stage, self.owned_path, self.shell
+        self.owned.GetPrim().SetCustomDataByKey("shell_config_json", json.dumps(dataclasses.asdict(model.config)))
+        self.owned.GetPrim().SetCustomDataByKey("material_json", json.dumps(dataclasses.asdict(model.material)))
         self.surface = mesh(s, root+"/FlexiblePLA_PET", model.points, model.mesh["triangles"])
         self.surface.CreateDisplayColorAttr()
         UsdGeom.Primvar(self.surface.GetDisplayColorAttr()).SetInterpolation(UsdGeom.Tokens.uniform)
@@ -296,7 +397,7 @@ class ShellWorkshop(ShellJobControls, DropPreview):
             + ("PET bending from E,t" if cfg.physical_strip_bending else f"ratio {cfg.panel_to_crease_ratio:g}")
             + f", gap {self.shell.material.hinge_gap_m*1000:g} mm\n"
             f"PLA {self.shell.material.pla_thickness_m*1000:g} mm + PET {self.shell.material.pet_thickness_m*1e6:g} um; "
-            f"refinement {cfg.interior_refinement}, " + ("IPC midsurface CCD" if cfg.self_contact else "NO self-contact forces") + "\n"
+            f"mesh {2**cfg.subdivision} edge segments / interior {cfg.interior_refinement}, " + ("IPC midsurface CCD" if cfg.self_contact else "NO self-contact forces") + "\n"
             f"PET junction relief {cfg.vertex_relief_fraction*100:g}% "
             + ("- MODIFIED CUT DESIGN (cyan edges)" if cfg.vertex_relief_fraction else "- intact source pattern"))
         set_points(self.frames_curve, points[self.frame_edges].reshape(-1, 3))
@@ -361,6 +462,8 @@ class ShellWorkshop(ShellJobControls, DropPreview):
 
     def neutral_shell(self):
         self.cancel_jobs()
+        if not self.ensure_current_scene():
+            return
         if self.inspector is not None:
             self.inspector.playing = False
         self.state = np.zeros(self.shell.ndof)
@@ -385,6 +488,7 @@ class ShellWorkshop(ShellJobControls, DropPreview):
     async def rebuild(self):
         get = lambda name: self.inputs[name].as_float
         config = ShellConfig(panel_to_crease_ratio=get("Panel / crease bending ratio"),
+                             subdivision=self.boundary_input.as_int,
                              crease_twist_ratio=get("Crease twist coupling"), panel_bending_scale=get("Panel bending scale"),
                              membrane_scale=get("Membrane stiffness scale"), panel_strain_limit=get("Membrane strain guard (%)")/100,
                              vertex_relief_fraction=get("PET junction relief (%)")/100,
@@ -436,6 +540,7 @@ class ShellWorkshop(ShellJobControls, DropPreview):
         self.flags["Thickness-derived PET bending (ignores ratio)"].set_value(not relief)
         self.flags["Midsurface self-contact + CCD"].set_value(True)
         self.refinement_input.set_value(0 if relief else 1)
+        self.boundary_input.set_value(1)
         await self.rebuild()
         self.feedback.text = ("Experimental PET cuts + 100x softer bending; NOT measured PLA/PET. "
                               "Use Apply winch pull. Adjacent-section twist coupling is inactive in this coarse cut mesh." if relief
@@ -611,6 +716,8 @@ class ShellWorkshop(ShellJobControls, DropPreview):
                               "Full physical folding is not yet calibrated.")
 
     def show_peak(self):
+        if not self.ensure_current_scene():
+            return
         if self.work and not self.work.done():
             self.feedback.text = "Wait for the current calculation before inspecting recorded frames."
             return
@@ -645,10 +752,12 @@ class ShellWorkshop(ShellJobControls, DropPreview):
             while not self.closed:
                 await omni.kit.app.get_app().next_update_async()
                 self.progress_label.text = self.progress_text()
-                if self.stage != omni.usd.get_context().get_stage():
-                    self.cancel_jobs()
-                    self.job_outcome = "STOPPED: scene changed"
-                    self.feedback.text = "Scene changed. Calculation halted; return to the reference workshop."
+                if not self.scene_is_current():
+                    if not self.scene_disconnected:
+                        self.cancel_jobs()
+                        self.scene_disconnected = True
+                        self.job_outcome = "STOPPED: scene changed"
+                        self.feedback.text = "Scene changed. Click Reconnect opened knee to bind this workshop to the matching saved USD."
                     continue
                 if self.inspector is not None:
                     self.inspector.tick()
@@ -666,6 +775,8 @@ class ShellWorkshop(ShellJobControls, DropPreview):
             pass
 
     def save(self):
+        if not self.ensure_current_scene():
+            return None
         stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S_%fZ")
         folder = self.lab.project/"exact_joint/results"/(stamp+"_nonlinear_shell")
         folder.mkdir(parents=True, exist_ok=False)

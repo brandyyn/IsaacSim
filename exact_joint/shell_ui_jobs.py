@@ -64,11 +64,17 @@ class ShellJobControls:
         while True:
             if self.closed:
                 raise asyncio.CancelledError()
+            if not self.job_context_valid():
+                raise RuntimeError("Scene disconnected. Click Reconnect opened knee; the old result was not applied.")
             if self.pending_job is not None:
                 raise SupersededJob()
             if self.running:
                 return
             await asyncio.sleep(.02)
+
+    def job_context_valid(self):
+        """Override for scene-bound jobs; checked before and after each worker."""
+        return True
 
     async def compute(self, function, *args, **kwargs):
         """At most one numerical worker, even across Neutral/cancel/restart."""

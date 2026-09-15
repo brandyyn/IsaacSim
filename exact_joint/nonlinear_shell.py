@@ -41,8 +41,12 @@ class ShellConfig:
     def validate(self):
         if not np.isfinite(list(asdict(self).values())).all():
             raise ValueError("Shell parameters must be finite")
-        if self.subdivision not in (1, 2):
-            raise ValueError("Shell subdivision must be 1 or 2")
+        if self.subdivision not in (1, 2, 3, 4, 5):
+            raise ValueError("Shell boundary subdivision must be an integer 1-5")
+        if self.subdivision > 2 and not self.sparse_solver:
+            raise ValueError("Fine boundary subdivision requires the sparse solver")
+        if 2**self.subdivision * 4**self.interior_refinement > 128:
+            raise ValueError("Combined mesh is too large for the interactive solver; reduce boundary or interior refinement")
         if self.interior_refinement not in (0, 1, 2):
             raise ValueError("Uniform interior refinement must be 0, 1 or 2")
         if self.interior_refinement and not self.sparse_solver:

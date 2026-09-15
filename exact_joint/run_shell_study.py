@@ -24,7 +24,7 @@ def main():
     parser.add_argument("--ratio", type=float, default=100)
     parser.add_argument("--crease-twist-ratio", type=float, default=.1)
     parser.add_argument("--gap-mm", type=float, default=.2)
-    parser.add_argument("--subdivision", type=int, choices=[1, 2], default=1)
+    parser.add_argument("--subdivision", type=int, choices=[1, 2, 3, 4, 5], default=1)
     parser.add_argument("--panel-bending-scale", type=float, default=1)
     parser.add_argument("--membrane-scale", type=float, default=1)
     parser.add_argument("--vertex-relief-fraction", type=float, default=0)

@@ -56,6 +56,8 @@ class ShellDisplacementView:
 
     def replay(self):
         view = self.view
+        if not view.ensure_current_scene():
+            return
         if view.work and not view.work.done():
             view.feedback.text = "Wait for the current solve before replaying its recorded steps."
             return
@@ -86,6 +88,8 @@ class ShellDisplacementView:
     def stop(self):
         self.playing = False
         self.paused = False
+        if not self.view.ensure_current_scene():
+            return
         self.update(self.view.state)
 
     def toggle_pause(self):
