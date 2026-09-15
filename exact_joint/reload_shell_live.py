@@ -56,6 +56,13 @@ if in_place:
         previous.inspector.__class__ = ShellDisplacementView
     previous.shell.__class__ = NonlinearShell
     previous.shell.config = ShellConfig(**dataclasses.asdict(previous.shell.config))
+    if previous.drop is not None:
+        from exact_joint.shell_impact import ShellImpact, ShellImpactConfig
+        previous.drop.__class__ = ShellImpact
+        previous.drop.config = ShellImpactConfig(**dataclasses.asdict(previous.drop.config))
+        job_metadata["job_steps"] = previous.drop.config.step_count
+        job_metadata["job_step"] = int(sum(b["time_after_contact_s"] > a["time_after_contact_s"]
+                                          for a, b in zip(previous.drop.trace, previous.drop.trace[1:])))
     previous.scene_disconnected = False
     previous.window.destroy()
     previous.build_ui()

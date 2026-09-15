@@ -53,7 +53,8 @@ class ShellWorkshop(ShellJobControls, DropPreview):
 
     async def start(self):
         config = ShellConfig(sparse_solver=True, interior_refinement=1,
-                             physical_strip_bending=True, self_contact=True, crease_twist_ratio=0)
+                             physical_strip_bending=True, self_contact=True, crease_twist_ratio=0,
+                             frame_hinge_width_m=.0002)
         self.shell = await asyncio.to_thread(NonlinearShell, self.lab.model.source, self.lab.config, config)
         self.state = np.zeros(self.shell.ndof)
         await super().start()
@@ -69,7 +70,9 @@ class ShellWorkshop(ShellJobControls, DropPreview):
     def build_ui(self):
         super().build_ui()
         self.window.title = "Nonlinear knee - rigid frames / flexible panels"
-        with self.window.frame, ui.VStack(spacing=3):
+        # The dock may be shorter than the fixed control group. Scroll the
+        # whole form so material/hinge inputs never collapse to zero height.
+        with self.window.frame, ui.ScrollingFrame() as self.form_scroll, ui.VStack(spacing=3, height=0):
             ui.Label("RIGID SQUARE FRAMES | FLEXIBLE INTERIORS", height=22, style={"font_size": 18})
             ui.Label("NONLINEAR SHELL EXPERIMENT - not validated solid FEM\nLeft leg: 1x + strain colour. Right plot: DISPLAY ONLY", height=33,
                      style={"color": 0xFF80DFFF})
@@ -121,13 +124,17 @@ class ShellWorkshop(ShellJobControls, DropPreview):
                           tooltip="Bind the matching opened USD using the current material/mesh settings. Resets only the owned knee overlay to neutral; does not save the USD.")
                 ui.Button("Save calculation", clicked_fn=self.save)
                 ui.Button("Return to reference FEM", clicked_fn=lambda: asyncio.ensure_future(self.restore()))
+            with ui.HStack(height=29):
+                ui.Button("Frame hinge design", clicked_fn=lambda: self.launch(self.preset(False, frame_hinges=True), "Frame hinge design"),
+                          tooltip="Rebuild both roofs with a 0.2 mm PET flexure border. PLA 0.4 mm / PET 80 um; no artificial material softening.")
+                ui.Label("Green roof outlines = PET / PLA hinge boundary", word_wrap=True)
             with ui.HStack(height=27):
                 ui.Button("Replay recorded impact", clicked_fn=lambda: self.launch(self.replay_recorded(), "Recorded impact replay"))
                 ui.Button("Show peak bending", clicked_fn=self.show_peak)
-            self.telemetry = ui.Label("", height=80, word_wrap=True)
+            self.telemetry = ui.Label("", height=98, word_wrap=True)
             self.settings_label = ui.Label("", height=59, word_wrap=True)
             self.feedback = ui.Label("Apply and Cable demo solve forces; Drop solves impact. Full travel is not guaranteed by a force input.", height=44, word_wrap=True)
-            with ui.ScrollingFrame(), ui.VStack(spacing=6, height=0):
+            with ui.VStack(spacing=6, height=0):
                 ui.Label("INPUTS: stiffness changes require Rebuild", height=25)
                 self.flags = {}
                 for label, value in (("Thickness-derived PET bending (ignores ratio)", self.shell.config.physical_strip_bending),
@@ -152,6 +159,7 @@ class ShellWorkshop(ShellJobControls, DropPreview):
                                      ("PET thickness (um)", self.shell.material.pet_thickness_m*1e6),
                                      ("PLA modulus (GPa, assumed)", self.shell.material.pla_modulus_pa/1e9),
                                      ("PET modulus (GPa, assumed)", self.shell.material.pet_modulus_pa/1e9),
+                                     ("Frame-plate PET hinge (mm)", self.shell.config.frame_hinge_width_m*1000),
                                      ("PET junction relief (%)", 0), ("Winch pull (mm)", .5),
                                      ("Winch stiffness (N/m)", 1000), ("Winch force cap (N)", 10),
                                      ("Static solver iterations", 900),
@@ -330,7 +338,13 @@ class ShellWorkshop(ShellJobControls, DropPreview):
         if len(self.relief_edges):
             cyan = material(s, "ExperimentalPETRelief", (.1, .95, .8))
             self.relief_lines = curves(s, root+"/ExperimentalCutBoundaries", len(self.relief_edges), .00010, cyan)
-        self.frames_curve = curves(s, root+"/OnlyRigidPerimeters", len(self.frame_edges), .0007, gold)
+        self.frame_hinge_edges = model.mesh.get("frame_hinge_edges", np.empty((0, 2), dtype=int))
+        self.frame_hinge_lines = None
+        if len(self.frame_hinge_edges):
+            green = material(s, "FramePlatePETFlexure", (.08, 1, .25))
+            self.frame_hinge_lines = curves(s, root+"/FramePlatePETInterfaces", len(self.frame_hinge_edges), .00007, green)
+        self.frames_curve = curves(s, root+"/OnlyRigidPerimeters", len(self.frame_edges),
+                                   .00025 if len(self.frame_hinge_edges) else .0007, gold)
         self.red = curves(s, root+"/CrossedActuatingCables", 8, .00022, red)
         self.axial = curves(s, root+"/AxialCables", 4, .00014, black)
         self.loaded_cables = curves(s, root+"/CurrentlyLoadedCables", 12, .0003, gold)
@@ -392,14 +406,16 @@ class ShellWorkshop(ShellJobControls, DropPreview):
         set_points(self.lines, points[self.line_edges].reshape(-1, 3))
         if self.relief_lines is not None:
             set_points(self.relief_lines, points[self.relief_edges].reshape(-1, 3))
+        if getattr(self, "frame_hinge_lines", None) is not None:
+            set_points(self.frame_hinge_lines, points[self.frame_hinge_edges].reshape(-1, 3))
         cfg = self.shell.config
         self.settings_label.text = (f"ACTIVE: panel bend x{cfg.panel_bending_scale:g}, membrane x{cfg.membrane_scale:g}, "
             + ("PET bending from E,t" if cfg.physical_strip_bending else f"ratio {cfg.panel_to_crease_ratio:g}")
             + f", gap {self.shell.material.hinge_gap_m*1000:g} mm\n"
             f"PLA {self.shell.material.pla_thickness_m*1000:g} mm + PET {self.shell.material.pet_thickness_m*1e6:g} um; "
             f"mesh {2**cfg.subdivision} edge segments / interior {cfg.interior_refinement}, " + ("IPC midsurface CCD" if cfg.self_contact else "NO self-contact forces") + "\n"
-            f"PET junction relief {cfg.vertex_relief_fraction*100:g}% "
-            + ("- MODIFIED CUT DESIGN (cyan edges)" if cfg.vertex_relief_fraction else "- intact source pattern"))
+            f"Roof hinges {cfg.frame_hinge_width_m*1000:g} mm; PET junction relief {cfg.vertex_relief_fraction*100:g}% "
+            + ("- MODIFIED CUT DESIGN (cyan edges)" if cfg.vertex_relief_fraction else "- original coarse geometry"))
         set_points(self.frames_curve, points[self.frame_edges].reshape(-1, 3))
         state_tensor = self.shell._tensor(self.state)
         top = self.shell.frame_point(state_tensor, 0, self.shell.cable_top).numpy()+[0, 0, self.offset]
@@ -414,8 +430,11 @@ class ShellWorkshop(ShellJobControls, DropPreview):
         else:
             self.loaded_cables.MakeInvisible()
         if self.static_trace and self.drop is None:
-            applied = np.asarray(self.static_trace[-1]["nodal_loads_n"]).sum(axis=0)
-            center = points[self.shell.mesh["bottom"]].mean(axis=0)
+            nodal_loads = np.asarray(self.static_trace[-1]["nodal_loads_n"])
+            applied = nodal_loads.sum(axis=0)
+            weights = np.linalg.norm(nodal_loads, axis=1)
+            center = (np.average(points, axis=0, weights=weights) if weights.sum() > 0
+                      else points[self.shell.mesh["bottom"]].mean(axis=0))
             set_points(self.applied_force, np.stack([center, center+.002*applied]))
             self.applied_force.MakeVisible() if np.linalg.norm(applied) > 1e-10 else self.applied_force.MakeInvisible()
         else:
@@ -448,6 +467,7 @@ class ShellWorkshop(ShellJobControls, DropPreview):
             f"Bend X/Y {angles[0]:.3f} / {angles[1]:.3f} deg | twist {angles[2]:.3f} deg\n"
             f"Compression {report['compression_fraction']*100:.3f}% | membrane strain {report['max_membrane_strain']*100:.3f}%\n"
             f"Upper/lower roof warp {roof_warp[0]*1e6:.2f} / {roof_warp[1]*1e6:.2f} um\n"
+            f"Roof PET local hinge rotation {np.rad2deg(report['frame_hinge']['max_local_dihedral_change_rad']):.3f} deg\n"
             f"Ground force {force:.3f} N | contact time +{clock:.3f} ms | max cable {self.tensions.max():.3f} N")
         self.legend.text = (f"{self.mode.split(';')[0]} | RIGID GOLD FRAMES | 1x\n"
                             f"Bend Y {angles[1]:.3f} deg | twist {angles[2]:.3f} deg | compression {report['compression_fraction']*100:.2f}%\n"
@@ -492,6 +512,7 @@ class ShellWorkshop(ShellJobControls, DropPreview):
                              crease_twist_ratio=get("Crease twist coupling"), panel_bending_scale=get("Panel bending scale"),
                              membrane_scale=get("Membrane stiffness scale"), panel_strain_limit=get("Membrane strain guard (%)")/100,
                              vertex_relief_fraction=get("PET junction relief (%)")/100,
+                             frame_hinge_width_m=get("Frame-plate PET hinge (mm)")/1000,
                              max_iterations=get("Static solver iterations"),
                              sparse_solver=self.flags["Sparse element solver"].as_bool,
                              physical_strip_bending=self.flags["Thickness-derived PET bending (ignores ratio)"].as_bool,
@@ -525,13 +546,14 @@ class ShellWorkshop(ShellJobControls, DropPreview):
         self.render()
         self.feedback.text = "Stiffness rebuilt. New controls apply to subsequent range/cable/drop calculations."
 
-    async def preset(self, relief):
+    async def preset(self, relief, frame_hinges=False):
         values = {"Panel / crease bending ratio": 1000 if relief else 100,
                   "Crease twist coupling": .1 if relief else 0, "Panel bending scale": .01 if relief else 1,
                   "PLA thickness (mm)": .4, "PET thickness (um)": 80,
                   "PLA modulus (GPa, assumed)": 2.2, "PET modulus (GPa, assumed)": 3.5,
                   "Membrane stiffness scale": 1, "PET junction relief (%)": 20 if relief else 0,
                   "PET exposed gap (mm)": .8 if relief else .2, "Membrane strain guard (%)": 3,
+                  "Frame-plate PET hinge (mm)": .2 if frame_hinges else 0,
                   "Static solver iterations": 3000 if relief else 900,
                   "Winch pull (mm)": .5, "Winch stiffness (N/m)": 1000, "Winch force cap (N)": 10}
         for name, value in values.items():
@@ -546,6 +568,9 @@ class ShellWorkshop(ShellJobControls, DropPreview):
                               "Use Apply winch pull. Adjacent-section twist coupling is inactive in this coarse cut mesh." if relief
                               else "Intact PLA 0.4 mm / PET 80 um; unscaled assumed moduli, thickness-derived bending. "
                                    "Refined mesh + midsurface IPC; NOT calibrated creased-PET or finite-thickness contact.")
+        if frame_hinges:
+            self.feedback.text = ("Both roof plates now connect to their rigid frames through 0.2 mm PET flexure borders (green). "
+                                  "Actual thicknesses, assumed moduli; movement is solved from force, not an imposed angle.")
 
     def start_drop(self):
         self.timeline_action = "drop"
@@ -560,7 +585,7 @@ class ShellWorkshop(ShellJobControls, DropPreview):
             duration_s=get("Drop duration (ms)")*.001)
         candidate = await self.compute(ShellImpact, self.shell, config)
         self.drop, self.state = candidate, candidate.state.copy()
-        self.job_steps = math.ceil(config.duration_s/config.step_s)
+        self.job_steps = config.step_count
         self.display_index = None
         self.snapshots, self.last_rejection = [], None
         self.static_trace = []
@@ -587,10 +612,12 @@ class ShellWorkshop(ShellJobControls, DropPreview):
             candidate.trace = self.drop.trace.copy()
             await self.compute(candidate.step)
             await self.wait_running()
+            advanced = candidate.time_s > self.drop.time_s
             self.drop = candidate
             self.state = candidate.state.copy()
-            self.job_step = len(candidate.trace)-1
-            self.snapshots.append(self.state.copy())
+            if advanced:
+                self.job_step += 1
+                self.snapshots.append(self.state.copy())
             self.render()
             await omni.kit.app.get_app().next_update_async()
         self.last_rejection = self.drop.last_candidate if "GUARD" in str(self.drop.reason) or "LIMIT" in str(self.drop.reason) else None
@@ -700,6 +727,7 @@ class ShellWorkshop(ShellJobControls, DropPreview):
                                       "relative_rotation_rad": report["relative_rotation_rad"].tolist(),
                                       "compression_fraction": report["compression_fraction"],
                                       "max_membrane_strain": report["max_membrane_strain"],
+                                      "frame_hinge": report["frame_hinge"],
                                       "residual": report["gradient_max_j_per_scaled_coordinate"]})
             self.render()
             reaction = report["required_frame_reactions_world_n_nm"][1]

@@ -96,6 +96,12 @@ class SparseShellTests(unittest.TestCase):
         self.assertLess(result["relative_rotation_rad"][1], 0)
         self.assertLessEqual(result["energy_fraction_of_initial"], 1.00001)
 
+    def test_impact_progress_count_matches_time_window_tolerance(self):
+        for duration, microseconds, expected in ((.001, 200, 5), (.015, 25, 600), (.00101, 200, 6)):
+            config = ShellImpactConfig(duration_s=duration, step_s=microseconds*1e-6)
+            config.validate()
+            self.assertEqual(config.step_count, expected)
+
     def test_invalid_refinement_and_contact_combinations(self):
         for change in ({"interior_refinement": 3}, {"interior_refinement": 1}, {"self_contact": True},
                        {"contact_distance_m": 0}, {"contact_energy_j": -1}, {"subdivision": 3},

@@ -5,6 +5,7 @@ Backward Euler adds numerical damping; no material/bond/failure validation.
 """
 
 from dataclasses import asdict, dataclass
+import math
 
 import numpy as np
 import torch
@@ -25,6 +26,11 @@ class ShellImpactConfig:
     pet_density_kg_m3: float = 1390.0
     pla_density_kg_m3: float = 1240.0
     max_iterations: int = 180
+
+    @property
+    def step_count(self):
+        """Match the integrator's 1e-12 s end tolerance, not float-division ceil."""
+        return max(1, math.ceil((self.duration_s-1e-12)/self.step_s))
 
     def validate(self):
         if not np.isfinite(list(asdict(self).values())).all():
@@ -208,6 +214,7 @@ class ShellImpact:
                "relative_rotation_rad": report["relative_rotation_rad"].tolist(),
                "compression_fraction": report["compression_fraction"], "max_membrane_strain": report["max_membrane_strain"],
                "strain_energy_components_j": report["energy_j"], "mechanical_energy_j": float(energy),
+               "frame_hinge": report["frame_hinge"],
                "energy_fraction_of_initial": float(energy/self.initial_energy_j),
                "minimum_foot_gap_m": float(gap.min()), "nonlinear_iterations": iterations,
                "residual_j_per_scaled_coordinate": residual, "stop_reason": self.reason}

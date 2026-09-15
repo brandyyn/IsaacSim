@@ -468,3 +468,16 @@ small-motion case cannot validate the large-fold contact regime.
 Iteration log: 2026-09-14 — refined PLA/PET shell, sparse impact and optional IPC
 implementation checks; spatial convergence and measured crease response remain
 open gates. See `exact_joint/CONTACT_AND_REFINEMENT.md`.
+
+Before tuning a compliant plate attached to a rigid frame, inspect whether the
+mesh actually contains the intended material transition. Free interior nodes
+alone do not create a flexure: a laminate continuing to the frame still supplies
+laminate edge restraint. Represent an exposed-film connection as a finite-width
+material region, constrain only the true perimeter nodes, and preserve connected
+topology. Verify its area under refinement, rigid-body energy invariance, and
+that both static and impact solvers use the same region. Compare with zero width
+without changing moduli; increased local compliance does not establish global
+mechanism travel. See `exact_joint/test_frame_hinges.py` and `exact_joint/FRAME_HINGES.md`.
+
+Iteration log: 2026-09-15 — roof/frame PET-flexure implementation; narrow-strip
+shell validity and full-travel physical calibration remain open.

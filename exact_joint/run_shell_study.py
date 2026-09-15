@@ -24,6 +24,8 @@ def main():
     parser.add_argument("--ratio", type=float, default=100)
     parser.add_argument("--crease-twist-ratio", type=float, default=.1)
     parser.add_argument("--gap-mm", type=float, default=.2)
+    parser.add_argument("--frame-hinge-mm", type=float, default=0,
+                        help="PET-only border inside both roof frames; 0 keeps the legacy roof")
     parser.add_argument("--subdivision", type=int, choices=[1, 2, 3, 4, 5], default=1)
     parser.add_argument("--panel-bending-scale", type=float, default=1)
     parser.add_argument("--membrane-scale", type=float, default=1)
@@ -47,6 +49,7 @@ def main():
     material = JointConfig(hinge_gap_m=args.gap_mm/1000)
     shell = NonlinearShell(source, material, ShellConfig(panel_to_crease_ratio=args.ratio, subdivision=args.subdivision,
                           crease_twist_ratio=args.crease_twist_ratio,
+                          frame_hinge_width_m=args.frame_hinge_mm/1000,
                           panel_bending_scale=args.panel_bending_scale, membrane_scale=args.membrane_scale,
                           vertex_relief_fraction=args.vertex_relief_fraction, max_iterations=args.max_iterations,
                           interior_refinement=args.interior_refinement, sparse_solver=args.sparse,
@@ -89,6 +92,7 @@ def main():
                        "intersection_pairs": report["surface_intersection_pairs"],
                        "candidate_state": candidate.tolist() if not report["accepted"] else None,
                        "energy_j": report["energy_j"],
+                       "frame_hinge": report["frame_hinge"],
                        "self_contact": report.get("self_contact"),
                        "state": candidate.tolist() if report["accepted"] else None}
                 result["cases"].append(row)

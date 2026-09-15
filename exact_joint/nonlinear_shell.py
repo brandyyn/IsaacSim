@@ -37,6 +37,9 @@ class ShellConfig:
     self_contact: bool = False
     contact_distance_m: float = 1e-6
     contact_energy_j: float = 1e-6
+    # Full exposed width on the roof side of each rigid perimeter. Zero keeps
+    # the legacy roof laminate; this is independent of the side-panel gap.
+    frame_hinge_width_m: float = 0.0
 
     def validate(self):
         if not np.isfinite(list(asdict(self).values())).all():
@@ -63,6 +66,8 @@ class ShellConfig:
             raise ValueError("Panel bending and membrane scales must be 0.01-10")
         if not 0 <= self.vertex_relief_fraction <= .2:
             raise ValueError("Experimental PET vertex relief must be 0-20% of each edge")
+        if not 0 <= self.frame_hinge_width_m <= .002:
+            raise ValueError("Frame-to-plate PET hinge width must be 0-2 mm (0 disables it)")
         if not .001 <= self.panel_strain_limit <= .1:
             raise ValueError("Exploratory membrane strain guard must be 0.1-10%")
         if not .02 <= self.minimum_height_fraction <= .5:
@@ -71,12 +76,16 @@ class ShellConfig:
             raise ValueError("Iteration limit must be an integer 10-5000")
 
 
-def surface_mesh(source, subdivision=1, gap_m=0.0, vertex_relief_fraction=0.0, interior_refinement=0):
+def surface_mesh(source, subdivision=1, gap_m=0.0, vertex_relief_fraction=0.0, interior_refinement=0,
+                 frame_hinge_width_m=0.0):
     """Subdivide original planar faces; keep every source vertex and crease chain.
 
 No averaged extrusion normals are used, so refinement preserves the reference
 midsurface. The two roof interiors receive free membrane nodes. Only nodes on
 the eight original square perimeter edges are attached to rigid frames.
+An optional PET-only roof border connects each free PLA/PET plate to its frame.
+Its full perpendicular width lies inside the roof; no source vertex is moved,
+no slit is introduced, and no zero-stiffness revolute joint is substituted.
     """
     points = source["points"].tolist()
     chains, edge_chains = [], {}
@@ -97,7 +106,7 @@ the eight original square perimeter edges are attached to rigid frames.
         chains.append(chain)
         edge_chains[a, b] = chain
         edge_chains[b, a] = chain[::-1]
-    triangles, owners, laminate = [], [], []
+    triangles, owners, laminate, frame_hinge = [], [], [], []
     for owner, panel in enumerate(source["panels"]):
         ids = panel["vertices"]
         center = len(points)
@@ -108,17 +117,36 @@ the eight original square perimeter edges are attached to rigid frames.
             boundary.extend(edge_chains[a, b][:-1])
         faces, face_laminate = [], []
         if len(ids) == 4:
+            plate_boundary = boundary
+            if frame_hinge_width_m:
+                face = source["points"][ids]
+                edges = np.roll(face, -1, axis=0)-face
+                radii = np.linalg.norm(np.cross(edges, center_point-face), axis=1)/np.linalg.norm(edges, axis=1)
+                if not np.allclose(radii, radii[0], atol=1e-12, rtol=1e-9):
+                    raise ValueError("Frame hinge inset requires the original regular square roofs")
+                fraction = frame_hinge_width_m/radii[0]
+                if not np.isfinite(fraction) or not 0 < fraction < .8:
+                    raise ValueError("Frame hinge width must be positive and less than 80% of the roof inradius")
+                plate_boundary = []
+                for vertex in boundary:
+                    plate_boundary.append(len(points))
+                    points.append(((1-fraction)*np.asarray(points[vertex])+fraction*center_point).tolist())
+                for i in range(len(boundary)):
+                    j = (i+1) % len(boundary)
+                    a, b, c, d = boundary[i], boundary[j], plate_boundary[j], plate_boundary[i]
+                    faces.extend([[a, b, c], [a, c, d]])
+                    face_laminate.extend([False, False])
             # An inner roof ring gives the membrane independent bending/twist
             # nodes; none are included in the rigid perimeter-frame constraint.
             inner = []
-            for vertex in boundary:
+            for vertex in plate_boundary:
                 inner.append(len(points))
                 points.append(((np.asarray(points[vertex])+center_point)/2).tolist())
-            for i in range(len(boundary)):
-                j = (i+1) % len(boundary)
-                a, b, c, d = boundary[i], boundary[j], inner[j], inner[i]
+            for i in range(len(plate_boundary)):
+                j = (i+1) % len(plate_boundary)
+                a, b, c, d = plate_boundary[i], plate_boundary[j], inner[j], inner[i]
                 faces.extend([[a, b, c], [a, c, d], [d, c, center]])
-            face_laminate = [True]*len(faces)
+                face_laminate.extend([True, True, True])
         else:
             # Explicit PET-only strip, half the total exposed gap on each
             # adjacent face. Insetting about the incenter gives the specified
@@ -156,6 +184,7 @@ the eight original square perimeter edges are attached to rigid frames.
             triangles.append(face)
             owners.append(owner)
             laminate.append(has_pla)
+            frame_hinge.append(len(ids) == 4 and not has_pla)
     for level in range(interior_refinement):
         midpoint_ids = {}
 
@@ -173,6 +202,7 @@ the eight original square perimeter edges are attached to rigid frames.
         triangles = refined
         owners = np.repeat(owners, 4).tolist()
         laminate = np.repeat(laminate, 4).tolist()
+        frame_hinge = np.repeat(frame_hinge, 4).tolist()
         chains = [[item for a, b in zip(chain[:-1], chain[1:]) for item in (a, middle(a, b))]+[chain[-1]]
                   for chain in chains]
     points, triangles, owners = np.asarray(points), np.asarray(triangles), np.asarray(owners)
@@ -204,11 +234,18 @@ the eight original square perimeter edges are attached to rigid frames.
         hinges.append([first[1], first[2], first[3], second[3]])
         crease_ids.append(crease_lookup.get(edge, -1))
         hinge_faces.append([first[0], second[0]])
+    frame_hinge = np.asarray(frame_hinge, dtype=bool)
+    laminate = np.asarray(laminate, dtype=bool)
+    hinge_faces = np.asarray(hinge_faces)
+    # Highlight the inner PET/PLA interface, not a disconnected visual hinge.
+    interface = (np.any(frame_hinge[hinge_faces], axis=1)
+                 & np.any(laminate[hinge_faces], axis=1))
     return {"points": points, "triangles": triangles, "owners": owners,
             "top": np.unique(top), "bottom": np.unique(bottom), "chains": chains,
             "frame_line_ids": frame_line_ids, "hinges": np.asarray(hinges),
-            "crease_ids": np.asarray(crease_ids), "laminate": np.asarray(laminate),
-            "hinge_faces": np.asarray(hinge_faces),
+            "crease_ids": np.asarray(crease_ids), "laminate": laminate,
+            "hinge_faces": hinge_faces, "frame_hinge": frame_hinge,
+            "frame_hinge_edges": np.asarray(hinges, dtype=int)[interface, :2],
             "free_boundary_edges": np.asarray([edge for edge, faces in edge_faces.items() if len(faces) == 1])}
 
 
@@ -232,7 +269,8 @@ class NonlinearShell:
         self.material.validate()
         self.config.validate()
         self.mesh = surface_mesh(source, self.config.subdivision, self.material.hinge_gap_m,
-                                 self.config.vertex_relief_fraction, self.config.interior_refinement)
+                                 self.config.vertex_relief_fraction, self.config.interior_refinement,
+                                 self.config.frame_hinge_width_m)
         self.points = self.mesh["points"]
         self.width = self.material.width_m
         self.height = source["height_m"]
@@ -461,6 +499,16 @@ class NonlinearShell:
             separation = rotations[0].inv().apply(centers[0]-centers[1])[2]
             angle_change = self.angles(points)-self.rest_angles
             angle_change = torch.atan2(torch.sin(angle_change), torch.cos(angle_change))
+            # Use empty masks for a legacy instance preserved by hot reload.
+            roof_strip = self.mesh.get("frame_hinge", np.zeros(len(self.faces), dtype=bool))
+            roof_hinges = np.any(roof_strip[self.mesh["hinge_faces"]], axis=1)
+            frame_hinge_report = {
+                "width_m": self.config.frame_hinge_width_m,
+                "pet_area_m2": float(self.area[roof_strip].sum()),
+                "max_membrane_strain": float(principal[roof_strip].max()) if np.any(roof_strip) else 0.0,
+                "max_local_dihedral_change_rad": float(angle_change[roof_hinges].abs().max()) if np.any(roof_hinges) else 0.0,
+                "bending_energy_j": float((.5*self.hinge_stiffness[roof_hinges]*angle_change[roof_hinges]**2).sum()),
+            }
         return {"points": points.numpy(), "principal_membrane_strain": principal.numpy(),
                 "max_membrane_strain": float(principal.max()), "relative_rotation_rad": relative,
                 "max_laminate_membrane_strain": float(principal[self.mesh["laminate"]].max()),
@@ -468,6 +516,7 @@ class NonlinearShell:
                 "frame_separation_m": float(separation), "compression_fraction": float(1-separation/self.height),
                 "energy_j": dict(zip(("membrane", "panel_bending", "folding", "crease_twist"), map(float, energies))),
                 "hinge_angle_changes_rad": angle_change.numpy(),
+                "frame_hinge": frame_hinge_report,
                 "scope": "Uncalibrated nonlinear membrane/discrete-hinge model; no solid stress or failure verdict"}
 
     def solve(self, tensions=None, lower_pose=None, nodal_loads=None, initial=None, lower_constraints=None, winch=None):

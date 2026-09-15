@@ -25,6 +25,22 @@ This is the shared progress log. Update it whenever the FEA model, simulator env
 
 ## Roadmap
 
+Roof-frame flexure implementation (2026-09-15): added continuous PET-only hinge
+borders inside both rigid square frames. New nonlinear default/preset uses a
+0.2 mm border; legacy roof remains an explicit comparison. Original 28/50/76
+geometry, 0.4 mm PLA / 80 um PET thicknesses and side-fold layout are preserved.
+The new controls rebuild physics and visual topology together; local roof hinge
+diagnostics are included in static and impact results. 75 regression tests and
+12 static comparisons pass. Compression changes from 0.503% to 0.527% at 3 N per
+active cable; roof-centre deflection rises from 0.247 to 0.269 mm at 1 N. Full
+folding and physical validation remain unresolved. Case `exact_joint_frame_hinges_v1`,
+run `20260915-exact-knee-frame-hinges-v1`; see `exact_joint/FRAME_HINGES.md`.
+No training, strength claim or v8 baseline promotion.
+Nine live callback/render/layout checks passed, including an eight-step cable ramp
+and the first 1 ms of a 70 mm impact (not a peak or survival test). Native mouse
+automation was unavailable; callbacks were invoked directly in Kit. The final
+roof-force result remains open, and the force arrow follows its actual load point.
+
 Refinement/reconnection follow-up (2026-09-15): reproduced a stale workshop
 binding after opening a saved nonlinear USD. Added explicit checksum-guarded
 reconnection, before/after-worker scene guards, and result-preserving hot reload.
@@ -34,7 +50,7 @@ geometry/thicknesses. Softer strip/panel bending does not yield full motion;
 100x softer membrane candidates violate the strain guard and are not promoted.
 Boundary 3/interior 1 gives 0.625% compression, 0.178 degrees bend and 0.096 degrees
 twist at 3 N in separate cases; the spatial-convergence gate still fails.
-66 numerical/controller checks pass; real button/render and scene guards tested
+67 numerical/controller checks pass; real button/render and scene guards tested
 live. See case `exact_joint_boundary_refinement_v1` and evaluation
 `20260915-exact-knee-refinement-reconnect-v1`. Full folding and physical material
 validation remain unresolved. No training or v8 baseline promotion.

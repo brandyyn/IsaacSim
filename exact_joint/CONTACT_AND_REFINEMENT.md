@@ -5,6 +5,17 @@ joint, a solid-stress FEM result, or a drop-survival calculation. The custom
 CPU shell solver runs inside the Isaac workshop; PhysX is not calculating these
 shell stresses. The v8 machine-learning baseline is unchanged.
 
+## Roof-frame hinge design, 2026-09-15
+
+The latest nonlinear preset adds a 0.2 mm PET-only border inside both square
+frames, connecting them to inset PLA/PET roof plates. The original coarse
+geometry and actual thicknesses are preserved; only roof PLA coverage changes.
+The old roof remains available as **Material reference**. New width controls,
+green interface outlines, local hinge diagnostics and cable/drop integration
+are documented in [Frame hinges](FRAME_HINGES.md). All 75 regression tests and
+12 static comparison cases pass. This is an implementation fix, not calibrated
+full-travel motion or proof of survival.
+
 ## Refinement and saved-scene recovery, 2026-09-15
 
 The opened saved USD and the running workshop can be different USD stage
@@ -47,11 +58,16 @@ tuning fix, not proof of the correct physical crease model.
 At boundary 3, interior refinement 0 to 1 changes compression about 8.7%, bend
 17.4% and twist 8.0%; the 5% spatial-convergence gate still fails. The exact
 source vertices, per-panel area and PLA/PET coverage remain invariant under the
-new boundary subdivisions. Sixty-six numerical/controller tests pass, including
+new boundary subdivisions. Sixty-seven numerical/controller tests pass, including
 discarding a worker result after scene change. Live scene-binding checks verify
 a real eight-step Bend Y+ button command, 1x rendered coordinates, and safe
 rejection of unrelated or disconnected scenes. These checks do not validate
 material response, full folding, strength or impact survival.
+
+The impact progress counter uses the integrator's time-window tolerance; an
+exact 1 ms window at 200 us now correctly displays five steps, not six. Rejected
+impact candidates do not increment the accepted-step counter or add duplicate
+replay frames.
 
 The study is reproducible with `python -m exact_joint.probe_shell_compliance`
 (`--output-dir` is optional). Case `exact_joint_boundary_refinement_v1` and run
