@@ -25,6 +25,21 @@ This is the shared progress log. Update it whenever the FEA model, simulator env
 
 ## Roadmap
 
+Photo-based topology and display checkpoint (2026-09-16): implementation
+`714b0e7f3b93477778ebfda9688655cce8f44c7b` excludes the two JSON end caps,
+preserves all 48 side panels and continuous 80 um PET, and adds 0.2 mm exposed
+frame-to-side-panel strips. PLA remains 0.4 mm; material scales remain 1.
+Smooth display-only transitions run independently of accepted FEM states;
+intermediate strain contours are hidden. 85 tests, 12 force cases and nine live
+Kit callback/render checks pass. At 10 N/strand, the 0.2 mm gap gives 2.196%
+compression / 0.509 deg bend / 0.360 deg twist in separate cases; widening the
+gap to 0.8 mm does not recover full travel. The original ideal rigid-facet
+edge-constraint audit has rank 66/66 at neutral; this does not establish the
+deformable-film response. Live impact QA covers only the first 1 ms of a 70 mm
+drop. Case `exact_joint_photo_open_v1`, run `20260916-exact-knee-photo-open-v1`.
+See `exact_joint/PHOTO_JOINT.md`. No full-motion, calibration, survival or ML
+promotion claim. Source JSON and v8 baseline unchanged; local only, not pushed.
+
 Roof-frame flexure implementation (2026-09-15): added continuous PET-only hinge
 borders inside both rigid square frames. New nonlinear default/preset uses a
 0.2 mm border; legacy roof remains an explicit comparison. Original 28/50/76

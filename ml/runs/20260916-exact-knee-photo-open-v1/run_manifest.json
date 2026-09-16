@@ -1,0 +1,56 @@
+{
+  "run_id": "20260916-exact-knee-photo-open-v1",
+  "status": "implementation_checked_not_physical_validation",
+  "baseline_commit": "5131a9740b3ce82e42331e923e1a45ffa396f71c",
+  "starting_commit": "1b26175bbaffc8c0e0fc5a07b97c8f84ed31a229",
+  "implementation_commit": "714b0e7f3b93477778ebfda9688655cce8f44c7b",
+  "parent_run": "20260915-exact-knee-frame-hinges-v1",
+  "isaac_sim_version": "6.0.1-rc.7 / Kit 110.1.2",
+  "stage": "Owned /World/NonlinearFrameLeg overlay in existing workshop; no user USD overwritten",
+  "environment_version": "photo open ends + solved-state display v1; v8 baseline unchanged",
+  "fea_case_id": "exact_joint_photo_open_v1",
+  "fea_artifact_sha256": "37f4676045804d5f11b2378836f3d9a4d00192401962c4e1b58840b1aee4aa7f",
+  "algorithm": "Custom shell implementation evaluation; no ML",
+  "seed": 0,
+  "randomization": {},
+  "observations": [],
+  "actions": [],
+  "reward_version": "none",
+  "training": {
+    "command": "none",
+    "steps": 0,
+    "wall_time_s": 0
+  },
+  "evaluation": {
+    "command": "unittest discover exact_joint test_*.py; run_shell_study --open-ends --frame-hinge-mm .2 --sparse --physical-strip --self-contact --interior-refinement 1 --crease-twist-ratio 0 --forces 3 10 (gaps .2/.8 mm); validate_photo_joint_live.py in Kit",
+    "conditions": "PLA 0.4 mm / PET 80 um; assumed moduli; no cuts or material scaling; live drop only first 1 ms",
+    "metrics": "metrics.json"
+  },
+  "artifacts": {
+    "config": "config.json",
+    "metrics": "metrics.json",
+    "checkpoint": null,
+    "checkpoint_sha256": null,
+    "sha256": {
+      "config.json": "86600b4bee2c276b189f5f4a2c77b3154d7b9afef099c4e3b2e388079e17dcb8",
+      "force_study_0.json.gz": "42c03860b7a825da49a2f39f478e8f7d8f7944441c765ae005d3902541baafde",
+      "force_study_1.json.gz": "7d1093ad315837d21a0d1a9649492502a9168e211da9bcb70023010b4d6f60df",
+      "live_callbacks.json.gz": "9f4565ae3ca46fef9e5eeeafa88c8c96b5206475ab7ba089a1090602c787808e",
+      "metrics.json": "f77c16a551c0fe118d8696598947b35b575d865baf8e6da97d8eafcd3ab5b0e0",
+      "tested_fold_compatibility.py.gz": "9f7c074a684d3632a1c1bbf717b72a3727bb08476738072c7101d874bdba6113",
+      "tested_nonlinear_shell.py.gz": "2e16edaa44b91136f7b9af5e62ea006a6c931d29754423f21398a64a9baa6623",
+      "tested_shell_actuation.py.gz": "a2d9014bd3eb61e6b590aff4764bba5bf3e79117c0805c61bf95797cdfd21f0d",
+      "tested_shell_contact.py.gz": "f26828c4a40326aa25419d3478b0bc88d028d328aa613bc8b3f6c06eb000f5d3",
+      "tested_shell_impact.py.gz": "43e03152590cb6039cdf608fab9d85439382c58a0fa6503904908c627fa0c7fa",
+      "tested_shell_ipc.py.gz": "313cb121f019732a0646e6711f5f958a52a1c3f600bda758d0c197925c38c901",
+      "tested_shell_presentation.py.gz": "ac9b7a654b139268b9e3430b84404cd7a0bdb5e8d04d66cface60c089d92c2f8",
+      "tested_shell_sparse.py.gz": "ea67867a4f602fb0790f014b99eb069c979509a32d0345e7f6de96eaae0046c1",
+      "tested_shell_ui_jobs.py.gz": "48e3b46db2c855ca9a93cbd80f022067e83989207c33858c63999eb5a48df8d1",
+      "tested_shell_view.py.gz": "32ffbb846c8f9989fa37968082dda6b6691b064c53f9e7bafc387c25841ff8d6",
+      "tested_validate_photo_joint_live.py.gz": "e5caaec63b4bf24c56b6600e4a614cd4854fbaa190b7e6ec3f0d7801e9e5f26b",
+      "workshop_qa.png": "f913be7c6f011045db0ce73af9a290523398d83f8918394e26443a36f46bcb31"
+    }
+  },
+  "provenance_notes": "Raw source-byte hashes checked against final files and committed code after newline normalization; code snapshots archived. No full folding, finite-thickness contact, material calibration or survival claim.",
+  "publication": "Local only; not pushed"
+}

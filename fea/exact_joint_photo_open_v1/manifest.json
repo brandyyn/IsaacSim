@@ -1,0 +1,136 @@
+{
+  "case_id": "exact_joint_photo_open_v1",
+  "status": "photo_topology_and_display_implementation_checked_full_travel_unresolved",
+  "parent_case": "exact_joint_frame_hinges_v1",
+  "starting_commit": "1b26175bbaffc8c0e0fc5a07b97c8f84ed31a229",
+  "geometry": {
+    "source_asset": "exact_joint/open_nonlinear_gui.py runtime overlay",
+    "source_topology": "exact_joint/source_joint.json",
+    "geometry_revision": "Unchanged 28 source vertices and 48 side panels; exclude the two JSON end caps, retain open rigid perimeters and continuous PET side-frame strips",
+    "sha256": "d578618a0f90342bd0093b4febe130dc0b07c18f1b223c4d6bf02c9f3d93ce35",
+    "width_m": 0.03,
+    "neutral_height_m": 0.0264,
+    "manufacturing_layout": {
+      "frame_to_side_panel_pet_width_m": 0.0002,
+      "side_panel_gap_m": 0.0002,
+      "pet_cut": false
+    },
+    "photo_references": [
+      {
+        "filename": "WhatsApp Image 2026-09-15 at 20.36.47 (1).jpeg",
+        "sha256": "97c46bbed4b80ff7a72489c1a5e55d057877e39ceaf6fe797095d827e045d35e"
+      },
+      {
+        "filename": "WhatsApp Image 2026-09-15 at 20.36.47 (2).jpeg",
+        "sha256": "f2017adbe806674c6536819279e855ce507c3d601c2f19238531e0389e192277"
+      },
+      {
+        "filename": "WhatsApp Image 2026-09-15 at 20.36.47 (3).jpeg",
+        "sha256": "333da1f650084d77eb606f891666b0204cda4170ee589cdbfe9128d669c6c3ca"
+      },
+      {
+        "filename": "WhatsApp Image 2026-09-15 at 20.36.47 (4).jpeg",
+        "sha256": "64861cb017405062f4ca3368dd68c09c6fcadccdbb1a991bd3d812b5187d6683"
+      },
+      {
+        "filename": "WhatsApp Image 2026-09-15 at 20.36.47 (5).jpeg",
+        "sha256": "998d9b68bc688b4597c0b1ad3156aa663fc7c4e06d2f6bb285172d879b82c04f"
+      },
+      {
+        "filename": "WhatsApp Image 2026-09-15 at 20.36.47.jpeg",
+        "sha256": "e5931bc1625428051bac5f84a21b6594517176a1fb9665fa1d9fb5ed4841619f"
+      }
+    ],
+    "visual_hardware": "Schematic 2 mm tall / 0.4 mm thick mounting bands only; not extra shell elements; lug/hole/guide dimensions unmeasured"
+  },
+  "units": {
+    "length": "m",
+    "mass": "kg",
+    "time": "s",
+    "force": "N",
+    "torque": "N*m",
+    "stress": "Pa",
+    "angle": "rad"
+  },
+  "frames": {
+    "fea_frame": "Origin lower perimeter center; Z upwards; source rotated +90 degrees about X and uniformly scaled from 250-unit width to 0.03 m",
+    "isaac_frame": "Same orientation plus recorded vertical display offset",
+    "transform_fea_to_isaac": "Identity rotation and scale; translation [0,0,offset] in saved calculation",
+    "joint_axis_in_isaac": [
+      0,
+      1,
+      0
+    ],
+    "neutral_angle_rad": 0,
+    "positive_angle_direction": "Right-hand relative frame rotation vector, not independent Euler angles"
+  },
+  "material": {
+    "model": "Finite-rotation Green membrane strain / plane-stress StVK plus discrete hinges; uncalibrated",
+    "parameters": {
+      "pet_thickness_m": 8e-05,
+      "pla_thickness_m": 0.0004,
+      "pet_modulus_pa": 3500000000,
+      "pla_modulus_pa": 2200000000,
+      "pet_poisson": 0.35,
+      "pla_poisson": 0.35
+    },
+    "assumptions": "User thicknesses; unmeasured elastic moduli, perfectly bonded isotropic PLA/PET. Material reference uses physical PET bending and zero extra crease coupling. PET pre-creasing/plasticity uncalibrated."
+  },
+  "mesh": {
+    "element_type": "Triangular membrane with discrete bending hinges and explicit PET-only borders",
+    "element_count": 3456,
+    "mesh_revision": "Open 48-side-panel shell; boundary subdivision 1 / interior refinement 1",
+    "convergence_summary": "Material area, source coordinates and open/continuous boundaries checked; spatial convergence not established",
+    "node_count": 1744
+  },
+  "boundary_conditions": [
+    "Static upper perimeter frame fixed; lower frame and web free under load",
+    "No end caps. Only square perimeter positions rigid; no imposed clamped slope at open frame boundaries",
+    "Continuous finite-width PET and deformable PLA/PET panels; no added cuts or softened material scales",
+    "No prescribed pose in cable-force or winch actuation; cable guides remain simplified corner-to-corner paths",
+    "Drop: both frames dynamic, four frictionless compliant normal foot contacts"
+  ],
+  "loads": [
+    "Separate compression, Y bend and CW twist at 3 and 10 N per active strand; compare side gaps 0.2 / 0.8 mm",
+    "Live eight-step compression/bend/twist ramps at 3 N; same open shell for 70 mm drop",
+    "Drop check only first 1 ms after contact at 200 us, assumed 30 g upper / 20 g lower assembly; unloaded cables"
+  ],
+  "solver": {
+    "software": "Project NumPy/SciPy/Torch sparse nonlinear shell + IPC Toolkit 1.6.0 rendered in Isaac",
+    "version": "Implementation commit and source-file hashes in linked run manifest",
+    "analysis_type": "Quasistatic load continuation; separate implicit backward-Euler drop diagnostic",
+    "time_step_s": null,
+    "notes": "Actual elastic/cable/contact energy gradients; Gauss-Newton search tangent. Midsurface barrier and conservative curved-frame CCD, NOT finite-thickness contact. Impact numerical stopping target 1e-6; physical residual rejection remains 3e-5."
+  },
+  "outputs": {
+    "raw_files": [
+      "ml/runs/20260916-exact-knee-photo-open-v1/live_callbacks.json.gz",
+      "ml/runs/20260916-exact-knee-photo-open-v1/force_study_0.json.gz",
+      "ml/runs/20260916-exact-knee-photo-open-v1/force_study_1.json.gz"
+    ],
+    "processed_files": [
+      "ml/runs/20260916-exact-knee-photo-open-v1/metrics.json"
+    ],
+    "response_model": null
+  },
+  "limitations": [
+    "Full folding motion is not reproduced",
+    "Spatial convergence not established",
+    "Actual PET seam connectivity and cable guides unconfirmed",
+    "Creased-film plasticity, hysteresis, bonds and print anisotropy uncalibrated",
+    "Midsurface contact has no laminate thickness clearance, friction or cable contact",
+    "Impact benchmark only covers first 1 ms after contact; no survival or full-peak result",
+    "No training or baseline promotion",
+    "Narrow 0.2 mm flexure relative to 80 um film thickness requires shell-approximation and actual crease validation",
+    "Photo-informed topology, not exact manufactured hardware CAD",
+    "Display easing is not equilibrium, physical dynamics or a certified collision path; no intermediate stress results saved",
+    "Ideal rigid-facet audit has zero first-order mobility at neutral, but does not establish deformable-film behavior"
+  ],
+  "review": {
+    "prepared_by": "Codex",
+    "reviewed_by": [],
+    "date_utc": "2026-09-16",
+    "notes": "Local callback, numerical and render checks; no native mouse automation. No publication or ML promotion."
+  },
+  "implementation_commit": "714b0e7f3b93477778ebfda9688655cce8f44c7b"
+}

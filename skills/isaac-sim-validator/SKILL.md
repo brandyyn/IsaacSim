@@ -21,7 +21,7 @@ Final gate before delivery. Reject outputs that fail the checks below; do not so
 | `isaacsim` import | uses `isaacsim.*`, not `omni.isaac.core` | reject: `Use isaacsim.* namespace; omni.isaac.core is deprecated` |
 | `SimulationApp` config | explicit `width` and `height` | reject: `SimulationApp without window args causes swapchain-capture size mismatch` |
 | Lights present | `DomeLight` (intensity >= 100) **and** `DistantLight` (>= 500) | reject: `No lighting; render will be black` |
-| Render mode | `RayTracedLighting` for iteration; `PathTracing` only for hero shots | reject: `PathTracing too slow for iteration; use RayTracedLighting` |
+| Render mode | Supported real-time renderer: `RaytracedLighting`, or `RealTimePathTracing` (RTX Real-Time 2.0 in 6.x); offline `PathTracing` only for hero shots | reject offline `PathTracing` for iteration; verify installed runtime spelling/default and measured frame time |
 | ACES tonemap | `/rtx/post/tonemap/op=4`, `filmIso` 200 default / 600 deep-aisle / 400 aerial | suggest: `Enable ACES (op=4) for contrast` |
 | Final render | >= 150 KB and mean_RGB > 30 | reject: `Render is black or low-energy; check lighting` |
 | User paths | no `/home/<user>/`, `C:\Users\<name>\`, or per-agent home paths | reject: `Hardcoded user path; use $ISAAC_SIM_DIR, $ISAAC_LAB_DIR, $WORKSPACE_DIR, or argparse` |
@@ -96,8 +96,8 @@ graph TD
     K -->|No| L[Reject: "SimulationApp requires explicit width and height"]
     K -->|Yes| M{Dome + Distant lights?}
     M -->|No| N[Reject: "Add DomeLight and DistantLight (min intensity 100 and 500)"]
-    M -->|Yes| O{RayTracedLighting?}
-    O -->|No| P[Reject: "Use RayTracedLighting for iteration"]
+    M -->|Yes| O{Supported real-time renderer?}
+    O -->|No| P[Reject: "Use a supported real-time renderer for iteration"]
     O -->|Yes| Q{Render output exists?}
     Q -->|No| R[Reject: "No render output"]
     Q -->|Yes| S{>= 150 KB and mean_RGB > 30?}
@@ -124,6 +124,11 @@ graph TD
 - Suggest (only when otherwise valid): `Could be improved: <tip>`
 
 Do not hedge ("I think", "maybe"). Do not deliver a black frame.
+
+Iteration note (2026-09-16): Isaac 6.x defaults to RTX Real-Time 2.0
+(`RealTimePathTracing`), distinct from offline `PathTracing`. Confirm against
+`source/extensions/isaacsim.simulation_app/isaacsim/simulation_app/simulation_app.py`;
+do not repeatedly force an unsupported older mode solely to match its name.
 
 ## Input sources
 

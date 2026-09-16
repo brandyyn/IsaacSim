@@ -666,4 +666,15 @@ was changed. See `exact_joint/CONTACT_AND_REFINEMENT.md` for the current control
 
 ## Conversation intent in one sentence
 
+Latest checkpoint (2026-09-16): the photo-informed open-ended knee is implemented
+at `714b0e7f3b93477778ebfda9688655cce8f44c7b`, with case
+`fea/exact_joint_photo_open_v1` and run `ml/runs/20260916-exact-knee-photo-open-v1`.
+It retains the original JSON side geometry but omits both end caps, adds continuous
+PET frame-to-side-panel regions and separates smooth display interpolation from
+accepted FEM states. See `exact_joint/PHOTO_JOINT.md` for controls, numerical
+results, 85-test/nine-live-check validation and limitations. Full physical travel
+is still unresolved. The user next requested simpler controls, applying material,
+stiffness/ratio and tension changes with every movement, and lower computational
+cost without bypassing FEM. This is a follow-up, not a validated mechanics upgrade.
+
 Use the original triangulated panel joint as the visible, continuous compressing shell of a paper-guided robot knee, while keeping the actual PhysX mechanism stable enough to run, share, and later serve as the environment for machine-learning experiments.

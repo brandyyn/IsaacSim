@@ -1,0 +1,33 @@
+{
+  "material": {
+    "width_m": 0.03,
+    "pet_thickness_m": 7.999999999999999e-05,
+    "pla_thickness_m": 0.0004,
+    "pet_modulus_pa": 3500000000.0,
+    "pla_modulus_pa": 2200000000.0,
+    "pet_poisson": 0.35,
+    "pla_poisson": 0.35,
+    "hinge_gap_m": 0.0002,
+    "refinement": 1
+  },
+  "shell_config": {
+    "subdivision": 1,
+    "panel_to_crease_ratio": 100.0,
+    "crease_twist_ratio": 0.0,
+    "panel_bending_scale": 1.0,
+    "membrane_scale": 1.0,
+    "vertex_relief_fraction": 0.0,
+    "panel_strain_limit": 0.03,
+    "minimum_height_fraction": 0.08,
+    "max_iterations": 900,
+    "interior_refinement": 1,
+    "sparse_solver": true,
+    "physical_strip_bending": true,
+    "self_contact": true,
+    "contact_distance_m": 1e-06,
+    "contact_energy_j": 1e-06,
+    "frame_hinge_width_m": 0.0002,
+    "open_ends": true
+  },
+  "source_sha256": "d578618a0f90342bd0093b4febe130dc0b07c18f1b223c4d6bf02c9f3d93ce35"
+}
