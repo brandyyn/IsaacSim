@@ -189,6 +189,7 @@ Add one row for every completed training or evaluation run. The detailed record 
 | `20260906-exact-knee-visible-fem-v1` | `95414aa3`; implementation linked in run manifest | `exact_joint_cable_v1` unchanged | 0 (unused) | Visible FEM/control regression | Live load ramps, cable glyphs/bars, labelled diagnostic magnification, native Play/Pause and saved-USD reconnect; no ML or new structural validation | None |
 | `20260906-exact-knee-demo-tweaks-v1` | `5e7844e5`; simulator `a1d9bd7b` | `exact_joint_cable_v1` baseline plus recorded sensitivity configurations | 0 (unused) | Clean-launch and demonstration checks | Apply/visible regressions rerun; seven real-UI rebuild comparisons, display/save checks and baseline restoration passed. Gap trend is counterintuitive and not fit for optimization; mesh convergence still FAIL. No ML. | None |
 | `20260920-exact-knee-fold-lines-v2` | `e965d365`; implementation same | `exact_joint_photo_open_fold_lines_v2` | 0 (unused) | Joint-only fold-line FEM/UI evaluation | 22 focused numeric checks, 6 accepted fold-control study cases, 28/28 cable-demo steps and 9 live checks; full travel, calibration and survival unresolved | None |
+| `20260920-exact-knee-button-fix-v3` | `2088951a` | `exact_joint_photo_open_button_fix_v3` | 0 (unused) | Live movement-button recovery and cable FEM/UI evaluation | 7/7 direct movement callbacks complete with nonzero telemetry; Cable demo 28/28; 9 live checks and 9 controller tests; full travel, calibration and survival unresolved | None |
 
 ### 2026-09-06: exact knee-only cable FEM handoff
 
@@ -224,3 +225,13 @@ strength/survival claim is made. The latest photo live validation passes nine
 checks, including capped/open topology, frame-hinge rebuild, material/fold
 control changes, smooth accepted-state transitions, all seven cable families,
 and the short 70 mm drop window. New code is local and not an ML promotion.
+
+Button-recovery follow-up (2026-09-20): implementation
+`2088951aef66e6d40f0b49c484c98c592441e458`. The actual Compression, Bend X+/−,
+Bend Y+/− and Twist CW/CCW UI callbacks each complete one accepted FEM solve.
+Cable demo completes 28/28 steps. Cancellation now clears stale RUNNING state,
+and final feedback reports solved bend, twist, compression and cable peak. The
+default 3 N response is physically small; the Magnified response checkbox is
+display-only. Run `20260920-exact-knee-button-fix-v3` and case
+`exact_joint_photo_open_button_fix_v3` archive source/code hashes and live
+evidence. This is a UI/reliability repair, not a full-travel or survival claim.

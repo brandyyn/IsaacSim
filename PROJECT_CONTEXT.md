@@ -704,3 +704,17 @@ reproduce full compression/bend/twist; this remains an exploratory custom shell
 model rather than calibrated solid FEA or a survival verdict. Baseline commit
 `5131a974` and the original source JSON remain unchanged; this follow-up is local
 only.
+
+### 2026-09-20: live button recovery and end-to-end actuation check
+
+The movement controls were exercised through their actual UI callbacks after a
+live reload: Compression, Bend X+/−, Bend Y+/− and Twist CW/CCW each completed
+one accepted nonlinear FEM step and reported nonzero bend/twist/compression
+telemetry. The 28-step Cable demo also completed all seven families and four
+tension fractions per family. A cancelled worker now clears the stale RUNNING
+state, and completion feedback reports the solved response so a small 3 N motion
+is not mistaken for a dead button. The response magnifier remains display-only;
+it does not change the FEM state. Roof-flex and prescribed pose controls remain
+intentionally unavailable in open-ended joint mode. Evidence is archived in
+`ml/runs/20260920-exact-knee-button-fix-v3`; full physical travel, calibration,
+solid-stress FEA and drop survival remain unresolved.
