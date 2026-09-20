@@ -1,0 +1,163 @@
+{
+  "focused_numeric_tests": {
+    "simple_ui": true,
+    "seven_displacement_actuations": true,
+    "reaction_force_measurement": true,
+    "material_stiffness_rebuild": true
+  },
+  "live_checks": {
+    "simple_ui": true,
+    "seven_displacement_actuations": true,
+    "reaction_force_measurement": true,
+    "material_stiffness_rebuild": true,
+    "no_force_target": true
+  },
+  "live_measurements": {
+    "Compression": {
+      "target_displacement_m": 0.0005,
+      "relative_rotation_rad": [
+        -8.220736534293395e-05,
+        -4.103227504511247e-05,
+        -3.1137656076184384e-05
+      ],
+      "compression_fraction": 0.018939393939393923,
+      "max_membrane_strain": 0.013190837407380331,
+      "reaction_world_n_nm": [
+        3.550175398103761e-07,
+        -3.9103320581546086e-07,
+        53.86533157432967,
+        -1.014807246575778e-08,
+        -9.367946747011235e-09,
+        2.558370643297286e-09
+      ],
+      "active_cable_count": 4,
+      "load_type": "DISPLACEMENT Compression 0.500 mm"
+    },
+    "Bend X+": {
+      "target_displacement_m": 0.0005,
+      "relative_rotation_rad": [
+        -2.2522335338297617e-06,
+        -0.022649535792155662,
+        -4.18410723713505e-06
+      ],
+      "compression_fraction": 0.0006737182599048097,
+      "max_membrane_strain": 0.019752867487383793,
+      "reaction_world_n_nm": [
+        107.53008240323997,
+        3.409198257031676e-08,
+        -7.553179619534944e-07,
+        1.5131807413594134e-09,
+        5.165631704386016e-09,
+        -8.206550049757695e-13
+      ],
+      "active_cable_count": 2,
+      "load_type": "DISPLACEMENT Bend X+ 0.500 mm"
+    },
+    "Bend X-": {
+      "target_displacement_m": 0.0005,
+      "relative_rotation_rad": [
+        1.2533873383515448e-05,
+        0.022642465661861535,
+        -5.0387579652288385e-06
+      ],
+      "compression_fraction": 0.0005193940245431516,
+      "max_membrane_strain": 0.0197322699269806,
+      "reaction_world_n_nm": [
+        -107.49991057413439,
+        1.4851924667880212e-07,
+        -4.6205219028649935e-07,
+        3.0608468988375975e-09,
+        -1.1993370391702782e-08,
+        -3.940104969172234e-09
+      ],
+      "active_cable_count": 2,
+      "load_type": "DISPLACEMENT Bend X- 0.500 mm"
+    },
+    "Bend Y+": {
+      "target_displacement_m": 0.0005,
+      "relative_rotation_rad": [
+        0.022640923781534077,
+        3.52118354999829e-05,
+        -1.903271908413979e-05
+      ],
+      "compression_fraction": 0.0005135536120073336,
+      "max_membrane_strain": 0.01975132802697112,
+      "reaction_world_n_nm": [
+        5.6999777342525704e-08,
+        107.50771070191962,
+        -4.6969139066987964e-07,
+        -1.3250966576818862e-08,
+        -5.978352079741559e-10,
+        2.226096796152239e-09
+      ],
+      "active_cable_count": 2,
+      "load_type": "DISPLACEMENT Bend Y+ 0.500 mm"
+    },
+    "Bend Y-": {
+      "target_displacement_m": 0.0005,
+      "relative_rotation_rad": [
+        -0.02265109893859496,
+        -2.506436749476357e-05,
+        1.5880238063696168e-05
+      ],
+      "compression_fraction": 0.0006806233372629311,
+      "max_membrane_strain": 0.019781186287090788,
+      "reaction_world_n_nm": [
+        -9.913260434757376e-08,
+        -107.52892324128084,
+        -4.969828202305848e-07,
+        3.5379498129756705e-09,
+        1.810268962742217e-09,
+        -1.022247223863989e-09
+      ],
+      "active_cable_count": 2,
+      "load_type": "DISPLACEMENT Bend Y- 0.500 mm"
+    },
+    "Twist CW": {
+      "target_displacement_m": 0.0005,
+      "relative_rotation_rad": [
+        -6.30617849647246e-05,
+        -2.9233601372537516e-06,
+        0.03333333333333333
+      ],
+      "compression_fraction": 0.00506591883578289,
+      "max_membrane_strain": 0.022838877232943457,
+      "reaction_world_n_nm": [
+        4.4087204287279746e-07,
+        9.340646087707682e-07,
+        4.60034768057227e-07,
+        -5.641285357657983e-06,
+        0.00010898984600774416,
+        3.4577776497941564
+      ],
+      "active_cable_count": 4,
+      "load_type": "DISPLACEMENT Twist CW 0.500 mm"
+    },
+    "Twist CCW": {
+      "target_displacement_m": 0.0005,
+      "relative_rotation_rad": [
+        3.1149005011622285e-05,
+        -7.65723841887224e-06,
+        -0.03333333333333333
+      ],
+      "compression_fraction": 0.005207764673704207,
+      "max_membrane_strain": 0.022869983669593325,
+      "reaction_world_n_nm": [
+        -3.417678229311604e-08,
+        -2.4385194308251812e-08,
+        -4.37262741570521e-08,
+        1.3519402049827826e-05,
+        5.371033732075559e-05,
+        -3.453267493298786
+      ],
+      "active_cable_count": 4,
+      "load_type": "DISPLACEMENT Twist CCW 0.500 mm"
+    }
+  },
+  "target_displacement_m": 0.0005,
+  "full_physical_travel_reproduced": false,
+  "physical_calibration": false,
+  "drop_survival": null,
+  "solid_stress_fea": false,
+  "scope": "Custom nonlinear shell FEM, one open-ended joint; not a survival or strength evaluation"
+}

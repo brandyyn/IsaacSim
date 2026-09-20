@@ -1,0 +1,113 @@
+{
+  "case_id": "exact_joint_photo_displacement_ui_v4",
+  "status": "displacement_controlled_single_joint_checked",
+  "parent_case": "exact_joint_photo_open_button_fix_v3",
+  "starting_commit": "714b0e7f3b93477778ebfda9688655cce8f44c7b",
+  "geometry": {
+    "source_asset": "exact_joint/open_nonlinear_gui.py runtime overlay",
+    "source_topology": "exact_joint/source_joint.json",
+    "geometry_revision": "One open-ended knee joint: omit JSON end caps, retain 48 side panels / 76 crease chains, rigid square perimeters and continuous PET frame hinges",
+    "sha256": "d578618a0f90342bd0093b4febe130dc0b07c18f1b223c4d6bf02c9f3d93ce35",
+    "width_m": 0.03,
+    "neutral_height_m": 0.0264,
+    "manufacturing_layout": {
+      "frame_to_side_panel_pet_width_m": 0.0002,
+      "side_panel_gap_m": 0.0002,
+      "pet_cut": false
+    },
+    "photo_references": [],
+    "visual_hardware": "Schematic 2 mm tall / 0.4 mm thick mounting bands only; not extra shell elements; lug/hole/guide dimensions unmeasured"
+  },
+  "units": {
+    "length": "m",
+    "mass": "kg",
+    "time": "s",
+    "force": "N",
+    "torque": "N*m",
+    "stress": "Pa",
+    "angle": "rad"
+  },
+  "frames": {
+    "fea_frame": "Origin lower perimeter center; Z upwards; source rotated +90 degrees about X and uniformly scaled from 250-unit width to 0.03 m",
+    "isaac_frame": "Same orientation plus recorded vertical display offset",
+    "transform_fea_to_isaac": "Identity rotation and scale; translation [0,0,offset] in saved calculation",
+    "joint_axis_in_isaac": [
+      0,
+      1,
+      0
+    ],
+    "neutral_angle_rad": 0,
+    "positive_angle_direction": "Right-hand relative frame rotation vector, not independent Euler angles"
+  },
+  "material": {
+    "model": "Finite-rotation Green membrane strain / plane-stress StVK plus discrete hinges; uncalibrated",
+    "parameters": {
+      "pet_thickness_m": 8e-05,
+      "pla_thickness_m": 0.0004,
+      "pet_modulus_pa": 3500000000,
+      "pla_modulus_pa": 2200000000,
+      "pet_poisson": 0.35,
+      "pla_poisson": 0.35
+    },
+    "assumptions": "User thicknesses; unmeasured elastic moduli, perfectly bonded isotropic PLA/PET. Material reference uses physical PET bending and zero extra crease coupling. PET pre-creasing/plasticity uncalibrated."
+  },
+  "mesh": {
+    "element_type": "Triangular membrane with discrete bending hinges and explicit PET-only borders",
+    "element_count": 864,
+    "mesh_revision": "Boundary subdivision 1 / interior refinement 0 open side-panel mesh",
+    "convergence_summary": "Topology and material controls checked; spatial convergence and full travel not established",
+    "node_count": 440
+  },
+  "boundary_conditions": [
+    "Upper square perimeter fixed; lower perimeter displacement is prescribed in small continuation steps",
+    "Compression and bend use lower-frame translation; twist uses equivalent cable arc displacement",
+    "Reaction force/moment is recovered from the constrained FEM gradient after each accepted solve",
+    "Midsurface IPC disabled in the interactive displacement path; strain/intersection guards remain active"
+  ],
+  "loads": [
+    "0.5 mm target displacement sweep for seven cable families; no force target"
+  ],
+  "solver": {
+    "software": "Project NumPy/SciPy/Torch sparse nonlinear shell + IPC Toolkit 1.6.0 rendered in Isaac",
+    "version": "Implementation commit and source-file hashes in linked run manifest",
+    "analysis_type": "Quasistatic load continuation; separate implicit backward-Euler drop diagnostic",
+    "time_step_s": null,
+    "notes": "Actual elastic/cable/contact energy gradients; Gauss-Newton search tangent. Midsurface barrier and conservative curved-frame CCD, NOT finite-thickness contact. Impact numerical stopping target 1e-6; physical residual rejection remains 3e-5."
+  },
+  "outputs": {
+    "raw_files": [
+      "ml/runs/20260916-exact-knee-photo-open-v1/live_callbacks.json.gz",
+      "ml/runs/20260916-exact-knee-photo-open-v1/force_study_0.json.gz",
+      "ml/runs/20260916-exact-knee-photo-open-v1/force_study_1.json.gz"
+    ],
+    "processed_files": [
+      "ml/runs/20260916-exact-knee-photo-open-v1/metrics.json"
+    ],
+    "response_model": null
+  },
+  "limitations": [
+    "Full folding motion is not reproduced",
+    "Spatial convergence not established",
+    "Actual PET seam connectivity and cable guides unconfirmed",
+    "Creased-film plasticity, hysteresis, bonds and print anisotropy uncalibrated",
+    "Midsurface contact has no laminate thickness clearance, friction or cable contact",
+    "Impact benchmark only covers first 1 ms after contact; no survival or full-peak result",
+    "No training or baseline promotion",
+    "Narrow 0.2 mm flexure relative to 80 um film thickness requires shell-approximation and actual crease validation",
+    "Photo-informed topology, not exact manufactured hardware CAD",
+    "Display easing is not equilibrium, physical dynamics or a certified collision path; no intermediate stress results saved",
+    "Ideal rigid-facet audit has zero first-order mobility at neutral, but does not establish deformable-film behavior",
+    "This follow-up is a single joint model, not a whole-leg dynamics or native deformable-body model",
+    "Fold compliance control is an exploratory bending parameter, not a measured material property",
+    "Full compression, bend and twist travel remains unresolved; no strength or survival claim",
+    "Interactive displacement path disables midsurface contact for responsiveness",
+    "Target displacement is a kinematic continuation, not measured cable take-up"
+  ],
+  "review": {
+    "prepared_by": "Codex",
+    "reviewed_by": [],
+    "date_utc": "2026-09-20",
+    "notes": "Single-joint displacement UI and live FEM/reaction checks; not ML promotion."
+  },
+  "implementation_commit": "bef64fb205988ab62375f752de68baa63c9c438f"
+}
