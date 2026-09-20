@@ -20,10 +20,16 @@ from exact_joint.mechanics import cable_anchors
 from exact_joint.shell_contact import intersection_pairs
 
 
+# In thickness-derived mode this preserves the original, unmodified PET
+# rigidity at the historical UI default. Other values are explicitly effective
+# fold-compliance experiments; they never alter PET membrane modulus/thickness.
+REFERENCE_CREASE_RATIO = 100.0
+
+
 @dataclass(frozen=True)
 class ShellConfig:
     subdivision: int = 1
-    panel_to_crease_ratio: float = 100.0
+    panel_to_crease_ratio: float = REFERENCE_CREASE_RATIO
     crease_twist_ratio: float = 0.1
     panel_bending_scale: float = 1.0
     membrane_scale: float = 1.0
@@ -37,8 +43,9 @@ class ShellConfig:
     self_contact: bool = False
     contact_distance_m: float = 1e-6
     contact_energy_j: float = 1e-6
-    # Full exposed width on the roof side of each rigid perimeter. Zero keeps
-    # the legacy roof laminate; this is independent of the side-panel gap.
+    # Full exposed width at each rigid perimeter: on roof interiors in the
+    # capped comparison, or on adjacent side panels when the ends are open.
+    # This is independent of the shared side-panel fold gap.
     frame_hinge_width_m: float = 0.0
     open_ends: bool = False
 
@@ -79,6 +86,22 @@ class ShellConfig:
             raise ValueError("Iteration limit must be an integer 10-5000")
 
 
+def end_plane_panel_ids(source):
+    """Identify actual top/bottom faces independently of polygon triangulation.
+
+    A side panel can share an edge with an end without spanning that end. All
+    of a cap's vertices must lie in the same mounting plane. Source panel IDs
+    are preserved so load/material provenance remains tied to the input JSON.
+    """
+    omitted = []
+    for panel_id, panel in enumerate(source["panels"]):
+        z = source["points"][panel["vertices"], 2]
+        if (np.all(np.isclose(z, 0, atol=1e-12, rtol=0))
+                or np.all(np.isclose(z, source["height_m"], atol=1e-12, rtol=0))):
+            omitted.append(panel_id)
+    return np.asarray(omitted, dtype=int)
+
+
 def surface_mesh(source, subdivision=1, gap_m=0.0, vertex_relief_fraction=0.0, interior_refinement=0,
                  frame_hinge_width_m=0.0, open_ends=False):
     """Subdivide original planar faces; keep every source vertex and crease chain.
@@ -111,10 +134,12 @@ adjacent side panels instead. No source vertex is moved and no slit is added.
         chains.append(chain)
         edge_chains[a, b] = chain
         edge_chains[b, a] = chain[::-1]
+    excluded_panel_ids = end_plane_panel_ids(source) if open_ends else np.empty(0, dtype=int)
+    excluded_panels = set(excluded_panel_ids)
     triangles, owners, laminate, frame_hinge = [], [], [], []
     for owner, panel in enumerate(source["panels"]):
         ids = panel["vertices"]
-        if open_ends and len(ids) == 4:
+        if owner in excluded_panels:
             continue  # Photos show open frames, not either of the JSON roof caps.
         center = len(points)
         center_point = source["points"][ids].mean(axis=0)
@@ -257,7 +282,7 @@ adjacent side panels instead. No source vertex is moved and no slit is added.
         if len(adjacent) == 1 and (vertex_relief_fraction or (open_ends and frame_boundary)):
             continue  # An open mounting-frame boundary or an explicit PET relief cut.
         if len(adjacent) != 2:
-            raise ValueError("Original shell must remain a closed two-manifold surface")
+            raise ValueError("Shell must remain two-manifold except at open ends or explicit relief cuts")
         first, second = adjacent
         if first[1] != second[2] or first[2] != second[1]:
             raise ValueError("Inconsistent reference shell winding")
@@ -270,13 +295,20 @@ adjacent side panels instead. No source vertex is moved and no slit is added.
     # Highlight the inner PET/PLA interface, not a disconnected visual hinge.
     interface = (np.any(frame_hinge[hinge_faces], axis=1)
                  & np.any(laminate[hinge_faces], axis=1))
+    free_boundary = np.asarray([edge for edge, faces in edge_faces.items() if len(faces) == 1], dtype=int).reshape(-1, 2)
+    boundary_z = points[free_boundary, 2]
+    at_end = (np.all(np.isclose(boundary_z, 0, atol=1e-12, rtol=0), axis=1)
+              | np.all(np.isclose(boundary_z, source["height_m"], atol=1e-12, rtol=0), axis=1))
     return {"points": points, "triangles": triangles, "owners": owners,
+            "retained_panel_ids": np.unique(owners), "excluded_panel_ids": excluded_panel_ids,
             "top": np.unique(top), "bottom": np.unique(bottom), "chains": chains,
             "frame_line_ids": frame_line_ids, "hinges": np.asarray(hinges),
             "crease_ids": np.asarray(crease_ids), "laminate": laminate,
             "hinge_faces": hinge_faces, "frame_hinge": frame_hinge,
             "frame_hinge_edges": np.asarray(hinges, dtype=int)[interface, :2],
-            "free_boundary_edges": np.asarray([edge for edge, faces in edge_faces.items() if len(faces) == 1])}
+            "free_boundary_edges": free_boundary,
+            "end_boundary_edges": free_boundary[at_end],
+            "relief_boundary_edges": free_boundary[~at_end]}
 
 
 def rotation_matrix(vector):
@@ -345,7 +377,12 @@ class NonlinearShell:
         # widening the strip actually changes its folding/twisting compliance.
         self.effective_strip_rigidity_nm = self.panel_rigidity_nm/self.config.panel_to_crease_ratio
         if self.config.physical_strip_bending:
-            self.effective_strip_rigidity_nm = self.pet_rigidity_nm
+            # Previously this branch silently ignored the ratio control. Use
+            # the PET law as a reference and expose the requested compliance
+            # multiplier. The actual panel/strip ratio is reported separately:
+            # this input is a reference-relative control in physical mode.
+            self.effective_strip_rigidity_nm = (self.pet_rigidity_nm
+                                               * REFERENCE_CREASE_RATIO/self.config.panel_to_crease_ratio)
         h = self.points[self.mesh["hinges"]]
         edge = h[:, 1] - h[:, 0]
         edge_length = np.linalg.norm(edge, axis=1)
@@ -547,6 +584,19 @@ class NonlinearShell:
                 "energy_j": dict(zip(("membrane", "panel_bending", "folding", "crease_twist"), map(float, energies))),
                 "hinge_angle_changes_rad": angle_change.numpy(),
                 "frame_hinge": frame_hinge_report,
+                "fold_line_model": {
+                    "mode": "PET_reference_scaled" if self.config.physical_strip_bending else "panel_ratio",
+                    "ratio_control": self.config.panel_to_crease_ratio,
+                    "reference_ratio_control": REFERENCE_CREASE_RATIO if self.config.physical_strip_bending else None,
+                    "panel_rigidity_nm": self.panel_rigidity_nm,
+                    "unscaled_pet_rigidity_nm": self.pet_rigidity_nm,
+                    "applied_strip_rigidity_nm": self.effective_strip_rigidity_nm,
+                    "actual_panel_to_strip_ratio": self.panel_rigidity_nm/self.effective_strip_rigidity_nm,
+                    "strip_bending_scale_from_pet": self.effective_strip_rigidity_nm/self.pet_rigidity_nm,
+                    "pet_membrane_modulus_pa": self.material.pet_modulus_pa,
+                    "pet_thickness_m": self.material.pet_thickness_m,
+                    "calibrated": False,
+                },
                 "scope": "Uncalibrated nonlinear membrane/discrete-hinge model; no solid stress or failure verdict"}
 
     def solve(self, tensions=None, lower_pose=None, nodal_loads=None, initial=None, lower_constraints=None, winch=None):
@@ -637,6 +687,13 @@ the candidate plus explicit convergence/strain checks without silently applying.
         report["surface_intersection_pairs"] = intersection_pairs(report["points"], self.mesh["triangles"]).tolist()
         report["accepted"] = (report["converged"] and report["within_strain_guard"] and report["within_height_guard"]
                               and not report["surface_intersection_pairs"])
+        report["acceptance_failures"] = [reason for passed, reason in (
+            (report["converged"], "force_residual"),
+            (report["max_laminate_membrane_strain"] <= self.config.panel_strain_limit, "laminate_strain_guard"),
+            (report["max_pet_strip_membrane_strain"] <= self.config.panel_strain_limit, "pet_strip_strain_guard"),
+            (report["within_height_guard"], "frame_separation_guard"),
+            (not report["surface_intersection_pairs"], "surface_intersection"),
+        ) if not passed]
         if self.contact is not None:
             report["self_contact"] = self.contact.report(report["points"])
         # Rotation-vector gradients are not Cartesian moments at finite angle.

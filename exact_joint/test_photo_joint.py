@@ -1,6 +1,7 @@
 """Open-frame topology and material checks; not experimental calibration."""
 
 import dataclasses
+import copy
 import unittest
 from pathlib import Path
 
@@ -10,7 +11,7 @@ from scipy.spatial.transform import Rotation
 from exact_joint.fold_compatibility import rigid_facet_audit
 from exact_joint.geometry import JointConfig, load_source
 from exact_joint.mechanics import tension_pattern
-from exact_joint.nonlinear_shell import NonlinearShell, ShellConfig, surface_mesh
+from exact_joint.nonlinear_shell import NonlinearShell, ShellConfig, end_plane_panel_ids, surface_mesh
 from exact_joint.shell_impact import ShellImpact, ShellImpactConfig
 
 
@@ -29,7 +30,11 @@ class PhotoJointTests(unittest.TestCase):
                              open_ends=True, interior_refinement=level)
             np.testing.assert_array_equal(m["points"][:28], self.source["points"])
             self.assertEqual(set(m["owners"]), set(range(48)))
+            np.testing.assert_array_equal(m["excluded_panel_ids"], [48, 49])
+            np.testing.assert_array_equal(m["retained_panel_ids"], np.arange(48))
             self.assertEqual(len(m["chains"]), 76)
+            self.assertEqual(m["relief_boundary_edges"].shape, (0, 2))
+            np.testing.assert_array_equal(m["end_boundary_edges"], m["free_boundary_edges"])
             edges = m["points"][m["free_boundary_edges"], 2]
             self.assertTrue(np.all(np.all(np.isclose(edges, 0), axis=1)
                                    | np.all(np.isclose(edges, self.source["height_m"]), axis=1)))
@@ -42,6 +47,54 @@ class PhotoJointTests(unittest.TestCase):
                 self.assertAlmostEqual(a[m["owners"] == owner].sum(), np.linalg.norm(np.cross(face[1]-face[0], face[2]-face[0]))/2, places=14)
             areas.append([a.sum(), a[m["laminate"]].sum(), a[m["frame_hinge"]].sum()])
         np.testing.assert_allclose(areas[0], areas[1], atol=1e-16)
+
+    def test_end_removal_is_independent_of_cap_triangulation(self):
+        source = copy.deepcopy(self.source)
+        source["panels"] = source["panels"][:48]
+        for cap in self.source["panels"][48:]:
+            a, b, c, d = cap["vertices"]
+            source["panels"].extend([{"vertices": [a, b, c]}, {"vertices": [a, c, d]}])
+        np.testing.assert_array_equal(end_plane_panel_ids(source), [48, 49, 50, 51])
+        mesh = surface_mesh(source, gap_m=.0002, frame_hinge_width_m=.0002, open_ends=True)
+        # Cap faces and their diagonal never enter the shell, mass, contact, or
+        # rendered triangles; the original side topology is byte-for-byte equal.
+        np.testing.assert_array_equal(mesh["triangles"], self.shell.mesh["triangles"])
+        np.testing.assert_array_equal(mesh["points"], self.shell.mesh["points"])
+        np.testing.assert_array_equal(mesh["hinges"], self.shell.mesh["hinges"])
+
+    def test_open_surface_is_one_connected_annulus_without_roof_triangles(self):
+        mesh = self.shell.mesh
+        triangles = mesh["triangles"]
+        nodes = set(triangles.ravel())
+        adjacency = {node: set() for node in nodes}
+        edges = set()
+        for a, b, c in triangles:
+            for u, v in ((a, b), (b, c), (c, a)):
+                adjacency[u].add(v)
+                adjacency[v].add(u)
+                edges.add(tuple(sorted((u, v))))
+        visited, pending = set(), [next(iter(nodes))]
+        while pending:
+            node = pending.pop()
+            if node not in visited:
+                visited.add(node)
+                pending.extend(adjacency[node]-visited)
+        self.assertEqual(visited, nodes)
+        self.assertEqual(len(nodes)-len(edges)+len(triangles), 0)
+        z = mesh["points"][triangles, 2]
+        self.assertFalse(np.any(np.all(np.isclose(z, 0, atol=1e-12), axis=1)))
+        self.assertFalse(np.any(np.all(np.isclose(z, self.source["height_m"], atol=1e-12), axis=1)))
+        # Exactly two closed boundary loops: no unintentional waist/corner slit.
+        boundaries = mesh["end_boundary_edges"]
+        _, degrees = np.unique(boundaries, return_counts=True)
+        self.assertTrue(np.all(degrees == 2))
+        self.assertEqual(len(boundaries), len(mesh["top"])+len(mesh["bottom"]))
+
+    def test_no_orphan_dofs_after_caps_are_removed(self):
+        shell = self.shell
+        active = np.unique(shell.mesh["triangles"])
+        self.assertEqual(set(shell.free_nodes) | set(shell.mesh["top"]) | set(shell.mesh["bottom"]), set(active))
+        np.testing.assert_array_equal(active, np.arange(len(shell.points)))
 
     def test_frame_interfaces_are_free_and_have_specified_setback(self):
         shell = self.shell

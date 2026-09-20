@@ -67,7 +67,7 @@ The main model is never magnified.
 | PET hinge (mm) / Apply hinge width | Full PET setback from a rigid frame into adjacent side panels; rebuilds mesh and clears old results |
 | PET exposed gap (mm) | Total exposed width shared by two adjacent side-panel edges; changes PLA coverage |
 | Thickness-derived PET bending | Computes strip bending from assumed modulus and actual film thickness; panel/crease ratio is ignored |
-| Panel / crease bending ratio | Effective strip rigidity only when thickness-derived mode is OFF; not measured material data |
+| Fold compliance (100 = PET reference) | Scales the PET fold-line bending law as `D_pet * 100 / control` in the physical mode; does not change PET membrane stiffness. Not measured material data. |
 | Crease twist coupling | Extra penalty for different fold angles along a crease; photo preset sets this to zero, not zero PET torsional resistance |
 | Panel bending / membrane scales | Experimental multipliers; keep at 1 for this material reference |
 | PLA/PET thicknesses and moduli | Change constitutive response; thicknesses are supplied values, moduli remain assumed |

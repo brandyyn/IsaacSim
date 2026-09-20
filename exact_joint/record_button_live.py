@@ -20,7 +20,7 @@ def record(expected_family):
     assert view.work is not None and view.work.done(), "Wait for the button's calculation"
     assert view.job_outcome == "COMPLETE", view.feedback.text
     assert view.mode == "FORCE-DRIVEN: "+expected_family
-    assert view.job_steps == view.job_step == len(view.static_trace) == 8
+    assert view.job_steps == view.job_step == len(view.static_trace) == 1
     assert view.last_rejection is None
     assert view.shell.contact is not None
     assert not any(button.enabled for button in view.pose_buttons)

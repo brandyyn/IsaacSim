@@ -95,6 +95,8 @@ def main():
                        "candidate_state": candidate.tolist() if not report["accepted"] else None,
                        "energy_j": report["energy_j"],
                        "frame_hinge": report["frame_hinge"],
+                       "fold_line_model": report["fold_line_model"],
+                       "acceptance_failures": report["acceptance_failures"],
                        "self_contact": report.get("self_contact"),
                        "state": candidate.tolist() if report["accepted"] else None}
                 result["cases"].append(row)

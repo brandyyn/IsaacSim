@@ -73,7 +73,12 @@ if in_place:
     previous.window.destroy()
     previous.build_ui()
     for name, value in values.items():
-        previous.inputs[name].set_value(value)
+        # Preserve a live session across the clearer fold-compliance label.
+        target = name if name in previous.inputs else {
+            "Panel / crease bending ratio": "Fold compliance (100 = PET reference)"
+        }.get(name, name)
+        if target in previous.inputs:
+            previous.inputs[target].set_value(value)
     for name, value in flags.items():
         previous.flags[name].set_value(value)
     previous.refinement_input.set_value(refinement)

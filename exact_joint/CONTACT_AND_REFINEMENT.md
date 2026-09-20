@@ -209,7 +209,7 @@ project's running-Isaac remote helper. Do not start a second Kit instance.
 | PLA thickness (mm), PET thickness (um) | Physical layer thicknesses. Affect membrane/bending stiffness and shell mass. User-specified values are 0.4 mm and 80 um. |
 | PLA/PET modulus (GPa, assumed) | Elastic assumptions: 2.2 / 3.5 GPa. These have not been measured on the user's samples. |
 | Thickness-derived PET bending | On: `E*t^3/[12*(1-nu^2)]`; the ratio field is deliberately ignored. Off: effective panel/crease ratio experiment. |
-| Panel / crease bending ratio | Only active with thickness-derived PET bending off. Larger = softer effective PET bending; not a measured crease law. |
+| Fold compliance (100 = PET reference) | In thickness-derived mode, applied PET fold rigidity is `D_pet * 100 / control`; larger = softer fold line without changing PET membrane modulus or thickness. In panel-ratio mode it is the panel/fold rigidity ratio. Not calibrated crease data. |
 | Crease twist coupling | Additional empirical penalty between neighbouring crease-segment rotations. Material reference uses zero, retaining the strip's own elasticity. |
 | PET exposed gap (mm) | Wider PET-only strip between inset PLA facets. Changes the fabrication geometry and folding compliance, not PET modulus. Confirm a buildable width. |
 | Panel bending / membrane scales | Experimental multipliers. Leave both at 1 for the unscaled material reference. |

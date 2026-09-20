@@ -59,7 +59,7 @@ class ShellWorkshop(ShellJobControls, DropPreview):
         self.accepted_report = None
 
     async def start(self):
-        config = ShellConfig(sparse_solver=True, interior_refinement=1,
+        config = ShellConfig(sparse_solver=True, interior_refinement=0,
                              physical_strip_bending=True, self_contact=True, crease_twist_ratio=0,
                              frame_hinge_width_m=.0002, open_ends=True)
         self.shell = await asyncio.to_thread(NonlinearShell, self.lab.model.source, self.lab.config, config)
@@ -128,7 +128,7 @@ class ShellWorkshop(ShellJobControls, DropPreview):
             with ui.HStack(height=29):
                 ui.Button("Cable demo", clicked_fn=lambda: self.start_range("cables"))
                 self.roof_button = ui.Button("Roof flex test", clicked_fn=lambda: self.start_range("roof"))
-                ui.Button("Whole leg", clicked_fn=self.whole_view)
+                ui.Button("Joint view", clicked_fn=self.whole_view)
                 ui.Button("Knee close-up", clicked_fn=self.close_view)
             with ui.HStack(height=29):
                 ui.Button("Apply winch pull", clicked_fn=lambda: self.start_range("winch"))
@@ -157,10 +157,10 @@ class ShellWorkshop(ShellJobControls, DropPreview):
             self.telemetry = ui.Label("", height=98, word_wrap=True)
             self.settings_label = ui.Label("", height=59, word_wrap=True)
             self.feedback = ui.Label("Apply and Cable demo solve forces; Drop solves impact. Full travel is not guaranteed by a force input.", height=44, word_wrap=True)
-            with ui.VStack(spacing=6, height=0):
+            with ui.CollapsableFrame("Advanced FEM settings / material / drop", collapsed=True):
                 ui.Label("INPUTS: stiffness changes require Rebuild", height=25)
                 self.flags = {}
-                for label, value in (("Thickness-derived PET bending (ignores ratio)", self.shell.config.physical_strip_bending),
+                for label, value in (("Thickness-derived PET bending (100 = PET reference)", self.shell.config.physical_strip_bending),
                                      ("Sparse element solver", self.shell.config.sparse_solver),
                                      ("Open ends (photo design, no JSON caps)", self.shell.config.open_ends),
                                      ("Midsurface self-contact + CCD", self.shell.config.self_contact)):
@@ -177,7 +177,7 @@ class ShellWorkshop(ShellJobControls, DropPreview):
                     ui.Label("Interior refinement (0/1/2)", width=240)
                     self.refinement_input = ui.IntField().model
                     self.refinement_input.set_value(self.shell.config.interior_refinement)
-                for label, value in (("Panel / crease bending ratio", 100), ("Crease twist coupling", self.shell.config.crease_twist_ratio),
+                for label, value in (("Fold compliance (100 = PET reference)", 100), ("Crease twist coupling", self.shell.config.crease_twist_ratio),
                                      ("Panel bending scale", 1), ("Membrane stiffness scale", 1),
                                      ("PLA thickness (mm)", self.shell.material.pla_thickness_m*1000),
                                      ("PET thickness (um)", self.shell.material.pet_thickness_m*1e6),
@@ -410,11 +410,12 @@ class ShellWorkshop(ShellJobControls, DropPreview):
                 cube(str(body.GetPath())+f"/PerimeterSupport_{side+1}", (side*model.width/2, 0, sign*.004),
                      (.002, .003, .008), steel)
             cube(str(body.GetPath())+"/RaisedYoke", (0, 0, sign*.008), (model.width+.002, .004, .003), steel)
-            if frame == 0:
-                cube(str(body.GetPath())+"/Thigh", (0, 0, .046), (.009, .012, .073), link)
-            else:
-                cube(str(body.GetPath())+"/Shank", (0, 0, -.042), (.009, .012, .067), link)
-                cube(str(body.GetPath())+"/Foot", (.012, 0, -.083), (.05, .026, .009), link)
+            if not model.config.open_ends:
+                if frame == 0:
+                    cube(str(body.GetPath())+"/Thigh", (0, 0, .046), (.009, .012, .073), link)
+                else:
+                    cube(str(body.GetPath())+"/Shank", (0, 0, -.042), (.009, .012, .067), link)
+                    cube(str(body.GetPath())+"/Foot", (.012, 0, -.083), (.05, .026, .009), link)
         self.inspector = ShellDisplacementView(self)
 
     def set_time(self, elapsed):
@@ -480,7 +481,8 @@ class ShellWorkshop(ShellJobControls, DropPreview):
             set_points(self.frame_hinge_lines, points[self.frame_hinge_edges].reshape(-1, 3))
         cfg = self.shell.config
         self.settings_label.text = (f"ACTIVE: panel bend x{cfg.panel_bending_scale:g}, membrane x{cfg.membrane_scale:g}, "
-            + ("PET bending from E,t" if cfg.physical_strip_bending else f"ratio {cfg.panel_to_crease_ratio:g}")
+            + (f"PET fold compliance {cfg.panel_to_crease_ratio:g} (100 = PET reference)" if cfg.physical_strip_bending
+               else f"panel/fold ratio {cfg.panel_to_crease_ratio:g}")
             + f", gap {self.shell.material.hinge_gap_m*1000:g} mm\n"
             f"PLA {self.shell.material.pla_thickness_m*1000:g} mm + PET {self.shell.material.pet_thickness_m*1e6:g} um; "
             f"mesh {2**cfg.subdivision} edge segments / interior {cfg.interior_refinement}, " + ("IPC midsurface CCD" if cfg.self_contact else "NO self-contact forces") + "\n"
@@ -587,7 +589,7 @@ class ShellWorkshop(ShellJobControls, DropPreview):
 
     async def rebuild(self):
         get = lambda name: self.inputs[name].as_float
-        config = ShellConfig(panel_to_crease_ratio=get("Panel / crease bending ratio"),
+        config = ShellConfig(panel_to_crease_ratio=get("Fold compliance (100 = PET reference)"),
                              subdivision=self.boundary_input.as_int,
                              crease_twist_ratio=get("Crease twist coupling"), panel_bending_scale=get("Panel bending scale"),
                              membrane_scale=get("Membrane stiffness scale"), panel_strain_limit=get("Membrane strain guard (%)")/100,
@@ -596,7 +598,7 @@ class ShellWorkshop(ShellJobControls, DropPreview):
                              open_ends=self.flags["Open ends (photo design, no JSON caps)"].as_bool,
                              max_iterations=get("Static solver iterations"),
                              sparse_solver=self.flags["Sparse element solver"].as_bool,
-                             physical_strip_bending=self.flags["Thickness-derived PET bending (ignores ratio)"].as_bool,
+                             physical_strip_bending=self.flags["Thickness-derived PET bending (100 = PET reference)"].as_bool,
                              self_contact=self.flags["Midsurface self-contact + CCD"].as_bool,
                              interior_refinement=self.refinement_input.as_int)
         config.validate()
@@ -628,7 +630,7 @@ class ShellWorkshop(ShellJobControls, DropPreview):
         self.feedback.text = "Stiffness rebuilt. New controls apply to subsequent range/cable/drop calculations."
 
     async def preset(self, relief, frame_hinges=False, open_ends=False):
-        values = {"Panel / crease bending ratio": 1000 if relief else 100,
+        values = {"Fold compliance (100 = PET reference)": 1000 if relief else 100,
                   "Crease twist coupling": .1 if relief else 0, "Panel bending scale": .01 if relief else 1,
                   "PLA thickness (mm)": .4, "PET thickness (um)": 80,
                   "PLA modulus (GPa, assumed)": 2.2, "PET modulus (GPa, assumed)": 3.5,
@@ -640,10 +642,10 @@ class ShellWorkshop(ShellJobControls, DropPreview):
         for name, value in values.items():
             self.inputs[name].set_value(value)
         self.flags["Sparse element solver"].set_value(True)
-        self.flags["Thickness-derived PET bending (ignores ratio)"].set_value(not relief)
+        self.flags["Thickness-derived PET bending (100 = PET reference)"].set_value(not relief)
         self.flags["Midsurface self-contact + CCD"].set_value(True)
         self.flags["Open ends (photo design, no JSON caps)"].set_value(open_ends)
-        self.refinement_input.set_value(0 if relief else 1)
+        self.refinement_input.set_value(0 if (relief or open_ends) else 1)
         self.boundary_input.set_value(1)
         await self.rebuild()
         self.feedback.text = ("Experimental PET cuts + 100x softer bending; NOT measured PLA/PET. "
@@ -750,7 +752,12 @@ class ShellWorkshop(ShellJobControls, DropPreview):
                     raise ValueError("Use finite experimental frame-force components within +/-100 N")
             nodes = self.shell.mesh["bottom"]
             for family in families:
-                fractions = np.linspace(0, 1, 9)[1:].tolist() if mode in ("manual", "single_cable", "winch") else (.25, .5, .75, 1, .5, 0)
+                if mode == "single_cable":
+                    fractions = [1.0]
+                elif mode in ("manual", "winch"):
+                    fractions = (.25, .5, .75, 1)
+                else:
+                    fractions = (.25, .5, .75, 1)
                 if mode in ("winch", "winch_demo"):
                     pull = self.inputs["Winch pull (mm)"].as_float
                     if not np.isfinite(pull) or not 0 <= pull <= 20:
@@ -826,7 +833,9 @@ class ShellWorkshop(ShellJobControls, DropPreview):
                                       "residual": report["gradient_max_j_per_scaled_coordinate"]})
             # Present only accepted endpoints; the next solve runs concurrently.
             # This easing is display-time, NOT force-balanced dynamics.
-            self.begin_transition(previous_state, min(3.0, max(.5, solve_wall_s*.8)))
+            # Keep the accepted endpoint, but give the viewer a stable smooth
+            # transition even when the coarse side-only solve finishes quickly.
+            self.begin_transition(previous_state, min(3.0, max(1.5, solve_wall_s*.8)))
             reaction = report["required_frame_reactions_world_n_nm"][1]
             if mode in ("manual", "single_cable", "cables", "roof", "winch", "winch_demo"):
                 self.feedback.text = (f"Converged. Cable peak {max(self.tensions):.3g} N/strand. "

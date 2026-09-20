@@ -678,3 +678,29 @@ stiffness/ratio and tension changes with every movement, and lower computational
 cost without bypassing FEM. This is a follow-up, not a validated mechanics upgrade.
 
 Use the original triangulated panel joint as the visible, continuous compressing shell of a paper-guided robot knee, while keeping the actual PhysX mechanism stable enough to run, share, and later serve as the environment for machine-learning experiments.
+
+### 2026-09-20: joint-only side-panel and fold-line control follow-up
+
+The current nonlinear workshop is deliberately limited to one knee joint. With
+`open_ends=True`, `surface_mesh()` identifies and excludes both actual JSON end
+planes (including triangulated-cap input), retains all 48 side panels and 76
+source crease chains, and reports retained/excluded panel IDs and boundary edges.
+The generated stage no longer adds the illustrative Thigh/Shank/Foot link cubes
+in this mode; only the square perimeters, frame-hinge strips, side panels and
+crossed cable guides are shown. The neutral interactive mesh is 440 nodes / 864
+triangles with boundary subdivision 1 and interior refinement 0.
+
+The physical PET fold-line law now honors `Fold compliance (100 = PET reference)`:
+applied fold rigidity is `D_PET * 100 / control`, while PET membrane modulus and
+thickness remain the entered values. The nonlinear report records this applied
+rigidity and an explicit `acceptance_failures` list. Movement buttons perform one
+complete FEM solve per requested family and use a display-only 1.5–3 s easing
+transition; Cable demo executes four tension fractions for each of the seven
+families. The live joint-only validation completed capped/open topology checks,
+hinge-width rebuild, ratio/material rebuilds, seven-family cable actuation (28/28),
+bend and twist callbacks, smooth transitions, and the first 1 ms of the 70 mm
+drop preview. The softer 1000-control study improves response but does not
+reproduce full compression/bend/twist; this remains an exploratory custom shell
+model rather than calibrated solid FEA or a survival verdict. Baseline commit
+`5131a974` and the original source JSON remain unchanged; this follow-up is local
+only.

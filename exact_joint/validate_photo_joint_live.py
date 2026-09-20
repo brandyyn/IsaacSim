@@ -78,7 +78,7 @@ async def validate():
                 pause_tested = True
                 last = time.perf_counter()
     assert view.job_outcome == "COMPLETE", view.feedback.text
-    assert view.job_step == 8 and len(view.snapshots) == 8
+    assert view.job_step == 1 and len(view.snapshots) == 1
     assert transitional and pause_tested and view.presentation_frames-before > 30
     checks["cable_ramp_smooth_transitions_and_pause"] = True
     checks["display_intermediates_do_not_replace_solver_states"] = True
@@ -101,7 +101,7 @@ async def validate():
     for pattern in ("Bend Y+", "Twist CW"):
         view.start_movement(pattern)
         await view.work
-        assert view.job_outcome == "COMPLETE" and view.job_step == 8, view.feedback.text
+        assert view.job_outcome == "COMPLETE" and view.job_step == 1, view.feedback.text
         r = view.shell.diagnostics(view.state)
         measurements[pattern] = {"relative_rotation_rad": r["relative_rotation_rad"].tolist(),
             "max_membrane_strain": r["max_membrane_strain"], "render_error_m": render_error()}

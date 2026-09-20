@@ -90,7 +90,12 @@ class FrameHingeTests(unittest.TestCase):
         expected = shell.material.pet_modulus_pa*shell.material.pet_thickness_m
         np.testing.assert_allclose(shell.membrane_modulus.numpy()[band], expected)
         ratio = NonlinearShell(self.source, shell.material, dataclasses.replace(self.config, panel_to_crease_ratio=9999))
-        np.testing.assert_array_equal(shell.hinge_stiffness, ratio.hinge_stiffness)
+        # In physical PET mode the ratio is now an explicit compliance control:
+        # 100 is the PET reference, while a larger value softens PET fold lines
+        # without changing the membrane modulus or thickness.
+        self.assertLess(ratio.effective_strip_rigidity_nm, shell.effective_strip_rigidity_nm)
+        self.assertTrue(np.all(ratio.hinge_stiffness.numpy() <= shell.hinge_stiffness.numpy()))
+        self.assertTrue(np.any(ratio.hinge_stiffness.numpy() < shell.hinge_stiffness.numpy()))
         thicker = NonlinearShell(self.source, dataclasses.replace(shell.material, pet_thickness_m=.00016), self.config)
         adjacent = shell.mesh["hinge_faces"]
         pure_pet = np.all(band[adjacent], axis=1)

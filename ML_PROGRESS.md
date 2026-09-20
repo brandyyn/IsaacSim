@@ -206,3 +206,20 @@ roofs stay rigid to rendered float precision. Hip/ankle origami copies are defer
 The material/mesh checks are exploratory: 22-25% response changes still exceed the
 5% convergence threshold. Next: knee crease convergence and measured force-motion
 calibration, then nonlinear folding/contact and loaded-leg checks. No training occurred.
+
+Fold-line / joint-only follow-up (2026-09-20): the nonlinear workshop now uses
+the open photo topology as a single knee joint: both JSON end-plane caps and the
+whole-leg link cubes are omitted, while the rigid square perimeters, continuous
+PLA/PET side panels, exposed frame hinges and crossed cable glyphs remain. The
+default boundary/interior setting is the coarse side-only mesh (440 nodes,
+864 triangles) for interactive FEM; every movement button still runs one full
+accepted nonlinear solve, while Cable demo runs four accepted tension levels per
+family (28/28 live). Fold compliance is explicit: in physical PET mode,
+`D_fold = D_PET * 100 / control`, so 100 is the PET reference and larger values
+soften only fold-line bending, not PET membrane modulus/thickness. A 1000 study
+raised separate-case compression from 1.344% to 1.710%, bend to 0.2945 degrees
+and twist to 0.2642 degrees; full physical travel remains unresolved and no
+strength/survival claim is made. The latest photo live validation passes nine
+checks, including capped/open topology, frame-hinge rebuild, material/fold
+control changes, smooth accepted-state transitions, all seven cable families,
+and the short 70 mm drop window. New code is local and not an ML promotion.

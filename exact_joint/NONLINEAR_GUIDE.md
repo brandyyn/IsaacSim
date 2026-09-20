@@ -86,7 +86,7 @@ force edits need Apply, and drop inputs need **Drop / recompute**.
 
 | Input | Effect / limitation |
 |---|---|
-| Panel / crease bending ratio | Laminate flexural rigidity divided by effective PET-strip rigidity. Larger = easier strip bending relative to panels. Does **not** reduce PET membrane stretching stiffness. Default 100 is an assumption, not a measurement. |
+| Fold compliance (100 = PET reference) | In physical PET mode, applied fold rigidity is `D_PET * 100 / control`; larger = easier fold-line bending without reducing PET membrane stiffness. With physical mode off, it is the panel/fold rigidity ratio. Default 100 is an assumption, not a measurement. |
 | Crease twist coupling | Penalizes differences between adjacent sections' fold-angle changes. Smaller lets the crease warp more independently. It is not a torsional motor command. |
 | Panel bending scale | Multiplies laminate flexural rigidity; also changes strip rigidity at a fixed ratio. Does not change membrane modulus or the printed thickness. Values other than 1 are effective-model experiments. |
 | Membrane stiffness scale | Multiplies in-plane stretching/shear stiffness. Lowering it is not equivalent to making a crease easier to rotate; it changes the material model and needs calibration. |
