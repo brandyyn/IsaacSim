@@ -838,16 +838,23 @@ class ShellWorkshop(ShellJobControls, DropPreview):
             self.begin_transition(previous_state, min(3.0, max(1.5, solve_wall_s*.8)))
             reaction = report["required_frame_reactions_world_n_nm"][1]
             if mode in ("manual", "single_cable", "cables", "roof", "winch", "winch_demo"):
+                angles = np.rad2deg(report["relative_rotation_rad"])
                 self.feedback.text = (f"Converged. Cable peak {max(self.tensions):.3g} N/strand. "
-                    f"Residual {report['gradient_max_j_per_scaled_coordinate']:.2g} J/scaled coordinate.\n"
-                    "Shape and strain are solved at these loads; no angle is imposed.")
+                    f"Bend X/Y {angles[0]:.3f}/{angles[1]:.3f} deg, twist {angles[2]:.3f} deg, "
+                    f"compression {report['compression_fraction']*100:.3f}%.\n"
+                    f"Residual {report['gradient_max_j_per_scaled_coordinate']:.2g} J/scaled coordinate; "
+                    "shape and strain are solved at these loads, no angle is imposed.")
             else:
                 self.feedback.text = (f"Prescribed study. Required moment X/Y/Z: "
                     f"{reaction[3]:.4g} / {reaction[4]:.4g} / {reaction[5]:.4g} N m.")
             await omni.kit.app.get_app().next_update_async()
         await self.finish_transition()
-        self.feedback.text = (f"COMPLETE: {self.job_step}/{self.job_steps} steps. "
-                              "Read the angles/compression above: small solved motion can look stationary at 1x. "
+        final_report = self.shell.diagnostics(self.state)
+        final_angles = np.rad2deg(final_report["relative_rotation_rad"])
+        self.feedback.text = (f"COMPLETE: {self.job_step}/{self.job_steps} FEM steps. "
+                              f"Bend X/Y {final_angles[0]:.3f}/{final_angles[1]:.3f} deg, "
+                              f"twist {final_angles[2]:.3f} deg, compression {final_report['compression_fraction']*100:.3f}%. "
+                              "If the 1x shape is hard to see, enable Magnified response; it is display-only. "
                               "Full physical folding is not yet calibrated.")
 
     def show_peak(self):

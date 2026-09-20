@@ -138,6 +138,20 @@ class JobTests(unittest.IsolatedAsyncioTestCase):
         self.assertIsNone(coroutine.cr_frame)
         self.assertEqual(c.published, [])
 
+    async def test_external_task_cancellation_clears_running_state(self):
+        c = Controller()
+
+        async def waiting_job():
+            await asyncio.sleep(60)
+
+        c.launch(waiting_job(), "cancelled")
+        task = c.work
+        task.cancel()
+        await asyncio.gather(task, return_exceptions=True)
+        self.assertFalse(c.running)
+        self.assertEqual(c.job_outcome, "CANCELLED")
+        self.assertIn("choose a movement", c.feedback.text)
+
     async def test_scene_change_while_worker_runs_never_publishes_candidate(self):
         c = Controller()
         c.valid = True

@@ -45,7 +45,14 @@ class ShellJobControls:
             if self.work is asyncio.current_task():
                 self.job_outcome = "SWITCHING"
         except asyncio.CancelledError:
-            pass
+            # A cancelled rebuild/drop must never leave the panel looking as if
+            # it is still running. This is especially important when Kit
+            # closes a task during a scene reconnect or hot reload: the next
+            # cable button must start from a clean controller state.
+            if self.work is asyncio.current_task():
+                self.running = False
+                self.job_outcome = "CANCELLED"
+                self.feedback.text = "Calculation cancelled; choose a movement to start a new FEM solve."
         except Exception as exc:
             if self.work is asyncio.current_task():
                 self.job_outcome = "NOT APPLIED"

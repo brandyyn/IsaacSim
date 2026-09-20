@@ -54,7 +54,9 @@ async def validate():
     await job(view.preset(False, open_ends=True), "Validation: restore photo preset")
     view.inputs["Cable tension (N)"].set_value(3)
     before = view.presentation_frames
-    view.start_movement("Compression")
+    # Invoke the actual button callback, not a private helper, so a broken UI
+    # binding cannot be mistaken for a solver result.
+    view.movement_buttons["Compression"].call_clicked_fn()
     deltas, last, transitional = [], time.perf_counter(), False
     pause_tested = False
     while view.work and not view.work.done():
@@ -99,7 +101,7 @@ async def validate():
     checks["neutral_cancels_display_and_calculation"] = True
 
     for pattern in ("Bend Y+", "Twist CW"):
-        view.start_movement(pattern)
+        view.movement_buttons[pattern].call_clicked_fn()
         await view.work
         assert view.job_outcome == "COMPLETE" and view.job_step == 1, view.feedback.text
         r = view.shell.diagnostics(view.state)
