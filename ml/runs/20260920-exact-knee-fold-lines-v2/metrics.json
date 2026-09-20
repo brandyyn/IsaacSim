@@ -1,0 +1,653 @@
+{
+  "focused_numeric_tests": {
+    "photo_joint": 10,
+    "frame_hinges": 8,
+    "fold_controls": 4
+  },
+  "live_checks": {
+    "capped_comparison_preserved": true,
+    "open_ends_no_caps_no_cuts_actual_thicknesses": true,
+    "hinge_width_rebuilds_open_mesh": true,
+    "cable_ramp_smooth_transitions_and_pause": true,
+    "display_intermediates_do_not_replace_solver_states": true,
+    "replay_restores_final_accepted_state_and_trace": true,
+    "neutral_cancels_display_and_calculation": true,
+    "bend_and_twist_callbacks_complete": true,
+    "drop_uses_same_open_shell_and_smooth_display": true
+  },
+  "live_measurements": {
+    "render_updates_during_solve": {
+      "updates": 206,
+      "median_interval_s": 0.009306599968113005,
+      "p95_interval_s": 0.014372750025358982,
+      "presentation_frames": 39
+    },
+    "compression": {
+      "compression_fraction": 0.003720881289272393,
+      "frame_hinge": {
+        "width_m": 0.0002,
+        "pet_area_m2": 4.743123371496543e-05,
+        "max_membrane_strain": 0.0003424372400052415,
+        "max_local_dihedral_change_rad": 0.018707977216063165,
+        "bending_energy_j": 3.764838806319614e-06
+      },
+      "render_error_m": 7.447937266924498e-09
+    },
+    "Bend Y+": {
+      "relative_rotation_rad": [
+        -1.063926350713467e-05,
+        -0.001444111319496186,
+        -3.3884435147446094e-06
+      ],
+      "max_membrane_strain": 0.002329216922391011,
+      "render_error_m": 7.445155353336119e-09
+    },
+    "Twist CW": {
+      "relative_rotation_rad": [
+        -9.9733959939608e-06,
+        -6.161180327986602e-06,
+        -0.0012770194954103053
+      ],
+      "max_membrane_strain": 0.002025730947760006,
+      "render_error_m": 7.439245108820103e-09
+    },
+    "short_70mm_drop": {
+      "trace": [
+        {
+          "time_after_contact_s": 0.0,
+          "ground_force_n": 0.0,
+          "corner_forces_n": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "relative_rotation_rad": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "compression_fraction": 0.0,
+          "max_membrane_strain": 2.9476483466263325e-14,
+          "strain_energy_components_j": {
+            "membrane": 1.9232408550233996e-27,
+            "panel_bending": 0.0,
+            "folding": 0.0,
+            "crease_twist": 0.0
+          },
+          "mechanical_energy_j": 0.034335000000000004,
+          "frame_hinge": {
+            "width_m": 0.0002,
+            "pet_area_m2": 4.743123371496543e-05,
+            "max_membrane_strain": 1.4954531140614887e-15,
+            "max_local_dihedral_change_rad": 0.0,
+            "bending_energy_j": 0.0
+          },
+          "energy_fraction_of_initial": 1.0,
+          "minimum_foot_gap_m": 0.0,
+          "nonlinear_iterations": 0,
+          "residual_j_per_scaled_coordinate": 0.0,
+          "stop_reason": null,
+          "self_contact": {
+            "method": "IPC 1.6.0 barrier + conservative curved-frame CCD",
+            "scope": "Midsurfaces only; NO PLA/PET thickness clearance or friction",
+            "active_stencils": 0,
+            "minimum_active_distance_m": null,
+            "activation_distance_m": 1e-06,
+            "barrier_energy_j": 0.0
+          }
+        },
+        {
+          "time_after_contact_s": 0.00019999999999999998,
+          "ground_force_n": 4.6529955646224215,
+          "corner_forces_n": [
+            1.1675544634076067,
+            1.1675702280196794,
+            1.1589275542915318,
+            1.158943318903604
+          ],
+          "relative_rotation_rad": [
+            -2.428505081086688e-07,
+            -4.9183778660939424e-05,
+            -2.8313867219526495e-07
+          ],
+          "compression_fraction": 0.00023685072247559003,
+          "max_membrane_strain": 0.0002117798851679332,
+          "strain_energy_components_j": {
+            "membrane": 2.021925871371257e-06,
+            "panel_bending": 4.28704335086291e-08,
+            "folding": 5.226771426280715e-07,
+            "crease_twist": 0.0
+          },
+          "mechanical_energy_j": 0.033777644576999645,
+          "frame_hinge": {
+            "width_m": 0.0002,
+            "pet_area_m2": 4.743123371496543e-05,
+            "max_membrane_strain": 4.205760985971466e-05,
+            "max_local_dihedral_change_rad": 0.0013172176770954707,
+            "bending_energy_j": 1.6931544583521337e-08
+          },
+          "energy_fraction_of_initial": 0.983767134906062,
+          "minimum_foot_gap_m": -0.00022781858107701058,
+          "nonlinear_iterations": 4,
+          "residual_j_per_scaled_coordinate": 2.9155779152319135e-08,
+          "stop_reason": null,
+          "self_contact": {
+            "method": "IPC 1.6.0 barrier + conservative curved-frame CCD",
+            "scope": "Midsurfaces only; NO PLA/PET thickness clearance or friction",
+            "active_stencils": 0,
+            "minimum_active_distance_m": null,
+            "activation_distance_m": 1e-06,
+            "barrier_energy_j": 0.0
+          }
+        },
+        {
+          "time_after_contact_s": 0.00039999999999999996,
+          "ground_force_n": 8.938612509880164,
+          "corner_forces_n": [
+            2.2502555215587208,
+            2.2503334583595365,
+            2.218972796580546,
+            2.2190507333813607
+          ],
+          "relative_rotation_rad": [
+            -1.2010221668876208e-06,
+            -0.00018195008983101869,
+            -1.1469065954859319e-06
+          ],
+          "compression_fraction": 0.0007948301030077376,
+          "max_membrane_strain": 0.0007112053731535887,
+          "strain_energy_components_j": {
+            "membrane": 2.255412249575551e-05,
+            "panel_bending": 4.996119869802203e-07,
+            "folding": 5.836558632546565e-06,
+            "crease_twist": 0.0
+          },
+          "mechanical_energy_j": 0.03323790826124303,
+          "frame_hinge": {
+            "width_m": 0.0002,
+            "pet_area_m2": 4.743123371496543e-05,
+            "max_membrane_strain": 0.000120256885958873,
+            "max_local_dihedral_change_rad": 0.0044734415692708656,
+            "bending_energy_j": 1.8532509409893252e-07
+          },
+          "energy_fraction_of_initial": 0.9680474227826715,
+          "minimum_foot_gap_m": -0.0004446460060476415,
+          "nonlinear_iterations": 3,
+          "residual_j_per_scaled_coordinate": 6.218728841383808e-07,
+          "stop_reason": null,
+          "self_contact": {
+            "method": "IPC 1.6.0 barrier + conservative curved-frame CCD",
+            "scope": "Midsurfaces only; NO PLA/PET thickness clearance or friction",
+            "active_stencils": 0,
+            "minimum_active_distance_m": null,
+            "activation_distance_m": 1e-06,
+            "barrier_energy_j": 0.0
+          }
+        },
+        {
+          "time_after_contact_s": 0.0006,
+          "ground_force_n": 12.922240249767107,
+          "corner_forces_n": [
+            3.2662884150178595,
+            3.2665084469188783,
+            3.194611677964639,
+            3.194831709865729
+          ],
+          "relative_rotation_rad": [
+            -3.390996637452958e-06,
+            -0.0004151323361703537,
+            -2.6349548352077195e-06
+          ],
+          "compression_fraction": 0.001630659891115993,
+          "max_membrane_strain": 0.0014771016884381379,
+          "strain_energy_components_j": {
+            "membrane": 9.505804119910536e-05,
+            "panel_bending": 2.1454072922317283e-06,
+            "folding": 2.4383069485061524e-05,
+            "crease_twist": 0.0
+          },
+          "mechanical_energy_j": 0.03271424278796715,
+          "frame_hinge": {
+            "width_m": 0.0002,
+            "pet_area_m2": 4.743123371496543e-05,
+            "max_membrane_strain": 0.00022835216021759657,
+            "max_local_dihedral_change_rad": 0.00924596302366876,
+            "bending_energy_j": 7.720055749836833e-07
+          },
+          "energy_fraction_of_initial": 0.9527957707286193,
+          "minimum_foot_gap_m": -0.0006482125263755772,
+          "nonlinear_iterations": 4,
+          "residual_j_per_scaled_coordinate": 1.5025425966689302e-08,
+          "stop_reason": null,
+          "self_contact": {
+            "method": "IPC 1.6.0 barrier + conservative curved-frame CCD",
+            "scope": "Midsurfaces only; NO PLA/PET thickness clearance or friction",
+            "active_stencils": 0,
+            "minimum_active_distance_m": null,
+            "activation_distance_m": 1e-06,
+            "barrier_energy_j": 0.0
+          }
+        },
+        {
+          "time_after_contact_s": 0.0007999999999999999,
+          "ground_force_n": 16.58332201919552,
+          "corner_forces_n": [
+            4.211120876859357,
+            4.211584228495755,
+            4.080076781102041,
+            4.080540132738366
+          ],
+          "relative_rotation_rad": [
+            -7.140877862709101e-06,
+            -0.0007446178681743519,
+            -4.526965822545183e-06
+          ],
+          "compression_fraction": 0.002623489020028291,
+          "max_membrane_strain": 0.0024193065218026406,
+          "strain_energy_components_j": {
+            "membrane": 0.00024756921063131155,
+            "panel_bending": 5.603919119572787e-06,
+            "folding": 6.267344509415743e-05,
+            "crease_twist": 0.0
+          },
+          "mechanical_energy_j": 0.032205338694686114,
+          "frame_hinge": {
+            "width_m": 0.0002,
+            "pet_area_m2": 4.743123371496543e-05,
+            "max_membrane_strain": 0.0003548110149831768,
+            "max_local_dihedral_change_rad": 0.01496392966749843,
+            "bending_energy_j": 1.9922825567973216e-06
+          },
+          "energy_fraction_of_initial": 0.9379740409112017,
+          "minimum_foot_gap_m": -0.000837582594008332,
+          "nonlinear_iterations": 4,
+          "residual_j_per_scaled_coordinate": 9.88401908621428e-08,
+          "stop_reason": null,
+          "self_contact": {
+            "method": "IPC 1.6.0 barrier + conservative curved-frame CCD",
+            "scope": "Midsurfaces only; NO PLA/PET thickness clearance or friction",
+            "active_stencils": 0,
+            "minimum_active_distance_m": null,
+            "activation_distance_m": 1e-06,
+            "barrier_energy_j": 0.0
+          }
+        },
+        {
+          "time_after_contact_s": 0.001,
+          "ground_force_n": 19.914854487173674,
+          "corner_forces_n": [
+            5.082307006257837,
+            5.083113077162499,
+            4.8743141664243375,
+            4.875120237329001
+          ],
+          "relative_rotation_rad": [
+            -1.2424832700103088e-05,
+            -0.0011462278424713291,
+            -6.4914006227360735e-06
+          ],
+          "compression_fraction": 0.003631317434624304,
+          "max_membrane_strain": 0.0034194562521677576,
+          "strain_energy_components_j": {
+            "membrane": 0.0004789157406848292,
+            "panel_bending": 1.0796345109836912e-05,
+            "folding": 0.00011934572565316649,
+            "crease_twist": 0.0
+          },
+          "mechanical_energy_j": 0.03170998776222088,
+          "frame_hinge": {
+            "width_m": 0.0002,
+            "pet_area_m2": 4.743123371496543e-05,
+            "max_membrane_strain": 0.00048554372590792325,
+            "max_local_dihedral_change_rad": 0.020833133024086646,
+            "bending_energy_j": 3.820219205603941e-06
+          },
+          "energy_fraction_of_initial": 0.9235470441887542,
+          "minimum_foot_gap_m": -0.0010122557856416664,
+          "nonlinear_iterations": 4,
+          "residual_j_per_scaled_coordinate": 2.9923558568445963e-07,
+          "stop_reason": "TIME_WINDOW_COMPLETE; survival not evaluated",
+          "self_contact": {
+            "method": "IPC 1.6.0 barrier + conservative curved-frame CCD",
+            "scope": "Midsurfaces only; NO PLA/PET thickness clearance or friction",
+            "active_stencils": 0,
+            "minimum_active_distance_m": null,
+            "activation_distance_m": 1e-06,
+            "barrier_energy_j": 0.0
+          }
+        }
+      ],
+      "render_error_m": 3.7169924499425022e-09,
+      "config": {
+        "height_m": 0.07,
+        "upper_mass_kg": 0.03,
+        "lower_mass_kg": 0.02,
+        "contact_stiffness_n_m": 20000.0,
+        "contact_damping_ns_m": 0.1,
+        "step_s": 0.00019999999999999998,
+        "duration_s": 0.001,
+        "pet_density_kg_m3": 1390.0,
+        "pla_density_kg_m3": 1240.0,
+        "max_iterations": 180
+      },
+      "scope": "First 1 ms after contact only; no survival or peak claim"
+    }
+  },
+  "static_study": {
+    "cases": [
+      {
+        "pattern": "Compression",
+        "tension_n_per_strand": 3.0,
+        "pull_mm": null,
+        "actual_tensions_n": [
+          3.0,
+          3.0,
+          3.0,
+          3.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "wall_s": 1.2140516999643296,
+        "accepted": true,
+        "converged": true,
+        "iterations": 7,
+        "residual": 1.290820755367461e-08,
+        "relative_rotation_rad": [
+          -3.53343181137628e-06,
+          -1.9705214936976544e-06,
+          -1.0164891912804655e-06
+        ],
+        "compression_fraction": 0.004653355105696089,
+        "max_membrane_strain": 0.003316087502358632,
+        "max_laminate_membrane_strain": 0.0013871269197052206,
+        "max_pet_strip_membrane_strain": 0.003316087502358632,
+        "intersections": 0,
+        "intersection_pairs": [],
+        "energy_j": {
+          "membrane": 0.0007111708780841858,
+          "panel_bending": 1.0366494271739938e-05,
+          "folding": 2.4394632985147896e-05,
+          "crease_twist": 0.0
+        },
+        "frame_hinge": {
+          "width_m": 0.0002,
+          "pet_area_m2": 4.743123371496543e-05,
+          "max_membrane_strain": 0.0005092495704374194,
+          "max_local_dihedral_change_rad": 0.02114899633817632,
+          "bending_energy_j": 7.106752084108246e-07
+        },
+        "self_contact": null
+      },
+      {
+        "pattern": "Compression",
+        "tension_n_per_strand": 10.0,
+        "pull_mm": null,
+        "actual_tensions_n": [
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "wall_s": 0.4678168000536971,
+        "accepted": true,
+        "converged": true,
+        "iterations": 14,
+        "residual": 4.5825778061114875e-08,
+        "relative_rotation_rad": [
+          -1.2445357033681115e-05,
+          -5.884348783024559e-06,
+          -3.050744700530138e-06
+        ],
+        "compression_fraction": 0.017102014176588076,
+        "max_membrane_strain": 0.011971775843284897,
+        "max_laminate_membrane_strain": 0.004993715926094711,
+        "max_pet_strip_membrane_strain": 0.011971775843284897,
+        "intersections": 0,
+        "intersection_pairs": [],
+        "energy_j": {
+          "membrane": 0.00902267419677336,
+          "panel_bending": 0.00012224216876241393,
+          "folding": 0.0003053208175919532,
+          "crease_twist": 0.0
+        },
+        "frame_hinge": {
+          "width_m": 0.0002,
+          "pet_area_m2": 4.743123371496543e-05,
+          "max_membrane_strain": 0.001863695719448754,
+          "max_local_dihedral_change_rad": 0.06905639545952472,
+          "bending_energy_j": 8.271325056005717e-06
+        },
+        "self_contact": null
+      },
+      {
+        "pattern": "Bend Y+",
+        "tension_n_per_strand": 3.0,
+        "pull_mm": null,
+        "actual_tensions_n": [
+          0.0,
+          3.0,
+          3.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "wall_s": 0.21846800000639632,
+        "accepted": true,
+        "converged": true,
+        "iterations": 6,
+        "residual": 2.440174669493533e-08,
+        "relative_rotation_rad": [
+          -2.0837168016765764e-06,
+          -0.0015059341702899666,
+          -5.349559264549183e-07
+        ],
+        "compression_fraction": 0.002289608073228977,
+        "max_membrane_strain": 0.0026960398451295574,
+        "max_laminate_membrane_strain": 0.0011251353688627444,
+        "max_pet_strip_membrane_strain": 0.0026960398451295574,
+        "intersections": 0,
+        "intersection_pairs": [],
+        "energy_j": {
+          "membrane": 0.00023996252722101262,
+          "panel_bending": 3.972867402028358e-06,
+          "folding": 6.513897545882339e-06,
+          "crease_twist": 0.0
+        },
+        "frame_hinge": {
+          "width_m": 0.0002,
+          "pet_area_m2": 4.743123371496543e-05,
+          "max_membrane_strain": 0.00040444134579642384,
+          "max_local_dihedral_change_rad": 0.013765707207070578,
+          "bending_energy_j": 2.1682045646767592e-07
+        },
+        "self_contact": null
+      },
+      {
+        "pattern": "Bend Y+",
+        "tension_n_per_strand": 10.0,
+        "pull_mm": null,
+        "actual_tensions_n": [
+          0.0,
+          10.0,
+          10.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "wall_s": 0.41846849996363744,
+        "accepted": true,
+        "converged": true,
+        "iterations": 12,
+        "residual": 3.0974743117084814e-08,
+        "relative_rotation_rad": [
+          -7.002709135466004e-06,
+          -0.005139740211592611,
+          -1.6658198885491335e-06
+        ],
+        "compression_fraction": 0.008013652647339775,
+        "max_membrane_strain": 0.00933396051109803,
+        "max_laminate_membrane_strain": 0.003881593960723364,
+        "max_pet_strip_membrane_strain": 0.00933396051109803,
+        "intersections": 0,
+        "intersection_pairs": [],
+        "energy_j": {
+          "membrane": 0.0028226275184607456,
+          "panel_bending": 4.464706178655639e-05,
+          "folding": 7.610113477495476e-05,
+          "crease_twist": 0.0
+        },
+        "frame_hinge": {
+          "width_m": 0.0002,
+          "pet_area_m2": 4.743123371496543e-05,
+          "max_membrane_strain": 0.0013939053514963984,
+          "max_local_dihedral_change_rad": 0.044462549992990756,
+          "bending_energy_j": 2.444691951367425e-06
+        },
+        "self_contact": null
+      },
+      {
+        "pattern": "Twist CW",
+        "tension_n_per_strand": 3.0,
+        "pull_mm": null,
+        "actual_tensions_n": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          3.0,
+          3.0,
+          3.0,
+          3.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "wall_s": 0.2167085999972187,
+        "accepted": true,
+        "converged": true,
+        "iterations": 6,
+        "residual": 1.746192121336587e-08,
+        "relative_rotation_rad": [
+          -2.0987359160815356e-06,
+          -1.336500451519219e-06,
+          -0.001300985025271717
+        ],
+        "compression_fraction": 0.003042021314284993,
+        "max_membrane_strain": 0.0024512501116072385,
+        "max_laminate_membrane_strain": 0.0011831301821764151,
+        "max_pet_strip_membrane_strain": 0.0024512501116072385,
+        "intersections": 0,
+        "intersection_pairs": [],
+        "energy_j": {
+          "membrane": 0.00039324197659959884,
+          "panel_bending": 5.515538197183476e-06,
+          "folding": 1.0650007585038605e-05,
+          "crease_twist": 0.0
+        },
+        "frame_hinge": {
+          "width_m": 0.0002,
+          "pet_area_m2": 4.743123371496543e-05,
+          "max_membrane_strain": 0.0005465236132643199,
+          "max_local_dihedral_change_rad": 0.01543890317924129,
+          "bending_energy_j": 3.5681100057103214e-07
+        },
+        "self_contact": null
+      },
+      {
+        "pattern": "Twist CW",
+        "tension_n_per_strand": 10.0,
+        "pull_mm": null,
+        "actual_tensions_n": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "wall_s": 0.3778749000048265,
+        "accepted": true,
+        "converged": true,
+        "iterations": 11,
+        "residual": 2.9695451049804866e-08,
+        "relative_rotation_rad": [
+          -7.452208698145032e-06,
+          -4.119170907054824e-06,
+          -0.0046109368623656185
+        ],
+        "compression_fraction": 0.010816609584682335,
+        "max_membrane_strain": 0.00862967317891161,
+        "max_laminate_membrane_strain": 0.004140117878921595,
+        "max_pet_strip_membrane_strain": 0.00862967317891161,
+        "intersections": 0,
+        "intersection_pairs": [],
+        "energy_j": {
+          "membrane": 0.004759807360009807,
+          "panel_bending": 6.230662061010994e-05,
+          "folding": 0.00012741660073306547,
+          "crease_twist": 0.0
+        },
+        "frame_hinge": {
+          "width_m": 0.0002,
+          "pet_area_m2": 4.743123371496543e-05,
+          "max_membrane_strain": 0.0019129158749238934,
+          "max_local_dihedral_change_rad": 0.04979228239591775,
+          "bending_energy_j": 3.998847389741536e-06
+        },
+        "self_contact": null
+      }
+    ],
+    "fold_line_model": {
+      "mode": "PET_reference_scaled",
+      "ratio_control": 1000.0,
+      "reference_ratio_control": 100.0,
+      "pet_thickness_m": 8e-05,
+      "pet_membrane_modulus_pa": 3500000000.0,
+      "calibrated": false
+    }
+  },
+  "native_mouse_clicks_tested": false,
+  "full_physical_travel_reproduced": false,
+  "physical_calibration": false,
+  "drop_survival": null,
+  "render_validation": {
+    "bytes": 197006,
+    "mean_rgb": 205.88633282696756,
+    "render_mode": "RealTimePathTracing (Isaac 6 RTX Real-Time 2.0)",
+    "scope": "Visual/implementation QA only; custom quasistatic shell, not solid stress or dynamics"
+  }
+}

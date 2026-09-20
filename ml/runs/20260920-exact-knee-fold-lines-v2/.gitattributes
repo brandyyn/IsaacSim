@@ -1,0 +1,3 @@
+*.json -text
+*.json.gz -text
+*.png -text

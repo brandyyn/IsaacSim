@@ -1,0 +1,48 @@
+{
+  "run_id": "20260920-exact-knee-fold-lines-v2",
+  "status": "implementation_checked_not_physical_validation",
+  "baseline_commit": "5131a9740b3ce82e42331e923e1a45ffa396f71c",
+  "starting_commit": "714b0e7f3b93477778ebfda9688655cce8f44c7b",
+  "implementation_commit": "e965d36508d592e074f8ca605341fa449799cdfa",
+  "parent_run": "20260916-exact-knee-photo-open-v1",
+  "isaac_sim_version": "6.0.1-rc.7 / Kit 110.1.2",
+  "fea_case_id": "exact_joint_photo_open_fold_lines_v2",
+  "fea_artifact_sha256": "6738116eb77cc2936948fb0622091b23fbe43b8562dfc9b34ed66e7a1b6660d7",
+  "algorithm": "Custom nonlinear shell / discrete hinge evaluation; no ML",
+  "seed": 0,
+  "training": {
+    "command": "none",
+    "steps": 0,
+    "wall_time_s": 0
+  },
+  "evaluation": {
+    "command": "focused photo/frame/fold unittest modules + validate_photo_joint_live.py + 6-case shell study",
+    "conditions": "PLA 0.4 mm / PET 80 um; assumed isotropic moduli; open side panels; fold compliance 100 reference / 1000 study",
+    "metrics": "metrics.json"
+  },
+  "artifacts": {
+    "config": "config.json",
+    "metrics": "metrics.json",
+    "checkpoint": null,
+    "checkpoint_sha256": null,
+    "sha256": {
+      "metrics.json": "fc256e3727e5e577bdc14ef239634907aae621e674ff2ab6053f8cf0ff54ff1a",
+      "photo_live.json.gz": "1c340dcb350bb7b9dce84797b3f7d7596a16760c39e47808cfb0a989d7922f24",
+      "shell_study.json.gz": "6210da542a4a3927c6f256b2b8acdceabece233c3365b7c9c26071131f41053c",
+      "tested_fold_compatibility.py.gz": "9f7c074a684d3632a1c1bbf717b72a3727bb08476738072c7101d874bdba6113",
+      "tested_nonlinear_shell.py.gz": "58e8d51daea912293ff61acf60c872f4ec32b9a13cd75c6382940720642353ce",
+      "tested_shell_actuation.py.gz": "a2d9014bd3eb61e6b590aff4764bba5bf3e79117c0805c61bf95797cdfd21f0d",
+      "tested_shell_contact.py.gz": "f26828c4a40326aa25419d3478b0bc88d028d328aa613bc8b3f6c06eb000f5d3",
+      "tested_shell_impact.py.gz": "43e03152590cb6039cdf608fab9d85439382c58a0fa6503904908c627fa0c7fa",
+      "tested_shell_ipc.py.gz": "313cb121f019732a0646e6711f5f958a52a1c3f600bda758d0c197925c38c901",
+      "tested_shell_presentation.py.gz": "ac9b7a654b139268b9e3430b84404cd7a0bdb5e8d04d66cface60c089d92c2f8",
+      "tested_shell_sparse.py.gz": "ea67867a4f602fb0790f014b99eb069c979509a32d0345e7f6de96eaae0046c1",
+      "tested_shell_ui_jobs.py.gz": "48e3b46db2c855ca9a93cbd80f022067e83989207c33858c63999eb5a48df8d1",
+      "tested_shell_view.py.gz": "e954df4ee447361c59464e1a551c7faf9b7611fc2ce74e05d31f60a26852a38b",
+      "tested_validate_photo_joint_live.py.gz": "01dac0880c0ed0bd44f5a0c08d16037a274b5aed84510dff5fdfe1503e2d5d7b",
+      "workshop_qa.png": "1a666ca4620b029b5acf5069c8112dc70037b903070d49182f18a7c6f7bee8a2"
+    }
+  },
+  "provenance_notes": "Source JSON and tested code hashes checked against final files and immutable implementation commit. No full-motion, calibration or survival claim.",
+  "publication": "Local only; not pushed"
+}
