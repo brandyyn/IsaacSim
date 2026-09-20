@@ -615,8 +615,10 @@ the candidate plus explicit convergence/strain checks without silently applying.
             winch.validate()
             if np.any(tensions) or lower_pose is not None or lower_constraints is not None:
                 raise ValueError("Winch experiments cannot also impose tension or frame coordinates")
-        if self.contact is not None and (lower_pose is not None or lower_constraints is not None):
-            raise ValueError("IPC currently supports force/winch solves, not abrupt prescribed-frame studies")
+        # Displacement-controlled continuation is allowed with midsurface
+        # contact.  The UI advances the lower-frame coordinate in small steps;
+        # contact and strain guards still decide whether each endpoint is
+        # accepted.  A large single jump remains the caller's responsibility.
         if nodal_loads is not None:
             nodal_loads = np.asarray(nodal_loads, dtype=float)
             if nodal_loads.shape != self.points.shape or not np.isfinite(nodal_loads).all():

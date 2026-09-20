@@ -17,8 +17,8 @@ previous = lab.drop_preview
 in_place = previous is not None and type(previous).__name__ == "ShellWorkshop"
 if in_place:
     values = {key: value.as_float for key, value in previous.inputs.items()}
-    flags = {key: value.as_bool for key, value in previous.flags.items()}
-    refinement = previous.refinement_input.as_int
+    flags = {key: value.as_bool for key, value in getattr(previous, "flags", {}).items()}
+    refinement = previous.refinement_input.as_int if hasattr(previous, "refinement_input") else previous.shell.config.interior_refinement
     boundary = previous.boundary_input.as_int if hasattr(previous, "boundary_input") else previous.shell.config.subdivision
     pattern = previous.cable_pattern.model.get_item_value_model().as_int
     was_idle = previous.work is None or previous.work.done()
@@ -70,6 +70,10 @@ if in_place:
     previous.presentation_clock = __import__("time").perf_counter()
     previous.presentation_frames = 0
     previous.accepted_report = None
+    previous.active_family = getattr(previous, "active_family", None)
+    previous.active_cable_mask = getattr(previous, "active_cable_mask", __import__("numpy").zeros(12, dtype=bool))
+    previous.last_reaction = getattr(previous, "last_reaction", __import__("numpy").zeros(6))
+    previous.requested_displacement_mm = getattr(previous, "requested_displacement_mm", 0.0)
     previous.window.destroy()
     previous.build_ui()
     for name, value in values.items():
@@ -81,8 +85,10 @@ if in_place:
             previous.inputs[target].set_value(value)
     for name, value in flags.items():
         previous.flags[name].set_value(value)
-    previous.refinement_input.set_value(refinement)
-    previous.boundary_input.set_value(boundary)
+    if hasattr(previous, "refinement_input"):
+        previous.refinement_input.set_value(refinement)
+    if hasattr(previous, "boundary_input"):
+        previous.boundary_input.set_value(boundary)
     previous.cable_pattern.model.get_item_value_model().set_value(pattern)
     if not previous.scene_is_current():
         previous.reconnect_opened()

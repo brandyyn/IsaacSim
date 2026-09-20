@@ -718,3 +718,19 @@ it does not change the FEM state. Roof-flex and prescribed pose controls remain
 intentionally unavailable in open-ended joint mode. Evidence is archived in
 `ml/runs/20260920-exact-knee-button-fix-v3`; full physical travel, calibration,
 solid-stress FEA and drop survival remain unresolved.
+
+### 2026-09-20: simplified displacement-controlled joint UI
+
+The visible workshop is now a single open-ended knee joint. The inherited drop,
+winch, roof, save/reconnect and duplicate replay controls are removed from the
+user-facing panel. One cable-family selector and one `Run displacement` action
+drive Compression, Bend X+/−, Bend Y+/− and Twist CW/CCW. Compression and bend
+use lower-frame translation; twist uses equivalent cable arc displacement at the
+frame half-width. Each continuation step is an accepted nonlinear shell FEM
+state, and the lower-frame reaction force/moment is reported instead of asking
+the user to guess a cable force. The seven-family 0.5 mm live sweep passes, and
+material/fold-stiffness rebuild and restore pass. Midsurface contact is disabled
+for this interactive displacement path because the contact barrier made
+prescribed steps non-interactive; strain/intersection guards still reject an
+oversized target. This remains custom shell FEM, not calibrated solid FEA or a
+survival result.

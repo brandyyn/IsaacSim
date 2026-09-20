@@ -235,3 +235,12 @@ default 3 N response is physically small; the Magnified response checkbox is
 display-only. Run `20260920-exact-knee-button-fix-v3` and case
 `exact_joint_photo_open_button_fix_v3` archive source/code hashes and live
 evidence. This is a UI/reliability repair, not a full-travel or survival claim.
+
+Displacement-control follow-up (2026-09-20): the visible panel is now one
+joint-only workflow with one family selector, one target displacement field,
+`Run displacement`, `Neutral`, magnification, and a collapsed material/fold
+stiffness section. The seven cable families each pass a 0.5 mm continuation
+with reaction force/moment telemetry; stiffness rebuild/restore also passes.
+The displacement path intentionally disables midsurface IPC for responsiveness;
+strain and intersection guards remain active. This is a custom shell FEM
+evaluation, not a calibrated solid-stress, full-travel or survival claim.

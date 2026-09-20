@@ -28,6 +28,19 @@ from exact_joint.shell_displacement_view import ShellDisplacementView
 from exact_joint.shell_presentation import SolvedTransition
 
 
+class _MovementProxy:
+    """Programmatic compatibility handle for a movement without a UI button."""
+    def __init__(self, view, family, enabled=True):
+        self.view, self.family = view, family
+        self.enabled = enabled
+        self.visible = True
+
+    def call_clicked_fn(self):
+        if not self.enabled:
+            return None
+        return self.view.start_movement(self.family)
+
+
 class ShellWorkshop(ShellJobControls, DropPreview):
     def __init__(self, lab):
         super().__init__(lab)
@@ -57,10 +70,15 @@ class ShellWorkshop(ShellJobControls, DropPreview):
         self.presentation_clock = time.perf_counter()
         self.presentation_frames = 0
         self.accepted_report = None
+        self.active_family = None
+        self.active_cable_mask = np.zeros(12, dtype=bool)
+        self.last_reaction = np.zeros(6)
+        self.requested_displacement_mm = 0.0
 
     async def start(self):
         config = ShellConfig(sparse_solver=True, interior_refinement=0,
-                             physical_strip_bending=True, self_contact=True, crease_twist_ratio=0,
+                             physical_strip_bending=True, self_contact=False, crease_twist_ratio=0,
+                             max_iterations=180,
                              frame_hinge_width_m=.0002, open_ends=True)
         self.shell = await asyncio.to_thread(NonlinearShell, self.lab.model.source, self.lab.config, config)
         self.state = np.zeros(self.shell.ndof)
@@ -75,7 +93,74 @@ class ShellWorkshop(ShellJobControls, DropPreview):
         self.whole_view()
 
     def build_ui(self):
-        super().build_ui()
+        self._build_simple_ui()
+        return
+
+    def _build_simple_ui(self):
+        """Build the single-joint displacement/FEM control surface."""
+        self.window = ui.Window("Joint FEM - displacement actuation", width=560, height=520)
+        self.inputs = {}
+        families = ("Compression", "Bend X+", "Bend X-", "Bend Y+", "Bend Y-", "Twist CW", "Twist CCW")
+        with self.window.frame, ui.ScrollingFrame(), ui.VStack(spacing=5, height=0):
+            ui.Label("SINGLE JOINT | DISPLACEMENT-DRIVEN FEM", height=28, style={"font_size": 18})
+            ui.Label("One joint only. Select a cable family, enter a target displacement, and solve the lower-frame motion. FEM reports the reaction force/moment after every accepted step.\nTransitions are display-only; accepted endpoints are the FEM states.", height=56, word_wrap=True,
+                     style={"color": 0xFF80DFFF})
+            with ui.HStack(height=30):
+                ui.Label("Cable family", width=120)
+                self.cable_pattern = ui.ComboBox(0, *families)
+                ui.Button("Run displacement", clicked_fn=lambda: self.start_movement(self._selected_family()))
+                ui.Button("Neutral", clicked_fn=self.neutral_shell)
+            with ui.HStack(height=30):
+                ui.Label("Target displacement (mm)", width=180)
+                target = ui.FloatField(width=90).model
+                target.set_value(.5)
+                self.inputs["Joint displacement (mm)"] = target
+                ui.Label("Compression/bend use translation; twist uses cable arc displacement. Strain guards can stop an oversized target.", word_wrap=True)
+            self.progress_label = ui.Label("READY | choose a cable family", height=29, word_wrap=True, style={"color": 0xFF80DFFF})
+            self.presentation_label = ui.Label("", height=28, word_wrap=True, style={"color": 0xFF80DFFF})
+            with ui.HStack(height=26):
+                self.response_visible = ui.CheckBox(width=22).model
+                self.response_visible.set_value(self.show_response)
+                self.response_visible.add_value_changed_fn(lambda m: self.change_response(visible=m.as_bool))
+                ui.Label("Magnified displacement", width=170)
+                self.response_gain_input = ui.FloatField(width=65).model
+                self.response_gain_input.set_value(self.response_gain)
+                self.response_gain_input.add_value_changed_fn(lambda m: self.change_response(gain=m.as_float))
+            self.response_label = ui.Label("", height=38, word_wrap=True)
+            self.telemetry = ui.Label("", height=98, word_wrap=True)
+            self.settings_label = ui.Label("", height=55, word_wrap=True)
+            self.feedback = ui.Label("Ready. FEM is displacement-controlled; reaction force is measured after each solve.", height=54, word_wrap=True)
+            with ui.CollapsableFrame("Material / fold stiffness", collapsed=True):
+                ui.Label("Assumed PLA/PET properties; changing them requires Rebuild model.", height=28, word_wrap=True)
+                for label, value in (("Fold compliance (100 = PET reference)", 100),
+                                     ("Panel bending scale", self.shell.config.panel_bending_scale),
+                                     ("Membrane stiffness scale", self.shell.config.membrane_scale),
+                                     ("PLA modulus (GPa)", self.shell.material.pla_modulus_pa/1e9),
+                                     ("PET modulus (GPa)", self.shell.material.pet_modulus_pa/1e9),
+                                     ("PET hinge width (mm)", self.shell.config.frame_hinge_width_m*1000)):
+                    with ui.HStack(height=25):
+                        ui.Label(label, width=255)
+                        field = ui.FloatField(width=90).model
+                        field.set_value(value)
+                        self.inputs[label] = field
+                ui.Button("Rebuild model", clicked_fn=lambda: self.launch(self.rebuild(), "Rebuild model"))
+            ui.Label("Custom nonlinear membrane/discrete-hinge shell. No force target, solid stress, failure or survival rating is implied.", height=34, word_wrap=True)
+            self.legend = ui.Label("", height=42, word_wrap=True, style={"color": 0xFF80DFFF})
+        self.active_family = families[0]
+        # Compatibility handles keep scripted validation possible without
+        # adding seven redundant buttons to the user-facing panel.
+        self.movement_buttons = {family: _MovementProxy(self, family) for family in families}
+        self.roof_button = _MovementProxy(self, "Roof flex test", enabled=False)
+        self.pose_buttons = []
+        self.refresh_pose_controls()
+
+    def _selected_family(self):
+        families = ("Compression", "Bend X+", "Bend X-", "Bend Y+", "Bend Y-", "Twist CW", "Twist CCW")
+        index = self.cable_pattern.model.get_item_value_model().as_int
+        return families[index]
+
+    def _legacy_build_ui(self):
+        """Retained source for the previous panel; never shown."""
         self.window.title = "Nonlinear knee - rigid frames / flexible panels"
         # The dock may be shorter than the fixed control group. Scroll the
         # whole form so material/hinge inputs never collapse to zero height.
@@ -220,6 +305,8 @@ class ShellWorkshop(ShellJobControls, DropPreview):
                 self.refresh_pose_controls()
 
     def refresh_pose_controls(self):
+        if not hasattr(self, "pose_note"):
+            return
         self.roof_button.enabled = not self.shell.config.open_ends
         self.roof_button.tooltip = "No roof exists in the photo design. Apply cables or lower-frame force instead." if self.shell.config.open_ends else "Load the roof centre in the capped comparison."
         enabled = self.shell.contact is None
@@ -340,7 +427,31 @@ class ShellWorkshop(ShellJobControls, DropPreview):
         if family not in families:
             raise ValueError("Unknown cable movement")
         self.cable_pattern.model.get_item_value_model().set_value(families.index(family))
-        self.launch(self.range_job("single_cable"), "Cable "+family)
+        self.active_family = family
+        self.launch(self.range_job("displacement"), "Displacement "+family)
+
+    def _displacement_constraints(self, family, displacement_m):
+        """Map a cable take-up displacement to one lower-frame DOF.
+
+        Translation is used for compression/bend.  Twist is the equivalent
+        cable arc displacement at the half-width radius, so the solver still
+        returns a reaction moment in SI units.
+        """
+        if family == "Compression":
+            return {2: displacement_m}
+        if family == "Bend X+":
+            return {0: displacement_m}
+        if family == "Bend X-":
+            return {0: -displacement_m}
+        if family == "Bend Y+":
+            return {1: displacement_m}
+        if family == "Bend Y-":
+            return {1: -displacement_m}
+        if family == "Twist CW":
+            return {5: displacement_m / (self.shell.width / 2)}
+        if family == "Twist CCW":
+            return {5: -displacement_m / (self.shell.width / 2)}
+        raise ValueError("Unknown displacement family")
 
     def make_scene(self):
         s, root, model = self.stage, self.owned_path, self.shell
@@ -496,8 +607,9 @@ class ShellWorkshop(ShellJobControls, DropPreview):
         set_points(self.axial, cable[:4].reshape(-1, 3))
         set_points(self.red, cable[4:].reshape(-1, 3))
         set_points(self.loaded_cables, cable.reshape(-1, 3))
-        self.loaded_cables.GetWidthsAttr().Set((.00032*(self.tensions > 1e-10)).tolist())
-        if self.tensions.max() > 1e-10:
+        loaded = self.active_cable_mask | (self.tensions > 1e-10)
+        self.loaded_cables.GetWidthsAttr().Set((.00032*loaded).tolist())
+        if np.any(loaded):
             self.loaded_cables.MakeVisible()
         else:
             self.loaded_cables.MakeInvisible()
@@ -543,7 +655,8 @@ class ShellWorkshop(ShellJobControls, DropPreview):
             f"Compression {report['compression_fraction']*100:.3f}% | membrane strain {report['max_membrane_strain']*100:.3f}%\n"
             + ("Open ends; no roof plates or roof force test\n" if cfg.open_ends else f"Upper/lower roof warp {roof_warp[0]*1e6:.2f} / {roof_warp[1]*1e6:.2f} um\n")
             + f"Frame PET local hinge rotation {np.rad2deg(report['frame_hinge']['max_local_dihedral_change_rad']):.3f} deg\n"
-            f"Ground force {force:.3f} N | contact time +{clock:.3f} ms | max cable {self.tensions.max():.3f} N")
+            f"Reaction {np.linalg.norm(self.last_reaction[:3]):.4g} N / {np.linalg.norm(self.last_reaction[3:]):.4g} N m | "
+            f"Ground force {force:.3f} N | contact time +{clock:.3f} ms")
         self.legend.text = (f"{self.mode.split(';')[0]} | RIGID GOLD FRAMES | 1x\n"
                             f"Bend Y {angles[1]:.3f} deg | twist {angles[2]:.3f} deg | compression {report['compression_fraction']*100:.2f}%\n"
                             "Uncalibrated shell | strain, NOT failure | Ground lines: 2 mm/N")
@@ -568,6 +681,9 @@ class ShellWorkshop(ShellJobControls, DropPreview):
         self.drop = None
         self.display_index = None
         self.tensions = np.zeros(12)
+        self.active_cable_mask = np.zeros(12, dtype=bool)
+        self.last_reaction = np.zeros(6)
+        self.active_family = None
         self.offset = self.lab.scene.top_height-self.shell.height
         self.mode = "NEUTRAL"
         self.snapshots = []
@@ -588,25 +704,21 @@ class ShellWorkshop(ShellJobControls, DropPreview):
             super().pause_jobs()
 
     async def rebuild(self):
-        get = lambda name: self.inputs[name].as_float
-        config = ShellConfig(panel_to_crease_ratio=get("Fold compliance (100 = PET reference)"),
-                             subdivision=self.boundary_input.as_int,
-                             crease_twist_ratio=get("Crease twist coupling"), panel_bending_scale=get("Panel bending scale"),
-                             membrane_scale=get("Membrane stiffness scale"), panel_strain_limit=get("Membrane strain guard (%)")/100,
-                             vertex_relief_fraction=get("PET junction relief (%)")/100,
-                             frame_hinge_width_m=get("Frame-plate PET hinge (mm)")/1000,
-                             open_ends=self.flags["Open ends (photo design, no JSON caps)"].as_bool,
-                             max_iterations=get("Static solver iterations"),
-                             sparse_solver=self.flags["Sparse element solver"].as_bool,
-                             physical_strip_bending=self.flags["Thickness-derived PET bending (100 = PET reference)"].as_bool,
-                             self_contact=self.flags["Midsurface self-contact + CCD"].as_bool,
-                             interior_refinement=self.refinement_input.as_int)
+        get = lambda name, default: self.inputs[name].as_float if name in self.inputs else default
+        old = self.shell.config
+        config = dataclasses.replace(old,
+                             panel_to_crease_ratio=get("Fold compliance (100 = PET reference)", old.panel_to_crease_ratio),
+                             panel_bending_scale=get("Panel bending scale", old.panel_bending_scale),
+                             membrane_scale=get("Membrane stiffness scale", old.membrane_scale),
+                             frame_hinge_width_m=get("PET hinge width (mm)", old.frame_hinge_width_m*1000)/1000,
+                             max_iterations=180, sparse_solver=True, physical_strip_bending=True,
+                             self_contact=False, open_ends=True, interior_refinement=0, subdivision=1)
         config.validate()
         config = dataclasses.replace(config, max_iterations=int(config.max_iterations))
         self.feedback.text = "Assembling the new nonlinear shell; displayed result held until ready."
-        material = dataclasses.replace(self.shell.material, hinge_gap_m=get("PET exposed gap (mm)")/1000,
-            pla_thickness_m=get("PLA thickness (mm)")/1000, pet_thickness_m=get("PET thickness (um)")*1e-6,
-            pla_modulus_pa=get("PLA modulus (GPa, assumed)")*1e9, pet_modulus_pa=get("PET modulus (GPa, assumed)")*1e9)
+        material = dataclasses.replace(self.shell.material,
+            pla_modulus_pa=get("PLA modulus (GPa)", self.shell.material.pla_modulus_pa/1e9)*1e9,
+            pet_modulus_pa=get("PET modulus (GPa)", self.shell.material.pet_modulus_pa/1e9)*1e9)
         material.validate()
         candidate = await self.compute(NonlinearShell, self.lab.model.source, material, config)
         self.shell = candidate
@@ -615,6 +727,9 @@ class ShellWorkshop(ShellJobControls, DropPreview):
         self.display_index = None
         self.snapshots = []
         self.tensions = np.zeros(12)
+        self.active_cable_mask = np.zeros(12, dtype=bool)
+        self.last_reaction = np.zeros(6)
+        self.active_family = None
         self.last_rejection = None
         self.mode = "NEUTRAL - NEW STIFFNESS"
         self.static_trace = []
@@ -724,7 +839,18 @@ class ShellWorkshop(ShellJobControls, DropPreview):
     async def range_job(self, mode):
         self.inspector.playing = False
         jobs = []
-        if mode in ("bend", "twist", "compression"):
+        if mode == "displacement":
+            family = self.active_family or self._selected_family()
+            target = self.inputs["Joint displacement (mm)"].as_float
+            if not np.isfinite(target) or not 0 < target <= 2:
+                raise ValueError("Target displacement must be finite and between 0 and 2 mm")
+            self.requested_displacement_mm = float(target)
+            steps = max(1, math.ceil(target/.5))
+            for value in np.linspace(0, target, steps+1)[1:]:
+                constraints = self._displacement_constraints(family, value/1000)
+                jobs.append(({"lower_constraints": constraints},
+                             f"DISPLACEMENT {family} {value:.3f} mm"))
+        elif mode in ("bend", "twist", "compression"):
             if self.shell.contact is not None:
                 raise ValueError("Prescribed-frame studies do not support IPC yet; use force/winch actuation, "
                                  "or explicitly disable self-contact and Rebuild for a non-contact displacement study")
@@ -820,6 +946,11 @@ class ShellWorkshop(ShellJobControls, DropPreview):
             self.mode = label
             self.job_step = index+1
             self.tensions = np.asarray(report["tensions_n"])
+            if mode == "displacement":
+                self.active_cable_mask = tension_pattern(self.active_family, 1.0) > 0
+            else:
+                self.active_cable_mask = self.tensions > 1e-10
+            self.last_reaction = np.asarray(report["required_frame_reactions_world_n_nm"][1], dtype=float)
             self.snapshots.append(state.copy())
             self.static_trace.append({"mode": label, "tensions_n": self.tensions.tolist(),
                                       "solve_wall_s": solve_wall_s,
@@ -830,14 +961,20 @@ class ShellWorkshop(ShellJobControls, DropPreview):
                                       "compression_fraction": report["compression_fraction"],
                                       "max_membrane_strain": report["max_membrane_strain"],
                                       "frame_hinge": report["frame_hinge"],
+                                      "reaction_world_n_nm": self.last_reaction.tolist(),
                                       "residual": report["gradient_max_j_per_scaled_coordinate"]})
             # Present only accepted endpoints; the next solve runs concurrently.
             # This easing is display-time, NOT force-balanced dynamics.
             # Keep the accepted endpoint, but give the viewer a stable smooth
             # transition even when the coarse side-only solve finishes quickly.
             self.begin_transition(previous_state, min(3.0, max(1.5, solve_wall_s*.8)))
-            reaction = report["required_frame_reactions_world_n_nm"][1]
-            if mode in ("manual", "single_cable", "cables", "roof", "winch", "winch_demo"):
+            reaction = self.last_reaction
+            if mode == "displacement":
+                self.feedback.text = (f"FEM displacement {family}: {label.split()[-2]} mm accepted. "
+                    f"Lower-frame reaction {np.linalg.norm(reaction[:3]):.4g} N / "
+                    f"{np.linalg.norm(reaction[3:]):.4g} N m.\n"
+                    "The displayed cable is the prescribed actuator direction; force is a solved reaction.")
+            elif mode in ("manual", "single_cable", "cables", "roof", "winch", "winch_demo"):
                 angles = np.rad2deg(report["relative_rotation_rad"])
                 self.feedback.text = (f"Converged. Cable peak {max(self.tensions):.3g} N/strand. "
                     f"Bend X/Y {angles[0]:.3f}/{angles[1]:.3f} deg, twist {angles[2]:.3f} deg, "
@@ -851,11 +988,12 @@ class ShellWorkshop(ShellJobControls, DropPreview):
         await self.finish_transition()
         final_report = self.shell.diagnostics(self.state)
         final_angles = np.rad2deg(final_report["relative_rotation_rad"])
-        self.feedback.text = (f"COMPLETE: {self.job_step}/{self.job_steps} FEM steps. "
+        final_reaction = np.asarray(self.last_reaction, dtype=float)
+        self.feedback.text = (f"COMPLETE: {self.job_step}/{self.job_steps} displacement FEM steps. "
                               f"Bend X/Y {final_angles[0]:.3f}/{final_angles[1]:.3f} deg, "
                               f"twist {final_angles[2]:.3f} deg, compression {final_report['compression_fraction']*100:.3f}%. "
-                              "If the 1x shape is hard to see, enable Magnified response; it is display-only. "
-                              "Full physical folding is not yet calibrated.")
+                              f"Reaction {np.linalg.norm(final_reaction[:3]):.4g} N / {np.linalg.norm(final_reaction[3:]):.4g} N m. "
+                              "Magnification is display-only; full physical travel is not yet calibrated.")
 
     def show_peak(self):
         if not self.ensure_current_scene():
