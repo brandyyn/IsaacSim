@@ -734,3 +734,25 @@ for this interactive displacement path because the contact barrier made
 prescribed steps non-interactive; strain/intersection guards still reject an
 oversized target. This remains custom shell FEM, not calibrated solid FEA or a
 survival result.
+
+### 2026-09-21: photo/video cable pattern restored
+
+The displacement-control experiment above was intentionally superseded because
+its lower-frame translation did not reproduce the supplied joint's fold
+sequence. Commit `67b3a0fb` restores a compact cable-force panel and the original
+seven-family routing. `exact_joint/mechanics.py` is now the shared registry:
+same-corner axial cables 0–3 produce compression and paired bend; crossed
+diagonal groups 4–7 and 8–11 produce opposite twist. This matches the black/red
+cross routing visible in the supplied photos while preserving the original
+28/50/76 panel and crease registry.
+
+The photo/open shell still omits only the two JSON end-cap faces. Square
+perimeters are rigid; the triangular PLA-on-PET web and PET fold strips deform.
+Live Kit validation `exact_joint/validate_photo_cable_pattern_live.py` completed
+all seven callbacks at 3 N per active strand and verified the active cable index
+sets and neutral reset. Results are archived in
+`fea/exact_joint_photo_cable_pattern_v1/manifest.json` and
+`ml/runs/20260921-exact-knee-photo-cable-pattern-v1/run_manifest.json`.
+The measured responses remain small and exploratory (about 0.372% compression,
+0.083 degrees bend and 0.073 degrees twist); full travel and physical material
+calibration remain open.

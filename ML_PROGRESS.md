@@ -191,6 +191,7 @@ Add one row for every completed training or evaluation run. The detailed record 
 | `20260920-exact-knee-fold-lines-v2` | `e965d365`; implementation same | `exact_joint_photo_open_fold_lines_v2` | 0 (unused) | Joint-only fold-line FEM/UI evaluation | 22 focused numeric checks, 6 accepted fold-control study cases, 28/28 cable-demo steps and 9 live checks; full travel, calibration and survival unresolved | None |
 | `20260920-exact-knee-button-fix-v3` | `2088951a` | `exact_joint_photo_open_button_fix_v3` | 0 (unused) | Live movement-button recovery and cable FEM/UI evaluation | 7/7 direct movement callbacks complete with nonzero telemetry; Cable demo 28/28; 9 live checks and 9 controller tests; full travel, calibration and survival unresolved | None |
 | `20260920-exact-knee-displacement-ui-v4` | `bef64fb2` | `exact_joint_photo_displacement_ui_v4` | 0 (unused) | Single-joint displacement-controlled FEM/UI evaluation | Simplified panel; 7/7 displacement callbacks at 0.5 mm with reaction readback; stiffness rebuild/restore passes; no full-travel, calibration or survival claim | None |
+| `20260921-exact-knee-photo-cable-pattern-v1` | `67b3a0fb` | `exact_joint_photo_cable_pattern_v1` | 0 (unused) | Photo/video cable-family FEM/UI evaluation | 7/7 force-driven family callbacks at 3 N/active strand; active index sets and neutral reset verified; small uncalibrated response, no full-travel or survival claim | None |
 
 ### 2026-09-06: exact knee-only cable FEM handoff
 
@@ -245,3 +246,24 @@ with reaction force/moment telemetry; stiffness rebuild/restore also passes.
 The displacement path intentionally disables midsurface IPC for responsiveness;
 strain and intersection guards remain active. This is a custom shell FEM
 evaluation, not a calibrated solid-stress, full-travel or survival claim.
+
+### 2026-09-21: restore the supplied photo/video cable folding pattern
+
+The displacement-control experiment was rolled back because it prescribed a
+lower-frame coordinate and no longer followed the physical folding sequence.
+Implementation `67b3a0fb` restores the force-driven seven-family registry in
+`exact_joint/mechanics.py`: four same-corner axial cables for compression,
+adjacent axial pairs for signed X/Y bend, and the two diagonal crossing
+directions for signed twist. The compact panel now exposes cable tension and
+`Run cable`; it no longer presents a target displacement. The square frames
+remain rigid while the original 28/50/76 triangular side topology and PET/PLA
+fold strips deform.
+
+Live Kit validation at 3 N per active strand passed all seven callbacks and
+verified the active cable indices: 0.372% compression, about +/-0.083 degrees
+X/Y bend and +/-0.073 degrees twist. The accepted FEM result, source hashes,
+and reference-video hashes are recorded in case
+`fea/exact_joint_photo_cable_pattern_v1` and run
+`ml/runs/20260921-exact-knee-photo-cable-pattern-v1`. These are small,
+uncalibrated quasistatic responses; full video-like travel, material/contact
+calibration, drop survival and ML promotion remain unresolved.

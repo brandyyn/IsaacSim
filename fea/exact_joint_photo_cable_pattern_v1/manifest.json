@@ -1,0 +1,55 @@
+{
+  "case_id": "exact_joint_photo_cable_pattern_v1",
+  "status": "photo_video_pattern_restored_ui_and_live_fem_checked_full_travel_unresolved",
+  "parent_case": "exact_joint_photo_open_v1",
+  "implementation_commit": "67b3a0fb",
+  "source": {
+    "topology": "C:/Users/iamir/Downloads/Telegram Desktop/input.json",
+    "sha256": "d578618a0f90342bd0093b4febe130dc0b07c18f1b223c4d6bf02c9f3d93ce35",
+    "photo_pattern": "exact_joint/PHOTO_FOLD_PATTERN.md",
+    "reference_videos": [
+      {"filename": "video_2026-08-21_21-18-38.mp4", "sha256": "a46e249d5dac51e167041e8f74b4bfaba0360604ca45e174c1affb87821219c9"},
+      {"filename": "video_2026-08-21_21-16-48.mp4", "sha256": "c3a85ebbf48ee7d76450f140dff85611c1af91662a62c6297533c4a4e607dfcd"},
+      {"filename": "video_2026-08-21_21-17-33.mp4", "sha256": "a2e440565ad19e6203adf6b33dba9c115ba5c211536061dd79788d3eb75be528"}
+    ]
+  },
+  "geometry": "Original 28 vertices / 50 panels / 76 lines; two JSON end caps omitted in the photo/open shell; square perimeters rigid; PLA 0.4 mm on continuous PET 80 um.",
+  "frames_and_units": {
+    "length": "m", "mass": "kg", "time": "s", "force": "N", "torque": "N*m", "angle": "rad",
+    "isaac_frame": "source joint frame with lower perimeter at z=0 and upper perimeter fixed"
+  },
+  "actuation": {
+    "mode": "constant-tension quasistatic continuation",
+    "families": {
+      "Compression": [0, 1, 2, 3],
+      "Bend X+": [0, 1], "Bend X-": [2, 3],
+      "Bend Y+": [1, 2], "Bend Y-": [0, 3],
+      "Twist CW": [4, 5, 6, 7], "Twist CCW": [8, 9, 10, 11]
+    },
+    "tension_n_per_active_strand": 3.0,
+    "cable_routes": "same-corner axial strands followed by the two crossed diagonal directions; see PHOTO_FOLD_PATTERN.md"
+  },
+  "material": {
+    "pla_thickness_m": 0.0004, "pet_thickness_m": 0.00008,
+    "pla_modulus_pa": 2200000000, "pet_modulus_pa": 3500000000,
+    "calibrated": false
+  },
+  "solver": {
+    "software": "Isaac Sim 6.0.1-rc.7 / Kit 110.1.2 custom Torch nonlinear membrane/discrete-hinge shell",
+    "config": "sparse solver; physical PET strip bending; midsurface self-contact; frame hinge 0.2 mm; open ends; max_iterations 900",
+    "analysis": "one accepted force-driven FEM solve per selected family; display easing is not an equilibrium state"
+  },
+  "validation": {
+    "command": "exact_joint/validate_photo_cable_pattern_live.py",
+    "result": "exact_joint/results/20260921T044912_075450Z_photo_cable_pattern.json",
+    "result_sha256": "8d5b9c5dc0f76697155f1d537c8a0953f3c8bace4a3022c99ee264403053b55b",
+    "checks": ["simple UI", "seven force families", "active cable group matches registry", "neutral restored"],
+    "observed": "Compression 0.372%; signed X/Y bend about +/-0.083 deg; signed twist about +/-0.073 deg at 3 N/active strand."
+  },
+  "limitations": [
+    "Full video-like travel is not reproduced or calibrated.",
+    "Cable guide positions, pretension, friction and pre-crease angles are not measured.",
+    "Mesh convergence, finite-thickness contact, plasticity, delamination and strength remain open.",
+    "No drop-survival or ML-promotion claim."
+  ]
+}
