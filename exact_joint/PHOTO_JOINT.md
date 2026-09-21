@@ -4,6 +4,12 @@ This version corrects the end topology and display stepping. It **does not yet
 reproduce the physical joint's full compression, bending or twisting**, and is
 not a validated strength or drop-survival model.
 
+The current workshop uses the original photo/video **cable-force folding
+pattern** again. The lower frame is not prescribed by a displacement field:
+`tension_pattern()` selects the four axial, paired bend, or crossed twist
+strands shown in the supplied joint references. See
+[`PHOTO_FOLD_PATTERN.md`](PHOTO_FOLD_PATTERN.md) for the routing map.
+
 ## What changed
 
 The six supplied photos show open square ends. The source JSON has two end-cap
@@ -35,8 +41,9 @@ Reload alone preserves existing accepted results and settings.
    PLA/PET laminate; blue-green is exposed PET; green lines mark frame-strip
    interfaces; black/red lines show cable routing. Loaded strands turn gold.
 2. Set **Cable tension (N / active strand)**, initially 3 N for this numerical
-   demonstration. Click **Compression**, **Bend X/Y**, **Twist**, or **Cable demo**.
-   Each solves a force ramp; no target angle is imposed. Play is not required.
+   demonstration. Choose a family and click **Run cable**. Each click applies
+   the original force-driven family (compression, paired bend, or crossed
+   twist) and solves one accepted FEM step; no target angle is imposed.
 3. Leave **Smooth solved transitions** checked. Display easing runs while the
    next solve computes. The banner explicitly marks these intermediate poses
    as **display-only**. They are neither equilibria nor dynamic FEM timesteps;

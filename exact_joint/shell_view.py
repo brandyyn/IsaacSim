@@ -18,7 +18,7 @@ from pxr import Gf, UsdGeom, UsdShade, Vt
 from scipy.spatial.transform import Rotation
 
 from exact_joint.drop_preview import DropPreview
-from exact_joint.mechanics import tension_pattern
+from exact_joint.mechanics import CABLE_FAMILIES, CABLE_FAMILY_NOTES, tension_pattern
 from exact_joint.nonlinear_shell import NonlinearShell, ShellConfig
 from exact_joint.scene import ExactLegScene, curves, material, mesh, set_points
 from exact_joint.shell_impact import ShellImpact, ShellImpactConfig
@@ -77,8 +77,8 @@ class ShellWorkshop(ShellJobControls, DropPreview):
 
     async def start(self):
         config = ShellConfig(sparse_solver=True, interior_refinement=0,
-                             physical_strip_bending=True, self_contact=False, crease_twist_ratio=0,
-                             max_iterations=180,
+                             physical_strip_bending=True, self_contact=True, crease_twist_ratio=0,
+                             max_iterations=900,
                              frame_hinge_width_m=.0002, open_ends=True)
         self.shell = await asyncio.to_thread(NonlinearShell, self.lab.model.source, self.lab.config, config)
         self.state = np.zeros(self.shell.ndof)
@@ -97,25 +97,26 @@ class ShellWorkshop(ShellJobControls, DropPreview):
         return
 
     def _build_simple_ui(self):
-        """Build the single-joint displacement/FEM control surface."""
-        self.window = ui.Window("Joint FEM - displacement actuation", width=560, height=520)
+        """Build the compact single-joint cable/FEM control surface."""
+        self.window = ui.Window("Joint FEM - cable folding pattern", width=560, height=520)
         self.inputs = {}
-        families = ("Compression", "Bend X+", "Bend X-", "Bend Y+", "Bend Y-", "Twist CW", "Twist CCW")
+        families = CABLE_FAMILIES
         with self.window.frame, ui.ScrollingFrame(), ui.VStack(spacing=5, height=0):
-            ui.Label("SINGLE JOINT | DISPLACEMENT-DRIVEN FEM", height=28, style={"font_size": 18})
-            ui.Label("One joint only. Select a cable family, enter a target displacement, and solve the lower-frame motion. FEM reports the reaction force/moment after every accepted step.\nTransitions are display-only; accepted endpoints are the FEM states.", height=56, word_wrap=True,
+            ui.Label("SINGLE JOINT | PHOTO/VIDEO CABLE FOLDING FEM", height=28, style={"font_size": 18})
+            ui.Label("This restores the original seven-family cable pattern: four axial strands for compression, paired corner strands for bend, and crossed strands for twist. The square frames stay rigid; the triangular PLA-on-PET fold lines deform. Each cable pull runs an accepted FEM solve.", height=72, word_wrap=True,
                      style={"color": 0xFF80DFFF})
             with ui.HStack(height=30):
                 ui.Label("Cable family", width=120)
                 self.cable_pattern = ui.ComboBox(0, *families)
-                ui.Button("Run displacement", clicked_fn=lambda: self.start_movement(self._selected_family()))
+                ui.Button("Run cable", clicked_fn=lambda: self.start_movement(self._selected_family()))
                 ui.Button("Neutral", clicked_fn=self.neutral_shell)
             with ui.HStack(height=30):
-                ui.Label("Target displacement (mm)", width=180)
+                ui.Label("Cable tension (N / active strand)", width=220)
                 target = ui.FloatField(width=90).model
-                target.set_value(.5)
-                self.inputs["Joint displacement (mm)"] = target
-                ui.Label("Compression/bend use translation; twist uses cable arc displacement. Strain guards can stop an oversized target.", word_wrap=True)
+                target.set_value(3.0)
+                self.inputs["Cable tension (N)"] = target
+                ui.Label("Use 0.5–3 N first. Tension is a load, not an angle command; the FEM decides the fold.", word_wrap=True)
+            self.pattern_note = ui.Label("", height=26, word_wrap=True, style={"color": 0xFF80DFFF})
             self.progress_label = ui.Label("READY | choose a cable family", height=29, word_wrap=True, style={"color": 0xFF80DFFF})
             self.presentation_label = ui.Label("", height=28, word_wrap=True, style={"color": 0xFF80DFFF})
             with ui.HStack(height=26):
@@ -129,7 +130,7 @@ class ShellWorkshop(ShellJobControls, DropPreview):
             self.response_label = ui.Label("", height=38, word_wrap=True)
             self.telemetry = ui.Label("", height=98, word_wrap=True)
             self.settings_label = ui.Label("", height=55, word_wrap=True)
-            self.feedback = ui.Label("Ready. FEM is displacement-controlled; reaction force is measured after each solve.", height=54, word_wrap=True)
+            self.feedback = ui.Label("Ready. Cable forces follow the photo/video routing; FEM reaction and deformation are reported after each solve.", height=54, word_wrap=True)
             with ui.CollapsableFrame("Material / fold stiffness", collapsed=True):
                 ui.Label("Assumed PLA/PET properties; changing them requires Rebuild model.", height=28, word_wrap=True)
                 for label, value in (("Fold compliance (100 = PET reference)", 100),
@@ -144,9 +145,10 @@ class ShellWorkshop(ShellJobControls, DropPreview):
                         field.set_value(value)
                         self.inputs[label] = field
                 ui.Button("Rebuild model", clicked_fn=lambda: self.launch(self.rebuild(), "Rebuild model"))
-            ui.Label("Custom nonlinear membrane/discrete-hinge shell. No force target, solid stress, failure or survival rating is implied.", height=34, word_wrap=True)
+            ui.Label("Custom nonlinear membrane/discrete-hinge shell. No solid stress, failure or survival rating is implied; magnification is display-only.", height=34, word_wrap=True)
             self.legend = ui.Label("", height=42, word_wrap=True, style={"color": 0xFF80DFFF})
         self.active_family = families[0]
+        self.pattern_note.text = "Pattern: " + CABLE_FAMILY_NOTES[families[0]]
         # Compatibility handles keep scripted validation possible without
         # adding seven redundant buttons to the user-facing panel.
         self.movement_buttons = {family: _MovementProxy(self, family) for family in families}
@@ -155,9 +157,12 @@ class ShellWorkshop(ShellJobControls, DropPreview):
         self.refresh_pose_controls()
 
     def _selected_family(self):
-        families = ("Compression", "Bend X+", "Bend X-", "Bend Y+", "Bend Y-", "Twist CW", "Twist CCW")
+        families = CABLE_FAMILIES
         index = self.cable_pattern.model.get_item_value_model().as_int
-        return families[index]
+        family = families[index]
+        if hasattr(self, "pattern_note"):
+            self.pattern_note.text = "Pattern: " + CABLE_FAMILY_NOTES[family]
+        return family
 
     def _legacy_build_ui(self):
         """Retained source for the previous panel; never shown."""
@@ -423,12 +428,12 @@ class ShellWorkshop(ShellJobControls, DropPreview):
             self.close_view()
 
     def start_movement(self, family):
-        families = ("Compression", "Bend X+", "Bend X-", "Bend Y+", "Bend Y-", "Twist CW", "Twist CCW")
+        families = CABLE_FAMILIES
         if family not in families:
             raise ValueError("Unknown cable movement")
         self.cable_pattern.model.get_item_value_model().set_value(families.index(family))
         self.active_family = family
-        self.launch(self.range_job("displacement"), "Displacement "+family)
+        self.launch(self.range_job("single_cable"), "Cable "+family)
 
     def _displacement_constraints(self, family, displacement_m):
         """Map a cable take-up displacement to one lower-frame DOF.
@@ -711,8 +716,8 @@ class ShellWorkshop(ShellJobControls, DropPreview):
                              panel_bending_scale=get("Panel bending scale", old.panel_bending_scale),
                              membrane_scale=get("Membrane stiffness scale", old.membrane_scale),
                              frame_hinge_width_m=get("PET hinge width (mm)", old.frame_hinge_width_m*1000)/1000,
-                             max_iterations=180, sparse_solver=True, physical_strip_bending=True,
-                             self_contact=False, open_ends=True, interior_refinement=0, subdivision=1)
+                             max_iterations=900, sparse_solver=True, physical_strip_bending=True,
+                             self_contact=True, open_ends=True, interior_refinement=0, subdivision=1)
         config.validate()
         config = dataclasses.replace(config, max_iterations=int(config.max_iterations))
         self.feedback.text = "Assembling the new nonlinear shell; displayed result held until ready."
@@ -840,16 +845,7 @@ class ShellWorkshop(ShellJobControls, DropPreview):
         self.inspector.playing = False
         jobs = []
         if mode == "displacement":
-            family = self.active_family or self._selected_family()
-            target = self.inputs["Joint displacement (mm)"].as_float
-            if not np.isfinite(target) or not 0 < target <= 2:
-                raise ValueError("Target displacement must be finite and between 0 and 2 mm")
-            self.requested_displacement_mm = float(target)
-            steps = max(1, math.ceil(target/.5))
-            for value in np.linspace(0, target, steps+1)[1:]:
-                constraints = self._displacement_constraints(family, value/1000)
-                jobs.append(({"lower_constraints": constraints},
-                             f"DISPLACEMENT {family} {value:.3f} mm"))
+            raise ValueError("Displacement control was retired for the photo/video joint. Use the cable-family pull so the original fold pattern is preserved.")
         elif mode in ("bend", "twist", "compression"):
             if self.shell.contact is not None:
                 raise ValueError("Prescribed-frame studies do not support IPC yet; use force/winch actuation, "
@@ -867,7 +863,7 @@ class ShellWorkshop(ShellJobControls, DropPreview):
             amplitude = self.inputs["Cable tension (N)"].as_float
             if mode in ("cables", "manual", "single_cable") and (not np.isfinite(amplitude) or not 0 <= amplitude <= 10):
                 raise ValueError("Experimental cable tension must be 0-10 N")
-            families = ("Compression", "Bend X+", "Bend X-", "Bend Y+", "Bend Y-", "Twist CW", "Twist CCW")
+            families = CABLE_FAMILIES
             force = np.zeros(3)
             if mode in ("manual", "winch", "single_cable"):
                 index = self.cable_pattern.model.get_item_value_model().as_int
@@ -989,11 +985,18 @@ class ShellWorkshop(ShellJobControls, DropPreview):
         final_report = self.shell.diagnostics(self.state)
         final_angles = np.rad2deg(final_report["relative_rotation_rad"])
         final_reaction = np.asarray(self.last_reaction, dtype=float)
-        self.feedback.text = (f"COMPLETE: {self.job_step}/{self.job_steps} displacement FEM steps. "
-                              f"Bend X/Y {final_angles[0]:.3f}/{final_angles[1]:.3f} deg, "
-                              f"twist {final_angles[2]:.3f} deg, compression {final_report['compression_fraction']*100:.3f}%. "
-                              f"Reaction {np.linalg.norm(final_reaction[:3]):.4g} N / {np.linalg.norm(final_reaction[3:]):.4g} N m. "
-                              "Magnification is display-only; full physical travel is not yet calibrated.")
+        if mode == "displacement":
+            self.feedback.text = (f"COMPLETE: {self.job_step}/{self.job_steps} displacement FEM steps. "
+                                  f"Bend X/Y {final_angles[0]:.3f}/{final_angles[1]:.3f} deg, "
+                                  f"twist {final_angles[2]:.3f} deg, compression {final_report['compression_fraction']*100:.3f}%. "
+                                  f"Reaction {np.linalg.norm(final_reaction[:3]):.4g} N / {np.linalg.norm(final_reaction[3:]):.4g} N m. "
+                                  "Magnification is display-only; full physical travel is not yet calibrated.")
+        else:
+            self.feedback.text = (f"COMPLETE: {self.job_step}/{self.job_steps} cable FEM step(s) using the original photo/video pattern. "
+                                  f"Bend X/Y {final_angles[0]:.3f}/{final_angles[1]:.3f} deg, "
+                                  f"twist {final_angles[2]:.3f} deg, compression {final_report['compression_fraction']*100:.3f}%. "
+                                  f"Reaction {np.linalg.norm(final_reaction[:3]):.4g} N / {np.linalg.norm(final_reaction[3:]):.4g} N m. "
+                                  "The cable load is solved; magnification is display-only and full travel is not calibrated.")
 
     def show_peak(self):
         if not self.ensure_current_scene():

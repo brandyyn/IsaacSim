@@ -19,6 +19,33 @@ from exact_joint.elements import elevate,b_matrices,subdivide_surface
 from exact_joint.mesh_utils import compute_tet_volumes,elasticity_matrix
 
 
+# The ordering is the cable layout visible in the supplied joint photos:
+# four same-corner axial strands (black in the workshop), then the two
+# diagonal crossing directions (red).  The bend families pull adjacent
+# axial corners; twist pulls one diagonal direction at a time.  Keep this
+# registry shared by the solver and UI so a label can never select a
+# different fold pattern than the rendered cable.
+CABLE_FAMILIES = ("Compression", "Bend X+", "Bend X-", "Bend Y+", "Bend Y-", "Twist CW", "Twist CCW")
+CABLE_GROUPS = {
+    "Compression": (0, 1, 2, 3),
+    "Bend X+": (0, 1),
+    "Bend X-": (2, 3),
+    "Bend Y+": (1, 2),
+    "Bend Y-": (0, 3),
+    "Twist CW": (4, 5, 6, 7),
+    "Twist CCW": (8, 9, 10, 11),
+}
+CABLE_FAMILY_NOTES = {
+    "Compression": "four same-corner axial pulls",
+    "Bend X+": "front/right axial corner pair",
+    "Bend X-": "rear/left axial corner pair",
+    "Bend Y+": "right axial corner pair",
+    "Bend Y-": "left axial corner pair",
+    "Twist CW": "first diagonal crossing direction",
+    "Twist CCW": "opposite diagonal crossing direction",
+}
+
+
 def cable_anchors(width_m: float, height_m: float):
     """Four axial and eight crossed perimeter tendons with nonnegative tensions."""
     a = width_m/2
@@ -34,11 +61,9 @@ def tension_pattern(mode: str, amplitude_n: float):
     if not np.isfinite(amplitude_n) or amplitude_n<0:
         raise ValueError("Cable tension must be finite and nonnegative")
     tension = np.zeros(12)
-    groups = {"Compression":[0,1,2,3],"Bend X+":[0,1],"Bend X-":[2,3],
-              "Bend Y+":[1,2],"Bend Y-":[0,3],"Twist CW":[4,5,6,7],"Twist CCW":[8,9,10,11]}
-    if mode not in groups:
+    if mode not in CABLE_GROUPS:
         raise ValueError("Unknown cable pattern")
-    tension[groups[mode]] = amplitude_n
+    tension[list(CABLE_GROUPS[mode])] = amplitude_n
     return tension
 
 
