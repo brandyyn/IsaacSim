@@ -110,6 +110,8 @@ class ShellWorkshop(ShellJobControls, DropPreview):
                 self.cable_pattern = ui.ComboBox(0, *families)
                 ui.Button("Run cable", clicked_fn=lambda: self.start_movement(self._selected_family()))
                 ui.Button("Neutral", clicked_fn=self.neutral_shell)
+                ui.Button("Reconnect scene", clicked_fn=self.reconnect_opened,
+                          tooltip="After opening a matching saved exact-knee USD, rebind the FEM overlay without saving over it.")
             with ui.HStack(height=30):
                 ui.Label("Cable tension (N / active strand)", width=220)
                 target = ui.FloatField(width=90).model

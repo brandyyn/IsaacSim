@@ -44,6 +44,11 @@ Reload alone preserves existing accepted results and settings.
    demonstration. Choose a family and click **Run cable**. Each click applies
    the original force-driven family (compression, paired bend, or crossed
    twist) and solves one accepted FEM step; no target angle is imposed.
+3. If you opened a saved USD while the workshop was already running, wait for
+   any solve to finish, then click **Reconnect scene** in the compact panel.
+   It verifies the original JSON checksum, `/World/ExactLeg`, the FEM overlay,
+   and root transforms before rebinding. It resets only the owned overlay to
+   neutral and does not save over the USD.
 3. Leave **Smooth solved transitions** checked. Display easing runs while the
    next solve computes. The banner explicitly marks these intermediate poses
    as **display-only**. They are neither equilibria nor dynamic FEM timesteps;
