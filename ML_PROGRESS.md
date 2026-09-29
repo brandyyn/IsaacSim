@@ -4,6 +4,20 @@ This is the shared progress log. Update it whenever the FEA model, simulator env
 
 ## Current state
 
+- STL reference integration (2026-09-29): the three owner-supplied binary files are
+  versioned under `exact_joint/assets/stl_joint_v1/`. `Soft.stl` is an exact 160-
+  triangle subset of the 608-triangle assembled file; the remaining 448 assembled
+  triangles are the rigid PLA display set. `Rigid.stl` is retained separately as
+  the 448-triangle flat manufacturing layout and is never treated as the assembled
+  joint. The JSON source joint remains the FEM authority; PLA 0.4 mm / PET 80 um
+  and cable actuation are unchanged. A compact UI adds independent assembled and
+  flat-layout visibility toggles. Static byte/hash/topology checks pass. The
+  current local Kit source build exits before its Python run loop (`No run loop was
+  found`), so live actuation/FEM confirmation is still pending and no strength,
+  survival, calibration, or ML claim is made. Case:
+  `fea/exact_joint_stl_reference_v1`; evaluation:
+  `ml/runs/20260929-exact-knee-stl-reference-v1`.
+
 - Phase: `0 - deterministic simulation baseline`
 - Baseline commit: `5131a9740b3ce82e42331e923e1a45ffa396f71c`
 - Simulation: `panel_crease_leg_v8.usd`, launched with `open_knee_gui.py`
@@ -156,6 +170,7 @@ the linked evaluation is `20260907-exact-knee-drop-readiness-v1`. No training.
 
 | Date | Owner | Phase | Git commit | FEA case | Result | Next action |
 |---|---|---|---|---|---|---|
+| 2026-09-29 | Codex | Supplied STL reference integration | `93bad662` + local changes | `exact_joint_stl_reference_v1` | 3 files copied byte-for-byte; assembled 608 triangles split into 160 soft + 448 rigid; static checks pass; live Kit run-loop check blocked | Start a Kit build with a working Python run loop, toggle both overlays, and run one accepted cable solve |
 | 2026-08-22 | Codex | Simulation baseline | `5131a974` | None | v8 portable physics/visual-controller checkpoint committed and pushed | Import the first reviewed Ansys FEA case |
 | 2026-08-22 | Codex | FEA load replay | `6b6732d8` | `compression_v1` | 52 samples, 639.69 N peak force, neutral/45° replay stable | Add angle/displacement/torque data and confirm frame mapping |
 | 2026-08-24 | Codex | Multi-DOF motion experiment | `uncommitted; base 8fcbb672` | `compression_v1` not applied | Separate three-revolute X/Z/Y variant validated with combined positive and negative targets; no ML training run | Review axis/frame mapping against the physical videos and FEA before making this an ML environment |

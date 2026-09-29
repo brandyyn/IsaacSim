@@ -1,0 +1,52 @@
+{
+  "schema": "exact_joint_stl_reference_v1",
+  "source": "user-supplied binary STL files",
+  "units_assumption": "millimetre (binary STL has no embedded units; verify against measured part)",
+  "stl_to_m": 0.001,
+  "display_scale_m_per_source_unit": 0.0006,
+  "canonical_fem": {
+    "source": "exact_joint/source_joint.json",
+    "role": "authoritative JSON midsurface and nonlinear FEM topology",
+    "stl_geometry_is_reference_only": true
+  },
+  "files": {
+    "Rigid.stl": {
+      "file": "Rigid.stl",
+      "role": "flat manufacturing layout; not an assembled overlay",
+      "sha256": "4024ffc36300685089293e2708a8b07dab6e63a89d850ec2f7166a84d2d0d5ef",
+      "byte_count": 22484,
+      "triangle_count": 448,
+      "bounds_source_units": {"min": [-105.604927, -105.270180, 0.0], "max": [105.604927, 105.270180, 3.7]}
+    },
+    "soft_and_rigid_sections.stl": {
+      "file": "soft_and_rigid_sections.stl",
+      "role": "assembled CAD reference",
+      "sha256": "182956b662f61680372b6ac5d3e5478bece34de4f71ba57bb06b280d6b4d7f86",
+      "byte_count": 30484,
+      "triangle_count": 608,
+      "bounds_source_units": {"min": [-25.9, -25.9, 0.0], "max": [25.9, 25.9, 56.543304]}
+    },
+    "Soft.stl": {
+      "file": "Soft.stl",
+      "role": "assembled flexible shell subset",
+      "sha256": "60a900edd721c97526ca914448153059881a84287d553b4b2f91904e1dc0f6da",
+      "byte_count": 8084,
+      "triangle_count": 160,
+      "bounds_source_units": {"min": [-25.67153, -25.67153, 0.0], "max": [25.67153, 25.67153, 56.543304]}
+    }
+  },
+  "derived_split": {
+    "assembled_soft_triangles": 160,
+    "assembled_rigid_triangles": 448,
+    "match_rule": "sorted triangle vertices quantized to 1e-5 source units",
+    "rigid_winding": "reversed for USD display; original bytes preserved",
+    "topology_check": "all triangles non-degenerate; closed components have two incident facets per edge"
+  },
+  "mapping": {
+    "stl_x": "0.2 * json_x",
+    "stl_y": "-0.2 * json_z",
+    "stl_z": "0.2 * json_y + 28.2716503143",
+    "display_transform": "model_x = 0.0006 * cad_x; model_y = 0.0006 * cad_y; model_z = 0.0006 * (cad_z - 6.2716503143)",
+    "note": "validated midsurface mapping for the assembled soft shell; display transform does not change FEM thickness, material, or stiffness"
+  }
+}

@@ -26,6 +26,7 @@ from exact_joint.shell_actuation import winch_pull
 from exact_joint.shell_ui_jobs import ShellJobControls
 from exact_joint.shell_displacement_view import ShellDisplacementView
 from exact_joint.shell_presentation import SolvedTransition
+from exact_joint.stl_assets import STL_TO_METRE, load_joint_stl_assets
 
 
 class _MovementProxy:
@@ -74,6 +75,10 @@ class ShellWorkshop(ShellJobControls, DropPreview):
         self.active_cable_mask = np.zeros(12, dtype=bool)
         self.last_reaction = np.zeros(6)
         self.requested_displacement_mm = 0.0
+        self.stl_reference = None
+        self.stl_layout = None
+        self.stl_reference_visible = False
+        self.stl_layout_visible = False
 
     async def start(self):
         config = ShellConfig(sparse_solver=True, interior_refinement=0,
@@ -112,6 +117,13 @@ class ShellWorkshop(ShellJobControls, DropPreview):
                 ui.Button("Neutral", clicked_fn=self.neutral_shell)
                 ui.Button("Reconnect scene", clicked_fn=self.reconnect_opened,
                           tooltip="After opening a matching saved exact-knee USD, rebind the FEM overlay without saving over it.")
+            with ui.HStack(height=28):
+                ui.Button("Show STL assembled", clicked_fn=self.toggle_stl_reference,
+                          tooltip="Toggle the supplied soft-and-rigid assembled STL over the JSON FEM joint.")
+                ui.Button("Show flat Rigid", clicked_fn=self.toggle_stl_layout,
+                          tooltip="Toggle the supplied Rigid.stl manufacturing layout; it is not an assembled FEM body.")
+            self.stl_status = ui.Label("STL reference loaded | assembled hidden", height=24, word_wrap=True,
+                                       style={"color": 0xFF80DFFF})
             with ui.HStack(height=30):
                 ui.Label("Cable tension (N / active strand)", width=220)
                 target = ui.FloatField(width=90).model
@@ -534,7 +546,98 @@ class ShellWorkshop(ShellJobControls, DropPreview):
                 else:
                     cube(str(body.GetPath())+"/Shank", (0, 0, -.042), (.009, .012, .067), link)
                     cube(str(body.GetPath())+"/Foot", (.012, 0, -.083), (.05, .026, .009), link)
+        self._make_stl_reference(s)
         self.inspector = ShellDisplacementView(self)
+
+    @staticmethod
+    def _cad_points_to_model(triangles, assembled=True):
+        """Map supplied CAD source units to the existing metre FEM frame.
+
+        The CAD midsurface was verified against the JSON source: 0.2 source
+        units correspond to one JSON unit, and the lower assembled end plane is
+        at CAD z=6.2716503.  This is a display transform only; material
+        thickness and stiffness stay in the nonlinear FEM model.
+        """
+        points = np.asarray(triangles, dtype=np.float64).copy()
+        points[..., 0:2] *= STL_TO_METRE * 0.6
+        z_base = 6.2716503143 if assembled else float(np.min(points[..., 2]))
+        points[..., 2] = (points[..., 2] - z_base) * STL_TO_METRE * 0.6
+        return points.reshape(-1, 3)
+
+    def _make_stl_reference(self, stage):
+        """Add the user CAD as an optional, provenance-tagged visual overlay."""
+        root_path = self.owned_path + "/STLJointReference"
+        root = UsdGeom.Xform.Define(stage, root_path)
+        root.GetPrim().SetCustomDataByKey("source", "user-supplied STL assets")
+        root.GetPrim().SetCustomDataByKey("units_assumption", "binary STL source units mapped at 0.0006 m/unit")
+        root.GetPrim().SetCustomDataByKey("fem_authority", "exact_joint/source_joint.json")
+        assets = load_joint_stl_assets()
+        soft_mat = material(stage, "STLReferenceSoftPET", (.12, .85, .92), .34)
+        rigid_mat = material(stage, "STLReferenceRigidPLA", (.98, .54, .10), .42)
+        layout_mat = material(stage, "STLReferenceFlatRigid", (.48, .60, .95), .25)
+
+        def add_triangles(path, triangles, mat, role, assembled=True):
+            triangles = np.asarray(triangles, dtype=np.float64)
+            points = self._cad_points_to_model(triangles, assembled=assembled)
+            faces = [(3*i, 3*i+1, 3*i+2) for i in range(len(triangles))]
+            prim = mesh(stage, path, points, faces, mat)
+            prim.GetPrim().SetCustomDataByKey("role", role)
+            prim.GetPrim().SetCustomDataByKey("source_units", "unverified binary STL units")
+            prim.GetPrim().SetCustomDataByKey("display_scale_m_per_unit", .0006)
+            return prim
+
+        assembled = UsdGeom.Xform.Define(stage, root_path + "/Assembled")
+        assembled.GetPrim().SetCustomDataByKey("soft_source", assets["soft"].sha256)
+        assembled.GetPrim().SetCustomDataByKey("assembled_source", assets["assembled"].sha256)
+        add_triangles(root_path + "/Assembled/SoftPET", assets["soft"].triangles, soft_mat, "assembled flexible shell (Soft.stl)")
+        add_triangles(root_path + "/Assembled/RigidPLA", assets["assembled_rigid_triangles"], rigid_mat,
+                      "assembled rigid plates (soft and rigid sections.stl minus Soft.stl)")
+
+        layout = UsdGeom.Xform.Define(stage, root_path + "/FlatRigidLayout")
+        layout.GetPrim().SetCustomDataByKey("source", assets["rigid_layout"].sha256)
+        # Keep the manufacturing sheet out of the FEM overlay by default.  It
+        # is placed to the side when enabled so its bed coordinates are not
+        # mistaken for the assembled joint frame.
+        layout.AddTranslateOp().Set(Gf.Vec3d(-.075, -.045, 0.0))
+        add_triangles(root_path + "/FlatRigidLayout/RigidPLA", assets["rigid_layout"].triangles,
+                      layout_mat, "flat rigid manufacturing layout (Rigid.stl)", assembled=False)
+        self.stl_reference = assembled
+        self.stl_layout = layout
+        UsdGeom.Imageable(assembled.GetPrim()).MakeInvisible()
+        UsdGeom.Imageable(layout.GetPrim()).MakeInvisible()
+        if self.stl_reference_visible:
+            UsdGeom.Imageable(assembled.GetPrim()).MakeVisible()
+        if self.stl_layout_visible:
+            UsdGeom.Imageable(layout.GetPrim()).MakeVisible()
+        if hasattr(self, "stl_status"):
+            self.stl_status.text = ("STL reference loaded | assembled "
+                                     + ("visible" if self.stl_reference_visible else "hidden")
+                                     + " | flat Rigid "
+                                     + ("visible" if self.stl_layout_visible else "hidden"))
+
+    def toggle_stl_reference(self):
+        if self.stl_reference is None:
+            return
+        self.stl_reference_visible = not self.stl_reference_visible
+        imageable = UsdGeom.Imageable(self.stl_reference.GetPrim())
+        (imageable.MakeVisible if self.stl_reference_visible else imageable.MakeInvisible)()
+        self.stl_status.text = ("STL reference loaded | assembled "
+                                 + ("visible" if self.stl_reference_visible else "hidden")
+                                 + " | flat Rigid "
+                                 + ("visible" if self.stl_layout_visible else "hidden"))
+        self.render()
+
+    def toggle_stl_layout(self):
+        if self.stl_layout is None:
+            return
+        self.stl_layout_visible = not self.stl_layout_visible
+        imageable = UsdGeom.Imageable(self.stl_layout.GetPrim())
+        (imageable.MakeVisible if self.stl_layout_visible else imageable.MakeInvisible)()
+        self.stl_status.text = ("STL reference loaded | assembled "
+                                 + ("visible" if self.stl_reference_visible else "hidden")
+                                 + " | flat Rigid "
+                                 + ("visible" if self.stl_layout_visible else "hidden"))
+        self.render()
 
     def set_time(self, elapsed):
         self.elapsed = elapsed  # Base initialization only; our jobs own the release.

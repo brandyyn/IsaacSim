@@ -513,6 +513,29 @@ Next structural work: fix reference-geometry refinement, converge the stiffness,
 validate reduced modes against full transient FEM, and measure material/crease,
 contact and mass properties before assessing the rest of the drop.
 
+## Supplied STL reference set
+
+The three owner-supplied files are registered in
+`assets/stl_joint_v1/manifest.json` and copied byte-for-byte into that folder.
+The nonlinear FEM still uses `source_joint.json` for its nodes, panels, material
+thicknesses and cable loads. The STL files are an optional visual/reference layer:
+
+- **Show STL assembled** displays `soft_and_rigid_sections.stl`, split into the
+  exact `Soft.stl` PET subset (cyan) and the remaining rigid PLA facets (orange).
+- **Show flat Rigid** displays `Rigid.stl` as a separated manufacturing layout
+  (blue). It is intentionally not placed over the knee because its source XY
+  footprint is a flat print-bed sheet, not the assembled joint.
+
+The overlay uses the recorded CAD-to-model display mapping and does not change FEM
+thickness, stiffness, collision, or cable routing. Run
+`_build/target-deps/python/python.exe exact_joint/validate_stl_assets.py` for a
+dependency-light byte/hash/triangle/subset audit. The Kit-side
+`exact_joint/test_stl_assets.py` additionally exercises the NumPy split used by
+the scene controller. Live overlay toggles and a cable solve should be checked in
+a Kit build with a functioning Python run loop; the current local source build
+exits before that loop starts, so the checked-in reference case makes no live
+motion or strength claim by itself.
+
 ## Technical references
 
 - [INL/MOOSE Newmark integration](https://mooseframework.inl.gov/releases/moose/2024-03-08/source/timeintegrators/NewmarkBeta.html): integration formulation; linear stability is not a guarantee of contact accuracy.

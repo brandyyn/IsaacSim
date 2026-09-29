@@ -1,0 +1,90 @@
+{
+  "case_id": "exact_joint_stl_reference_v1",
+  "status": "reference-only",
+  "geometry": {
+    "source_asset": "exact_joint/assets/stl_joint_v1/soft_and_rigid_sections.stl",
+    "source_topology": "exact_joint/source_joint.json",
+    "geometry_revision": "user-supplied STL set; assembled reference split v1",
+    "sha256": {
+      "Rigid.stl": "4024ffc36300685089293e2708a8b07dab6e63a89d850ec2f7166a84d2d0d5ef",
+      "soft_and_rigid_sections.stl": "182956b662f61680372b6ac5d3e5478bece34de4f71ba57bb06b280d6b4d7f86",
+      "Soft.stl": "60a900edd721c97526ca914448153059881a84287d553b4b2f91904e1dc0f6da",
+      "source_joint.json": "d578618a0f90342bd0093b4febe130dc0b07c18f1b223c4d6bf02c9f3d93ce35"
+    },
+    "stl_units_assumption": "millimetre; binary STL does not embed units",
+    "display_scale_m_per_stl_unit": 0.0006,
+    "assembled_cad_to_model": {
+      "model_x": "0.0006 * cad_x",
+      "model_y": "0.0006 * cad_y",
+      "model_z": "0.0006 * (cad_z - 6.2716503143)"
+    }
+  },
+  "units": {
+    "length": "m",
+    "mass": "kg",
+    "time": "s",
+    "force": "N",
+    "torque": "N*m",
+    "stress": "Pa",
+    "angle": "rad"
+  },
+  "frames": {
+    "fea_frame": "exact_joint/source_joint.json normalized knee frame",
+    "isaac_frame": "Z-up metre frame used by exact_joint nonlinear workshop",
+    "transform_fea_to_isaac": "STL display mapping is recorded above; FEM node frame remains source_joint.json",
+    "joint_axis_in_isaac": [0.0, 1.0, 0.0],
+    "neutral_angle_rad": 0.0,
+    "positive_angle_direction": "source_joint convention; supplied STL is a visual/reference overlay"
+  },
+  "material": {
+    "model": "PLA 0.4 mm on PET film 80 um (existing exact_joint FEM)",
+    "parameters": {
+      "rigid_role": "PLA printed panels and square frames",
+      "soft_role": "PET flexible shell subset from Soft.stl",
+      "stl_materials_are_display_only": true
+    }
+  },
+  "mesh": {
+    "element_type": "binary STL surface triangles for visual reference; nonlinear shell mesh remains JSON-derived",
+    "element_count": 608,
+    "characteristic_length_m": 0.0006,
+    "mesh_revision": "assembled 608 triangles = 160 Soft + 448 derived rigid",
+    "convergence_summary": "not an FEA convergence result; source JSON FEM remains authoritative"
+  },
+  "boundary_conditions": [
+    "No new boundary condition is inferred from STL.",
+    "Existing exact_joint cable FEM boundary conditions and cable routing remain in force."
+  ],
+  "loads": [],
+  "solver": {
+    "software": "Isaac Sim exact_joint nonlinear shell",
+    "version": "source build 6.0 runtime; live run-loop validation pending",
+    "analysis_type": "quasistatic cable-driven nonlinear shell",
+    "time_step_s": null,
+    "notes": "STL overlay is not passed as solver thickness, stiffness, collision, or load data."
+  },
+  "outputs": {
+    "raw_files": [
+      "exact_joint/assets/stl_joint_v1/Rigid.stl",
+      "exact_joint/assets/stl_joint_v1/soft_and_rigid_sections.stl",
+      "exact_joint/assets/stl_joint_v1/Soft.stl"
+    ],
+    "processed_files": [
+      "exact_joint/assets/stl_joint_v1/manifest.json",
+      "exact_joint/stl_assets.py"
+    ],
+    "response_model": null
+  },
+  "limitations": [
+    "Binary STL units are not embedded; the millimetre assumption and 0.0006 m/source-unit display scale must be confirmed against a measured part.",
+    "Rigid.stl is a flat manufacturing layout and is never treated as the assembled overlay.",
+    "The assembled visual split is validated by triangle identity, but it does not replace the source JSON FEM topology.",
+    "Live Isaac Sim actuation validation is pending because the current local source build exits before its Python run loop starts."
+  ],
+  "review": {
+    "prepared_by": "Codex",
+    "reviewed_by": [],
+    "date_utc": "2026-09-29",
+    "notes": "Geometry and provenance review completed with astra geometry/integration agents and luna verification agent."
+  }
+}

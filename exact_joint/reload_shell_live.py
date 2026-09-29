@@ -35,7 +35,7 @@ elif previous is not None:
     await lab.drop_preview.restore()
 importlib.invalidate_caches()
 loaded = {}
-for name in ("mechanics", "shell_ipc", "shell_sparse", "nonlinear_shell", "shell_impact", "shell_ui_jobs", "shell_display_math", "shell_displacement_view", "shell_presentation", "shell_view"):
+for name in ("mechanics", "shell_ipc", "shell_sparse", "nonlinear_shell", "shell_impact", "shell_ui_jobs", "shell_display_math", "shell_displacement_view", "shell_presentation", "stl_assets", "shell_view"):
     qualified = "exact_joint."+name
     module = sys.modules.get(qualified) or types.ModuleType(qualified)
     sys.modules[qualified] = module
@@ -74,6 +74,8 @@ if in_place:
     previous.active_cable_mask = getattr(previous, "active_cable_mask", __import__("numpy").zeros(12, dtype=bool))
     previous.last_reaction = getattr(previous, "last_reaction", __import__("numpy").zeros(6))
     previous.requested_displacement_mm = getattr(previous, "requested_displacement_mm", 0.0)
+    previous.stl_reference_visible = getattr(previous, "stl_reference_visible", False)
+    previous.stl_layout_visible = getattr(previous, "stl_layout_visible", False)
     previous.window.destroy()
     previous.build_ui()
     for name, value in values.items():

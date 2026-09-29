@@ -4,6 +4,31 @@ This file is the portable technical context reconstructed from the Codex convers
 
 ## Current checkpoint
 
+### 2026-09-29: supplied STL reference assets integrated
+
+The owner-supplied `Rigid.stl`, `soft and rigid sections.stl`, and `Soft.stl`
+are preserved byte-for-byte under `exact_joint/assets/stl_joint_v1/` with a
+provenance manifest. The assembled file contains 608 surface triangles. `Soft.stl`
+matches 160 of those triangles exactly (the flexible PET display subset); the
+remaining 448 are the rigid PLA display subset. `Rigid.stl` has 448 triangles but
+is a much larger flat print-bed/manufacturing layout, so it is deliberately kept
+as a separate optional reference and is not overlaid as the assembled knee.
+
+`exact_joint/stl_assets.py` validates the binary structure, hashes, non-degenerate
+facets, and assembled material split. `shell_view.py` adds the assembled and flat
+layout as optional, provenance-tagged USD overlays with compact visibility
+buttons. The assembled CAD-to-model display mapping is recorded in
+`exact_joint/assets/stl_joint_v1/manifest.json` and
+`fea/exact_joint_stl_reference_v1/manifest.json`; it is a display transform only.
+The JSON joint, nonlinear shell mesh, cable routing, and PLA/PET FEM properties
+remain authoritative and are not silently replaced by STL thickness or stiffness.
+
+Static file/hash/topology checks pass. Live Kit actuation/FEM confirmation is
+blocked on this machine because the local source build exits before the Python run
+loop (`No run loop was found`); this does not invalidate the copied assets or the
+scene integration code. No full-motion, impact-survival, calibration, or ML claim
+is made from this reference-only checkpoint.
+
 ### 2026-09-14 UTC: distinguish invisible response from inactive buttons
 
 The user's 0.5 mm Twist CW winch command did execute, but produced only 19.34 um
