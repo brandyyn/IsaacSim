@@ -34,7 +34,20 @@ class ShellJobControls:
         self.feedback.text = "Starting "+label+"..."
         self.work = asyncio.ensure_future(self.guard_job(coroutine))
         # Cancellation can arrive before guard_job has first awaited its input.
-        self.work.add_done_callback(lambda _task: coroutine.close())
+        self.work.add_done_callback(lambda task: self._job_finished(task, coroutine))
+
+    def _job_finished(self, task, coroutine):
+        coroutine.close()
+        # In this case guard_job never executes its try/finally. Clear the
+        # stale running indicator and let a newer queued button request run.
+        if task.cancelled() and self.work is task:
+            self.running = False
+            self.job_outcome = "CANCELLED"
+            self.feedback.text = "Calculation cancelled; choose a movement to start a new FEM solve."
+            next_job, self.pending_job = self.pending_job, None
+            if next_job is not None:
+                self.work = None
+                self.launch(*next_job)
 
     async def guard_job(self, coroutine):
         try:

@@ -41,9 +41,13 @@ Reload alone preserves existing accepted results and settings.
    PLA/PET laminate; blue-green is exposed PET; green lines mark frame-strip
    interfaces; black/red lines show cable routing. Loaded strands turn gold.
 2. Set **Cable tension (N / active strand)**, initially 3 N for this numerical
-   demonstration. Choose a family and click **Run cable**. Each click applies
-   the original force-driven family (compression, paired bend, or crossed
-   twist) and solves one accepted FEM step; no target angle is imposed.
+   demonstration. Choose a family and click **Apply cable force**. Each click
+   captures the selected family and force, then solves four accepted FEM ramp
+   steps (25%, 50%, 75%, 100%) using the original force-driven family
+   (compression, paired bend, or crossed twist); no target angle is imposed.
+   The lower assembled STL, when shown, follows the accepted end-frame pose as
+   a clearly labelled display-only kinematic overlay so the small physical
+   response is visible without changing the FEM result.
 3. If you opened a saved USD while the workshop was already running, wait for
    any solve to finish, then click **Reconnect scene** in the compact panel.
    It verifies the original JSON checksum, `/World/ExactLeg`, the FEM overlay,

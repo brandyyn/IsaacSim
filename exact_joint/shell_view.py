@@ -25,6 +25,7 @@ from exact_joint.shell_impact import ShellImpact, ShellImpactConfig
 from exact_joint.shell_actuation import winch_pull
 from exact_joint.shell_ui_jobs import ShellJobControls
 from exact_joint.shell_displacement_view import ShellDisplacementView
+from exact_joint.shell_display_math import frame_blend_display
 from exact_joint.shell_presentation import SolvedTransition
 from exact_joint.stl_assets import STL_TO_METRE, load_joint_stl_assets
 
@@ -61,7 +62,7 @@ class ShellWorkshop(ShellJobControls, DropPreview):
         self.display_index = None
         self.static_trace = []
         self.timeline_action = "manual"
-        self.show_response = False
+        self.show_response = True
         self.response_gain = 100.0
         self.inspector = None
         self.scene_disconnected = False
@@ -79,6 +80,7 @@ class ShellWorkshop(ShellJobControls, DropPreview):
         self.stl_layout = None
         self.stl_reference_visible = False
         self.stl_layout_visible = False
+        self.stl_display_meshes = []
 
     async def start(self):
         config = ShellConfig(sparse_solver=True, interior_refinement=0,
@@ -113,13 +115,14 @@ class ShellWorkshop(ShellJobControls, DropPreview):
             with ui.HStack(height=30):
                 ui.Label("Cable family", width=120)
                 self.cable_pattern = ui.ComboBox(0, *families)
-                ui.Button("Run cable", clicked_fn=lambda: self.start_movement(self._selected_family()))
+                ui.Button("Apply cable force", clicked_fn=lambda: self.start_movement(self._selected_family()),
+                          tooltip="Read the force below and solve a four-step cable loading ramp for the selected family.")
                 ui.Button("Neutral", clicked_fn=self.neutral_shell)
                 ui.Button("Reconnect scene", clicked_fn=self.reconnect_opened,
                           tooltip="After opening a matching saved exact-knee USD, rebind the FEM overlay without saving over it.")
             with ui.HStack(height=28):
                 ui.Button("Show STL assembled", clicked_fn=self.toggle_stl_reference,
-                          tooltip="Toggle the supplied soft-and-rigid assembled STL over the JSON FEM joint.")
+                          tooltip="Show the supplied CAD below the FEM joint. Its display motion blends the accepted FEM end-frame poses; it is not a solid FEM result.")
                 ui.Button("Show flat Rigid", clicked_fn=self.toggle_stl_layout,
                           tooltip="Toggle the supplied Rigid.stl manufacturing layout; it is not an assembled FEM body.")
             self.stl_status = ui.Label("STL reference loaded | assembled hidden", height=24, word_wrap=True,
@@ -131,13 +134,14 @@ class ShellWorkshop(ShellJobControls, DropPreview):
                 self.inputs["Cable tension (N)"] = target
                 ui.Label("Use 0.5–3 N first. Tension is a load, not an angle command; the FEM decides the fold.", word_wrap=True)
             self.pattern_note = ui.Label("", height=26, word_wrap=True, style={"color": 0xFF80DFFF})
+            self.cable_pattern.model.add_item_changed_fn(lambda *_: self._selected_family())
             self.progress_label = ui.Label("READY | choose a cable family", height=29, word_wrap=True, style={"color": 0xFF80DFFF})
             self.presentation_label = ui.Label("", height=28, word_wrap=True, style={"color": 0xFF80DFFF})
             with ui.HStack(height=26):
                 self.response_visible = ui.CheckBox(width=22).model
                 self.response_visible.set_value(self.show_response)
                 self.response_visible.add_value_changed_fn(lambda m: self.change_response(visible=m.as_bool))
-                ui.Label("Magnified displacement", width=170)
+                ui.Label("Display-only displacement scale", width=210)
                 self.response_gain_input = ui.FloatField(width=65).model
                 self.response_gain_input.set_value(self.response_gain)
                 self.response_gain_input.add_value_changed_fn(lambda m: self.change_response(gain=m.as_float))
@@ -447,7 +451,11 @@ class ShellWorkshop(ShellJobControls, DropPreview):
             raise ValueError("Unknown cable movement")
         self.cable_pattern.model.get_item_value_model().set_value(families.index(family))
         self.active_family = family
-        self.launch(self.range_job("single_cable"), "Cable "+family)
+        # Capture inputs at the click, including queued requests. Editing the
+        # dropdown or force while a worker drains must not change that request.
+        amplitude = self.inputs["Cable tension (N)"].as_float
+        self.launch(self.range_job("single_cable", family=family, amplitude=amplitude),
+                    f"Cable {family} ({amplitude:g} N/strand)")
 
     def _displacement_constraints(self, family, displacement_m):
         """Map a cable take-up displacement to one lower-frame DOF.
@@ -572,6 +580,7 @@ class ShellWorkshop(ShellJobControls, DropPreview):
         root.GetPrim().SetCustomDataByKey("units_assumption", "binary STL source units mapped at 0.0006 m/unit")
         root.GetPrim().SetCustomDataByKey("fem_authority", "exact_joint/source_joint.json")
         assets = load_joint_stl_assets()
+        self.stl_display_meshes = []
         soft_mat = material(stage, "STLReferenceSoftPET", (.12, .85, .92), .34)
         rigid_mat = material(stage, "STLReferenceRigidPLA", (.98, .54, .10), .42)
         layout_mat = material(stage, "STLReferenceFlatRigid", (.48, .60, .95), .25)
@@ -584,6 +593,9 @@ class ShellWorkshop(ShellJobControls, DropPreview):
             prim.GetPrim().SetCustomDataByKey("role", role)
             prim.GetPrim().SetCustomDataByKey("source_units", "unverified binary STL units")
             prim.GetPrim().SetCustomDataByKey("display_scale_m_per_unit", .0006)
+            if assembled:
+                self.stl_display_meshes.append((prim, points.copy()))
+                prim.GetPrim().SetCustomDataByKey("deformation", "DISPLAY ONLY: height-weighted FEM frame blend; no solid stress")
             return prim
 
         assembled = UsdGeom.Xform.Define(stage, root_path + "/Assembled")
@@ -598,7 +610,9 @@ class ShellWorkshop(ShellJobControls, DropPreview):
         # Keep the manufacturing sheet out of the FEM overlay by default.  It
         # is placed to the side when enabled so its bed coordinates are not
         # mistaken for the assembled joint frame.
-        layout.AddTranslateOp().Set(Gf.Vec3d(-.075, -.045, 0.0))
+        translate_ops = [op for op in layout.GetOrderedXformOps()
+                         if op.GetOpType() == UsdGeom.XformOp.TypeTranslate]
+        (translate_ops[0] if translate_ops else layout.AddTranslateOp()).Set(Gf.Vec3d(-.075, -.045, 0.0))
         add_triangles(root_path + "/FlatRigidLayout/RigidPLA", assets["rigid_layout"].triangles,
                       layout_mat, "flat rigid manufacturing layout (Rigid.stl)", assembled=False)
         self.stl_reference = assembled
@@ -647,7 +661,12 @@ class ShellWorkshop(ShellJobControls, DropPreview):
 
     def close_view(self):
         center = self.offset+self.shell.height/2 if self.shell else .132
-        if self.show_response:
+        if self.stl_reference_visible:
+            # Keep the lower CAD display in shot when Apply starts a solve.
+            target_x = .028 if self.show_response else 0
+            ViewportManager.set_camera_view("/OmniverseKit_Persp", eye=[.15, -.29, center+.09],
+                                            target=[target_x, 0, (center+self.shell.height/2)/2])
+        elif self.show_response:
             center = self.lab.scene.top_height-self.shell.height/2
             ViewportManager.set_camera_view("/OmniverseKit_Persp", eye=[.090, -.175, center+.060], target=[.028, 0, center])
         else:
@@ -686,6 +705,15 @@ class ShellWorkshop(ShellJobControls, DropPreview):
         report = self.accepted_report
         shown_state = np.asarray(display_state) if interpolated else self.state
         shown_points = self.shell.positions(self.shell._tensor(shown_state)).numpy() if interpolated else report["points"]
+        if self.stl_reference_visible:
+            frame_states = shown_state[self.shell.frame_start:self.shell.frame_start+12].reshape(2, 6)
+            gain = self.response_gain if self.show_response else 1.0
+            for cad_mesh, neutral_points in getattr(self, "stl_display_meshes", []):
+                cad_points, _ = frame_blend_display(neutral_points, self.shell.frame_centers.numpy(),
+                    self.shell.width*frame_states[:, :3], Rotation.from_rotvec(frame_states[:, 3:]).as_matrix(), gain)
+                set_points(cad_mesh, cad_points)
+            self.stl_status.text = (f"LOWER STL: frame-motion display x{gain:g}, not solid FEM. "
+                                   "Upper joint/values = JSON shell FEM. Flat layout stays static.")
         points = shown_points + [0, 0, self.offset]
         set_points(self.surface, points)
         values = np.clip(report["principal_membrane_strain"]/self.shell.config.panel_strain_limit, 0, 1)
@@ -946,7 +974,7 @@ class ShellWorkshop(ShellJobControls, DropPreview):
     def start_range(self, mode):
         self.launch(self.range_job(mode), mode.replace("_", " "))
 
-    async def range_job(self, mode):
+    async def range_job(self, mode, family=None, amplitude=None):
         self.inspector.playing = False
         jobs = []
         if mode == "displacement":
@@ -965,26 +993,28 @@ class ShellWorkshop(ShellJobControls, DropPreview):
                 si_value = self.shell.height*value/100 if mode == "compression" else np.deg2rad(value)
                 jobs.append(({"lower_constraints": {coordinate: si_value}}, f"PRESCRIBED {mode.upper()} {value:.1f}; other coordinates free"))
         elif mode in ("cables", "manual", "single_cable", "winch", "winch_demo"):
-            amplitude = self.inputs["Cable tension (N)"].as_float
+            if amplitude is None:
+                amplitude = self.inputs["Cable tension (N)"].as_float
             if mode in ("cables", "manual", "single_cable") and (not np.isfinite(amplitude) or not 0 <= amplitude <= 10):
                 raise ValueError("Experimental cable tension must be 0-10 N")
             families = CABLE_FAMILIES
             force = np.zeros(3)
             if mode in ("manual", "winch", "single_cable"):
-                index = self.cable_pattern.model.get_item_value_model().as_int
-                families = (families[index],)
+                if family is None:
+                    index = self.cable_pattern.model.get_item_value_model().as_int
+                    family = families[index]
+                if family not in families:
+                    raise ValueError("Unknown cable movement")
+                families = (family,)
                 if mode != "single_cable":
                     force = np.array([self.inputs[f"Lower frame force {axis} (N)"].as_float for axis in "XYZ"])
                 if not np.isfinite(force).all() or np.abs(force).max() > 100:
                     raise ValueError("Use finite experimental frame-force components within +/-100 N")
             nodes = self.shell.mesh["bottom"]
             for family in families:
-                if mode == "single_cable":
-                    fractions = [1.0]
-                elif mode in ("manual", "winch"):
-                    fractions = (.25, .5, .75, 1)
-                else:
-                    fractions = (.25, .5, .75, 1)
+                # Accepted load steps expose the response even when the same
+                # endpoint is requested twice; a one-step repeat looked inert.
+                fractions = (.25, .5, .75, 1)
                 if mode in ("winch", "winch_demo"):
                     pull = self.inputs["Winch pull (mm)"].as_float
                     if not np.isfinite(pull) or not 0 <= pull <= 20:

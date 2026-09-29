@@ -1,7 +1,7 @@
 """Live QA for the photo/video-aligned cable-family workshop.
 
 Run inside Isaac Sim's python server after the nonlinear workshop is open.
-Every family is applied through the same callback used by the visible Run cable
+Every family is applied through the same callback used by the visible Apply cable force
 button, so this checks the routing registry, the accepted FEM path, and the
 simple UI together rather than only unit-testing tension arrays.
 """
@@ -40,7 +40,7 @@ for family in CABLE_FAMILIES:
     view.start_movement(family)
     await wait_job()
     assert view.job_outcome == "COMPLETE", (family, view.feedback.text)
-    assert view.job_step == 1 and view.job_steps == 1
+    assert view.job_step == view.job_steps == 4
     active = np.flatnonzero(view.tensions > 1e-10).tolist()
     assert active == list(CABLE_GROUPS[family]), (family, active)
     report = view.shell.diagnostics(view.state)

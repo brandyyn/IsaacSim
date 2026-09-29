@@ -3,6 +3,28 @@
 import numpy as np
 
 
+def frame_blend_display(reference, centers, translations, rotations, gain=1.0):
+    """Skin a CAD display between two FEM frames, with upper-frame motion removed.
+
+    This is a kinematic visualization, not a solid FEM interpolation or a stress
+    result. Height weights preserve the two end-frame motions at physical gain.
+    """
+    reference = np.asarray(reference, dtype=float)
+    centers, translations = np.asarray(centers), np.asarray(translations)
+    rotations = np.asarray(rotations)
+    if reference.ndim != 2 or reference.shape[1] != 3:
+        raise ValueError("CAD reference must contain N x 3 points")
+    if centers.shape != (2, 3) or translations.shape != (2, 3) or rotations.shape != (2, 3, 3):
+        raise ValueError("Two frame centers, translations and rotations required")
+    height = centers[0, 2]-centers[1, 2]
+    if not np.isfinite(height) or height <= 0:
+        raise ValueError("Upper frame must be above lower frame")
+    weight = np.clip((reference[:, 2]-centers[1, 2])/height, 0, 1)[:, None]
+    transformed = [(reference-centers[i]) @ rotations[i].T+centers[i]+translations[i] for i in (0, 1)]
+    solved = weight*transformed[0]+(1-weight)*transformed[1]
+    return displacement_plot(reference, solved, centers[0], translations[0], rotations[0], gain, np.zeros(3))
+
+
 def displacement_plot(reference, solved, frame_center, frame_translation, frame_rotation, gain, offset):
     """Remove upper-frame rigid motion and magnify displacement, never strain.
 

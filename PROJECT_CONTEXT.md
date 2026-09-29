@@ -29,6 +29,26 @@ loop (`No run loop was found`); this does not invalidate the copied assets or th
 scene integration code. No full-motion, impact-survival, calibration, or ML claim
 is made from this reference-only checkpoint.
 
+### 2026-09-29: force-button visibility and lower-CAD display follow-up
+
+The complete Isaac Sim 6.0.1 runtime at `D:\IsaacSim\_build\windows-x86_64\release`
+was used for live QA with the project checkout selected through
+`PANEL_CREASE_PROJECT_ROOT`. The visible **Apply cable force** action now captures
+the selected family and tension at click time, solves four accepted FEM load
+ramp steps (25/50/75/100%), and reports the accepted endpoint. This avoids a
+queued UI edit changing the request or a one-step response appearing inactive.
+
+When the assembled STL is shown below the FEM overlay, its SoftPET/RigidPLA
+vertices follow a height-weighted blend of the accepted upper/lower frame poses.
+This is explicitly a magnified, kinematic display-only overlay; the JSON shell
+remains the FEM authority and no STL stress or strength result is inferred.
+The cancellation controller was also fixed so a cancelled request no longer
+leaves the controls stuck in a running state. Live 1 N/strand compression,
+Bend X+, and Twist CW runs completed 4/4 steps; the measured exploratory
+responses were 0.121% compression, 0.028 degrees bend, and 0.024 degrees twist.
+These small values remain uncalibrated and do not establish full travel or
+survival.
+
 ### 2026-09-14 UTC: distinguish invisible response from inactive buttons
 
 The user's 0.5 mm Twist CW winch command did execute, but produced only 19.34 um

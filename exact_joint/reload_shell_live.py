@@ -78,6 +78,10 @@ if in_place:
     previous.stl_layout_visible = getattr(previous, "stl_layout_visible", False)
     previous.window.destroy()
     previous.build_ui()
+    # Rebind the display-only STL meshes after a hot reload.  The USD prims
+    # survive, but the Python mesh handles/neutral points belong to the old
+    # module instance and would otherwise leave the lower CAD view static.
+    previous._make_stl_reference(previous.stage)
     for name, value in values.items():
         # Preserve a live session across the clearer fold-compliance label.
         target = name if name in previous.inputs else {

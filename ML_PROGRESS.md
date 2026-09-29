@@ -13,9 +13,23 @@ This is the shared progress log. Update it whenever the FEA model, simulator env
   and cable actuation are unchanged. A compact UI adds independent assembled and
   flat-layout visibility toggles. Static byte/hash/topology checks pass. The
   current local Kit source build exits before its Python run loop (`No run loop was
-  found`), so live actuation/FEM confirmation is still pending and no strength,
-  survival, calibration, or ML claim is made. Case:
+  found`); the packaged Isaac Sim 6.0.1 release runtime is used for live
+  actuation checks. No strength, survival, calibration, or ML claim is made.
+  Case:
   `fea/exact_joint_stl_reference_v1`; evaluation:
+  `ml/runs/20260929-exact-knee-stl-reference-v1`.
+
+- Force-button visibility follow-up (2026-09-29): the full Isaac Sim 6.0.1
+  runtime was attached to the project checkout for live validation. The compact
+  **Apply cable force** path now captures the family/tension at click time and
+  solves four accepted 25/50/75/100% FEM load steps. The visible assembled STL
+  below the FEM joint follows a labelled height-weighted frame-pose blend at
+  display gain x100; it is not a solid FEM result and does not replace the JSON
+  shell authority. Live compression, Bend X+, and Twist CW at 1 N/strand
+  completed 4/4 steps. Responses were 0.121% compression, 0.028 degrees bend,
+  and 0.024 degrees twist. Five display-math tests and ten controller tests
+  pass. Full travel, mesh convergence, material calibration, impact survival,
+  and ML promotion remain open. Evaluation:
   `ml/runs/20260929-exact-knee-stl-reference-v1`.
 
 - Phase: `0 - deterministic simulation baseline`
