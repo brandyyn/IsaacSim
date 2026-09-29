@@ -30,7 +30,7 @@ This is the shared progress log. Update it whenever the FEA model, simulator env
   and 0.024 degrees twist. Five display-math tests and ten controller tests
   pass. Full travel, mesh convergence, material calibration, impact survival,
   and ML promotion remain open. Evaluation:
-  `ml/runs/20260929-exact-knee-stl-reference-v1`.
+  `ml/runs/20260929-exact-knee-button-stl-visible-v1`.
 
 - Phase: `0 - deterministic simulation baseline`
 - Baseline commit: `5131a9740b3ce82e42331e923e1a45ffa396f71c`

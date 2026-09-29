@@ -1,0 +1,55 @@
+{
+  "run_id": "20260929-exact-knee-button-stl-visible-v1",
+  "status": "evaluation-only",
+  "baseline_commit": "5200a2f0",
+  "isaac_sim_version": "6.0.1 packaged release runtime",
+  "stage": "exact_joint nonlinear workshop with optional FEM-driven STL display overlay",
+  "environment_version": "exact_joint photo cable pattern and visible-action follow-up v1",
+  "fea_case_id": "exact_joint_stl_reference_v1",
+  "fea_artifact_sha256": "see fea/exact_joint_stl_reference_v1/manifest.json",
+  "algorithm": "none; deterministic UI/FEM validation only",
+  "seed": 0,
+  "randomization": {},
+  "observations": [
+    "accepted FEM frame pose and reaction telemetry",
+    "active cable indices for each photo/video family",
+    "display-only assembled STL pose and displacement scale"
+  ],
+  "actions": [
+    "Apply cable force",
+    "Neutral",
+    "Show STL assembled",
+    "Reconnect scene"
+  ],
+  "reward_version": "none",
+  "training": {
+    "command": "none",
+    "steps": 0,
+    "wall_time_s": 0.0
+  },
+  "evaluation": {
+    "command": "exact_joint/validate_photo_cable_pattern_live.py",
+    "conditions": "one open-ended knee; PLA 0.4 mm / PET 80 um; 3 N per active strand; four accepted 25/50/75/100% load steps per family",
+    "metrics": {
+      "seven_force_families_completed": true,
+      "active_group_matches_registry": true,
+      "neutral_restored": true,
+      "load_ramp_steps_per_family": 4,
+      "compression_percent": 0.372088,
+      "bend_x_plus_deg": -0.082995,
+      "bend_y_plus_deg": -0.082741,
+      "twist_cw_deg": -0.073168,
+      "twist_ccw_deg": 0.072660,
+      "display_only_stl_gain": 100,
+      "display_math_tests": 5,
+      "controller_tests": 10
+    }
+  },
+  "artifacts": {
+    "config": "exact_joint/assets/stl_joint_v1/manifest.json",
+    "metrics": "exact_joint/results/*_photo_cable_pattern.json",
+    "checkpoint": "none",
+    "checkpoint_sha256": "none"
+  },
+  "notes": "The assembled STL follows accepted FEM end-frame poses only as a labelled kinematic display overlay. The JSON shell remains the FEM authority. Small exploratory responses are not full-travel, strength, survival, material-calibration, or ML-promotion evidence."
+}
