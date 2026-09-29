@@ -74,14 +74,11 @@ if in_place:
     previous.active_cable_mask = getattr(previous, "active_cable_mask", __import__("numpy").zeros(12, dtype=bool))
     previous.last_reaction = getattr(previous, "last_reaction", __import__("numpy").zeros(6))
     previous.requested_displacement_mm = getattr(previous, "requested_displacement_mm", 0.0)
+    previous.comparison_view = getattr(previous, "comparison_view", True)
     previous.stl_reference_visible = getattr(previous, "stl_reference_visible", False)
     previous.stl_layout_visible = getattr(previous, "stl_layout_visible", False)
     previous.window.destroy()
     previous.build_ui()
-    # Rebind the display-only STL meshes after a hot reload.  The USD prims
-    # survive, but the Python mesh handles/neutral points belong to the old
-    # module instance and would otherwise leave the lower CAD view static.
-    previous._make_stl_reference(previous.stage)
     for name, value in values.items():
         # Preserve a live session across the clearer fold-compliance label.
         target = name if name in previous.inputs else {
@@ -99,6 +96,10 @@ if in_place:
     if not previous.scene_is_current():
         previous.reconnect_opened()
     else:
+        # Rebind the display-only STL meshes after a hot reload. The USD prims
+        # survive, but the Python mesh handles/neutral points belong to the old
+        # module instance and would otherwise leave the lower CAD view static.
+        previous._make_stl_reference(previous.stage)
         if was_idle:
             for name, value in job_metadata.items():
                 setattr(previous, name, value)

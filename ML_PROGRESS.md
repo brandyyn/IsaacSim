@@ -32,6 +32,28 @@ This is the shared progress log. Update it whenever the FEA model, simulator env
   and ML promotion remain open. Evaluation:
   `ml/runs/20260929-exact-knee-button-stl-visible-v1`.
 
+- Side-by-side comparison follow-up (2026-09-29): the default workshop view
+  now hides the white/red/yellow FEM overlay and places the blue displacement
+  diagnostic beside the assembled STL. The STL pose is a labelled kinematic
+  display driven by accepted upper/lower frame states; it is not a second FEM
+  mesh or a strength result. Live 1 N/strand compression and Twist CW runs in
+  this view completed 4/4 steps. Cable input is guarded at 10 N/active strand;
+  3% strain, 8% minimum height, intersection/contact and convergence guards
+  can reject a candidate earlier. No actuator rating or full-travel claim is
+  made. Evaluation remains linked to
+  `ml/runs/20260929-exact-knee-button-stl-visible-v1`.
+
+- Side-by-side comparison follow-up (2026-09-29): the default workshop view
+  now hides the white/red/yellow FEM overlay and places the blue displacement
+  diagnostic beside the assembled STL. The STL pose is a labelled kinematic
+  display driven by accepted upper/lower frame states; it is not a second FEM
+  mesh or a strength result. Live 1 N/strand compression and Twist CW runs in
+  this view completed 4/4 steps. Cable input is guarded at 10 N/active strand;
+  3% strain, 8% minimum height, intersection/contact and convergence guards
+  can reject a candidate earlier. No actuator rating or full-travel claim is
+  made. Evaluation remains linked to
+  `ml/runs/20260929-exact-knee-button-stl-visible-v1`.
+
 - Phase: `0 - deterministic simulation baseline`
 - Baseline commit: `5131a9740b3ce82e42331e923e1a45ffa396f71c`
 - Simulation: `panel_crease_leg_v8.usd`, launched with `open_knee_gui.py`

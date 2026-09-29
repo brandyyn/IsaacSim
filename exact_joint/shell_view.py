@@ -30,6 +30,9 @@ from exact_joint.shell_presentation import SolvedTransition
 from exact_joint.stl_assets import STL_TO_METRE, load_joint_stl_assets
 
 
+MAX_EXPERIMENTAL_CABLE_TENSION_N = 10.0
+
+
 class _MovementProxy:
     """Programmatic compatibility handle for a movement without a UI button."""
     def __init__(self, view, family, enabled=True):
@@ -64,6 +67,7 @@ class ShellWorkshop(ShellJobControls, DropPreview):
         self.timeline_action = "manual"
         self.show_response = True
         self.response_gain = 100.0
+        self.comparison_view = True
         self.inspector = None
         self.scene_disconnected = False
         self.smooth_motion = True
@@ -78,7 +82,7 @@ class ShellWorkshop(ShellJobControls, DropPreview):
         self.requested_displacement_mm = 0.0
         self.stl_reference = None
         self.stl_layout = None
-        self.stl_reference_visible = False
+        self.stl_reference_visible = True
         self.stl_layout_visible = False
         self.stl_display_meshes = []
 
@@ -125,6 +129,8 @@ class ShellWorkshop(ShellJobControls, DropPreview):
                           tooltip="Show the supplied CAD below the FEM joint. Its display motion blends the accepted FEM end-frame poses; it is not a solid FEM result.")
                 ui.Button("Show flat Rigid", clicked_fn=self.toggle_stl_layout,
                           tooltip="Toggle the supplied Rigid.stl manufacturing layout; it is not an assembled FEM body.")
+                ui.Button("Blue + STL side-by-side", clicked_fn=self.toggle_comparison_view,
+                          tooltip="Hide the white/red/yellow FEM overlay and compare the blue displacement display with the assembled STL.")
             self.stl_status = ui.Label("STL reference loaded | assembled hidden", height=24, word_wrap=True,
                                        style={"color": 0xFF80DFFF})
             with ui.HStack(height=30):
@@ -132,7 +138,7 @@ class ShellWorkshop(ShellJobControls, DropPreview):
                 target = ui.FloatField(width=90).model
                 target.set_value(3.0)
                 self.inputs["Cable tension (N)"] = target
-                ui.Label("Use 0.5–3 N first. Tension is a load, not an angle command; the FEM decides the fold.", word_wrap=True)
+                ui.Label("Use 0.5–3 N first. UI guard: 10 N/active strand. Strain, separation, contact and convergence guards can stop a solve.", word_wrap=True)
             self.pattern_note = ui.Label("", height=26, word_wrap=True, style={"color": 0xFF80DFFF})
             self.cable_pattern.model.add_item_changed_fn(lambda *_: self._selected_family())
             self.progress_label = ui.Label("READY | choose a cable family", height=29, word_wrap=True, style={"color": 0xFF80DFFF})
@@ -617,6 +623,7 @@ class ShellWorkshop(ShellJobControls, DropPreview):
                       layout_mat, "flat rigid manufacturing layout (Rigid.stl)", assembled=False)
         self.stl_reference = assembled
         self.stl_layout = layout
+        self._set_stl_placement()
         UsdGeom.Imageable(assembled.GetPrim()).MakeInvisible()
         UsdGeom.Imageable(layout.GetPrim()).MakeInvisible()
         if self.stl_reference_visible:
@@ -653,15 +660,75 @@ class ShellWorkshop(ShellJobControls, DropPreview):
                                  + ("visible" if self.stl_layout_visible else "hidden"))
         self.render()
 
+    @staticmethod
+    def _imageable(obj):
+        if obj is None:
+            return None
+        prim = obj.GetPrim() if hasattr(obj, "GetPrim") else obj
+        return UsdGeom.Imageable(prim)
+
+    def _set_stl_placement(self):
+        """Place the assembled CAD beside the blue display in comparison mode."""
+        if self.stl_reference is None:
+            return
+        ops = [op for op in self.stl_reference.GetOrderedXformOps()
+               if op.GetOpType() == UsdGeom.XformOp.TypeTranslate]
+        op = ops[0] if ops else self.stl_reference.AddTranslateOp()
+        if self.comparison_view:
+            op.Set(Gf.Vec3d(.125, 0.0, self.offset))
+        else:
+            op.Set(Gf.Vec3d(0.0, 0.0, 0.0))
+
+    def _set_comparison_visibility(self):
+        """Show only the blue diagnostic and assembled STL in comparison mode."""
+        visible = not self.comparison_view
+        for obj in (self.surface, self.lines, self.relief_lines,
+                    self.frame_hinge_lines, self.frames_curve, self.red,
+                    self.axial, self.loaded_cables, self.applied_force,
+                    self.top_cross, self.forces):
+            imageable = self._imageable(obj)
+            if imageable is None:
+                continue
+            (imageable.MakeVisible if visible else imageable.MakeInvisible)()
+        for name in ("UpperRigidAssembly", "LowerRigidAssembly"):
+            imageable = self._imageable(self.stage.GetPrimAtPath(self.owned_path+"/"+name))
+            if imageable is not None:
+                (imageable.MakeVisible if visible else imageable.MakeInvisible)()
+        if self.comparison_view:
+            self._set_stl_placement()
+            if self.stl_reference is not None and self.stl_reference_visible:
+                self._imageable(self.stl_reference).MakeVisible()
+        self._imageable(self.inspector.root if self.inspector is not None else None)
+        if self.inspector is not None:
+            (self.inspector.root.MakeVisible if self.show_response else self.inspector.root.MakeInvisible)()
+
+    def toggle_comparison_view(self):
+        if not self.ensure_current_scene():
+            return
+        self.comparison_view = not self.comparison_view
+        self._set_stl_placement()
+        self._set_comparison_visibility()
+        self.close_view()
+        self.render()
+        self.feedback.text = ("Comparison view: blue display-only displacement + assembled STL; white/red/yellow FEM overlay hidden."
+                              if self.comparison_view else
+                              "Full FEM overlay restored; the assembled STL remains an optional display reference.")
+
     def set_time(self, elapsed):
         self.elapsed = elapsed  # Base initialization only; our jobs own the release.
 
     def whole_view(self):
+        if self.comparison_view:
+            self.close_view()
+            return
         ViewportManager.set_camera_view("/OmniverseKit_Persp", eye=[.34, -.51, .3], target=[0, 0, .125])
 
     def close_view(self):
         center = self.offset+self.shell.height/2 if self.shell else .132
-        if self.stl_reference_visible:
+        if self.comparison_view and self.stl_reference_visible:
+            ViewportManager.set_camera_view("/OmniverseKit_Persp", eye=[.23, -.36, center+.09],
+                                            target=[.09, 0, center+.006])
+        elif self.stl_reference_visible:
             # Keep the lower CAD display in shot when Apply starts a solve.
             target_x = .028 if self.show_response else 0
             ViewportManager.set_camera_view("/OmniverseKit_Persp", eye=[.15, -.29, center+.09],
@@ -804,6 +871,11 @@ class ShellWorkshop(ShellJobControls, DropPreview):
                 self.legend.text = (f"LEFT: physical leg 1x | RIGHT: displacement x{self.response_gain:g}, DISPLAY ONLY\n"
                     f"TRUE bend Y {angles[1]:.3f} deg | twist {angles[2]:.3f} deg | compression {report['compression_fraction']*100:.3f}%\n"
                     "Right is a vector plot, NOT a physical fold or validated capacity.")
+        if self.comparison_view:
+            self.legend.text = (f"BLUE + ASSEMBLED STL COMPARISON | displacement x{self.response_gain:g}, DISPLAY ONLY\n"
+                                f"True FEM: bend Y {angles[1]:.3f} deg | twist {angles[2]:.3f} deg | compression {report['compression_fraction']*100:.3f}%\n"
+                                "White/red/yellow FEM overlay hidden; STL pose is kinematic display only.")
+            self._set_comparison_visibility()
         if interpolated:
             self.legend.text = "DISPLAY TRANSITION - NOT A SOLVED FEM STATE\nAccepted endpoint results shown in controls; strain colours hidden.\nNo physical time or equilibrium is assigned to this transition."
             self.presentation_frames += 1
@@ -995,8 +1067,8 @@ class ShellWorkshop(ShellJobControls, DropPreview):
         elif mode in ("cables", "manual", "single_cable", "winch", "winch_demo"):
             if amplitude is None:
                 amplitude = self.inputs["Cable tension (N)"].as_float
-            if mode in ("cables", "manual", "single_cable") and (not np.isfinite(amplitude) or not 0 <= amplitude <= 10):
-                raise ValueError("Experimental cable tension must be 0-10 N")
+            if mode in ("cables", "manual", "single_cable") and (not np.isfinite(amplitude) or not 0 <= amplitude <= MAX_EXPERIMENTAL_CABLE_TENSION_N):
+                raise ValueError(f"Experimental cable tension must be 0-{MAX_EXPERIMENTAL_CABLE_TENSION_N:g} N/active strand")
             families = CABLE_FAMILIES
             force = np.zeros(3)
             if mode in ("manual", "winch", "single_cable"):
@@ -1040,8 +1112,8 @@ class ShellWorkshop(ShellJobControls, DropPreview):
             if self.shell.config.open_ends:
                 raise ValueError("Photo design has no roof caps. Use cable actuation or lower-frame force instead.")
             amplitude = self.inputs["Roof test force (N)"].as_float
-            if not np.isfinite(amplitude) or not 0 <= amplitude <= 10:
-                raise ValueError("Experimental roof force must be 0-10 N")
+            if not np.isfinite(amplitude) or not 0 <= amplitude <= MAX_EXPERIMENTAL_CABLE_TENSION_N:
+                raise ValueError(f"Experimental roof force must be 0-{MAX_EXPERIMENTAL_CABLE_TENSION_N:g} N")
             nodes = self.shell.free_nodes[np.isclose(self.shell.points[self.shell.free_nodes, 2], self.shell.height)]
             center = nodes[np.argmin(np.linalg.norm(self.shell.points[nodes, :2], axis=1))]
             load = np.zeros_like(self.shell.points)
@@ -1218,6 +1290,9 @@ class ShellWorkshop(ShellJobControls, DropPreview):
                   "shell_config": dataclasses.asdict(self.shell.config), "mode": self.mode,
                   "display": {"physical_geometry_gain": 1, "diagnostic_gain": self.response_gain,
                               "diagnostic_visible": self.show_response,
+                              "comparison_view": self.comparison_view,
+                              "assembled_stl_visible": self.stl_reference_visible,
+                              "cable_tension_ui_guard_n_per_active_strand": MAX_EXPERIMENTAL_CABLE_TENSION_N,
                               "smooth_transitions": self.smooth_motion,
                               "intermediate_states_saved": False,
                               "transition_scope": "Display-only easing of accepted endpoints; no intermediate stresses or physical times",

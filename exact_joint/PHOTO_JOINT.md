@@ -88,6 +88,7 @@ The main model is never magnified.
 | Panel bending / membrane scales | Experimental multipliers; keep at 1 for this material reference |
 | PLA/PET thicknesses and moduli | Change constitutive response; thicknesses are supplied values, moduli remain assumed |
 | Winch pull / stiffness / force cap | Cable rest-length take-up with tension-only elastic response and saturation; not a commanded joint angle |
+| Cable tension (N / active strand) | Force-driven cable load used by the photo/video pattern. The interactive experiment accepts 0-10 N per active strand; 10 N is a UI guard, not a measured cable or material limit. Accepted states can stop earlier on 3% membrane strain, 8% minimum frame height, intersection/contact or non-convergence guards. |
 | Lower frame force X/Y/Z | Additional force, included by **Apply cable + force**, not the individual cable-only buttons |
 | Boundary subdivision / interior refinement | Mesh resolution; finer runs cost more and require a convergence study |
 | Midsurface self-contact + CCD | Checks shell midsurface contact paths; does not model finite laminate thickness or cable contact |

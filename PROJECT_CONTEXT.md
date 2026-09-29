@@ -49,6 +49,42 @@ responses were 0.121% compression, 0.028 degrees bend, and 0.024 degrees twist.
 These small values remain uncalibrated and do not establish full travel or
 survival.
 
+### 2026-09-29: blue diagnostic and assembled-STL comparison view
+
+The workshop now has a comparison mode that hides the white/red/yellow FEM
+overlay and places the blue displacement diagnostic beside the assembled STL.
+The blue geometry and STL remain display-only visualizations of the accepted
+JSON-shell FEM state; the solver still runs on the original photo/open-end
+shell with PLA 0.4 mm and PET 80 um. The assembled STL is moved beside the
+diagnostic with an explicit kinematic display transform, and its local motion
+uses the accepted upper/lower frame pose at the selected display gain. A button
+restores the full FEM overlay when needed.
+
+The cable input is capped at 10 N per active strand by an experimental UI guard.
+Accepted states are additionally limited by the 3% membrane-strain guard, the
+8% minimum frame-separation guard, self-contact/intersection checks, and the
+nonlinear residual/iteration limit. These are numerical/model-use limits, not
+measured material strength or actuator ratings. Compression and twist were
+re-run in the comparison view and completed 4/4 accepted FEM steps.
+
+### 2026-09-29: blue diagnostic and assembled-STL comparison view
+
+The workshop now has a comparison mode that hides the white/red/yellow FEM
+overlay and places the blue displacement diagnostic beside the assembled STL.
+The blue geometry and STL remain display-only visualizations of the accepted
+JSON-shell FEM state; the solver still runs on the original photo/open-end
+shell with PLA 0.4 mm and PET 80 um. The assembled STL is moved beside the
+diagnostic with an explicit kinematic display transform, and its local motion
+uses the accepted upper/lower frame pose at the selected display gain. A button
+restores the full FEM overlay when needed.
+
+The cable input is capped at 10 N per active strand by an experimental UI guard.
+Accepted states are additionally limited by the 3% membrane-strain guard, the
+8% minimum frame-separation guard, self-contact/intersection checks, and the
+nonlinear residual/iteration limit. These are numerical/model-use limits, not
+measured material strength or actuator ratings. Compression and twist were
+re-run in the comparison view and completed 4/4 accepted FEM steps.
+
 ### 2026-09-14 UTC: distinguish invisible response from inactive buttons
 
 The user's 0.5 mm Twist CW winch command did execute, but produced only 19.34 um
