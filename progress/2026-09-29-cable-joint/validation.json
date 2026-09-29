@@ -1,0 +1,54 @@
+{
+  "checkpoint_commit": "044e6594",
+  "baseline_commit": "5131a9740b3ce82e42331e923e1a45ffa396f71c",
+  "isaac_sim_version": "6.0.1",
+  "scope": "one open-ended photo/video-pattern knee joint",
+  "materials": {
+    "pla_thickness_m": 0.0004,
+    "pet_thickness_m": 0.00008
+  },
+  "comparison_view": {
+    "blue_displacement_gain": 100,
+    "assembled_stl_visible": true,
+    "fixed_white_red_yellow_overlay_visible": false,
+    "stl_role": "display-only kinematic pose; not FEM authority"
+  },
+  "force_input": {
+    "units": "N per active strand",
+    "interactive_guard_max": 10.0,
+    "recommended_start_range": [0.5, 3.0]
+  },
+  "acceptance_guards": {
+    "membrane_strain_fraction": 0.03,
+    "minimum_frame_height_fraction": 0.08,
+    "self_contact_and_intersection": true,
+    "max_iterations": 900,
+    "finite_nonnegative_tensions": true
+  },
+  "live_validation": {
+    "seven_families_completed": true,
+    "accepted_steps_per_family": 4,
+    "active_cable_groups_match_registry": true,
+    "neutral_restored": true,
+    "three_n_per_active_strand": {
+      "compression_percent": 0.372088,
+      "bend_x_plus_deg": -0.082995,
+      "bend_x_minus_deg": 0.081967,
+      "bend_y_plus_deg": -0.082741,
+      "bend_y_minus_deg": 0.082213,
+      "twist_cw_deg": -0.073168,
+      "twist_ccw_deg": 0.072660
+    },
+    "one_n_comparison_view_smoke": {
+      "compression_percent": 0.121,
+      "twist_cw_deg": -0.024,
+      "accepted_steps": 4
+    }
+  },
+  "limitations": [
+    "full physical travel is not calibrated",
+    "STL is not a solid FEM mesh",
+    "no material strength or cable rating is established",
+    "no drop-survival or robotic-arm readiness claim"
+  ]
+}
