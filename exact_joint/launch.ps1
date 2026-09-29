@@ -11,6 +11,7 @@ $env:PANEL_CREASE_PROJECT_ROOT = $jointProject
 $jointScript = if ($Nonlinear) { 'open_nonlinear_gui.py' } else { 'open_gui.py' }
 $jointArguments = @(
     ('"' + $jointExperience + '"'), '--no-ros-env', '--enable', 'isaacsim.code_editor.python_server',
+    '--enable', 'omni.kit.loop-isaac', '--/app/quitAfter=-1',
     '--/app/window/width=1600', '--/app/window/height=1000',
     # Kit splits --exec again after Windows parses argv; preserve inner quotes
     # so a project path containing spaces remains one Python-script argument.
