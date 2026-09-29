@@ -40,8 +40,8 @@ This is the shared progress log. Update it whenever the FEA model, simulator env
   this view completed 4/4 steps. Cable input is guarded at 10 N/active strand;
   3% strain, 8% minimum height, intersection/contact and convergence guards
   can reject a candidate earlier. No actuator rating or full-travel claim is
-  made. Evaluation remains linked to
-  `ml/runs/20260929-exact-knee-button-stl-visible-v1`.
+  made. Evaluation is recorded in
+  `ml/runs/20260929-exact-knee-blue-stl-comparison-v1`.
 
 - Side-by-side comparison follow-up (2026-09-29): the default workshop view
   now hides the white/red/yellow FEM overlay and places the blue displacement
